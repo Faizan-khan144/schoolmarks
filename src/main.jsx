@@ -1,10 +1,22 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
-import "./index.css";
+import { StrictMode } from "react"
+import { createRoot } from "react-dom/client"
+import App from "./App"
+import "./index.css"
+import {
+  initializeStorage
+} from "./utils/storage"
+import { defaultStudents } from "./data/defaultStudents"
+import { defaultClasses } from "./data/defaultClasses"
+import { defaultSubjects } from "./data/defaultSubjects"
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+initializeStorage({
+  students: defaultStudents,
+  classes: defaultClasses,
+  subjects: defaultSubjects
+})
+
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
     <App />
-  </React.StrictMode>
-);
+  </StrictMode>
+)
