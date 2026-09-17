@@ -1,4 +1,3 @@
-
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Activity,
@@ -16,11 +15,10 @@ import {
   ClipboardCheck,
   Clock3,
   FileText,
-  GraduationCap,  
+  GraduationCap,
   LayoutDashboard,
   LineChart,
   Menu,
-  MessageCircle,
   MoreHorizontal,
   PieChart,
   Plus,
@@ -41,16 +39,21 @@ import {
   Trophy,
   Calculator,
   Bot,
-  MessageSquareText
+  MessageSquareText,
+  Filter,
+  Pencil,
+  Trash2,
+  Save,
+  ChevronDown
 } from "lucide-react";
 
 const studentsSeed = [
-  { name: "Ayaan Khan", className: "9-A", avg: 87, attendance: 96, status: "Excellent" },
-  { name: "Zayan Ahmed", className: "9-B", avg: 51, attendance: 73, status: "At Risk" },
-  { name: "Maham Ali", className: "9-A", avg: 82, attendance: 91, status: "Good" },
-  { name: "Hassan Raza", className: "9-C", avg: 76, attendance: 88, status: "Good" },
-  { name: "Areeba Khan", className: "9-B", avg: 91, attendance: 98, status: "Excellent" },
-  { name: "Rayyan Malik", className: "9-C", avg: 64, attendance: 79, status: "Attention" }
+  { id: 1, name: "Ayaan Khan", className: "9-A", avg: 87, attendance: 96, status: "Excellent" },
+  { id: 2, name: "Zayan Ahmed", className: "9-B", avg: 51, attendance: 73, status: "At Risk" },
+  { id: 3, name: "Maham Ali", className: "9-A", avg: 82, attendance: 91, status: "Good" },
+  { id: 4, name: "Hassan Raza", className: "9-C", avg: 76, attendance: 88, status: "Good" },
+  { id: 5, name: "Areeba Khan", className: "9-B", avg: 91, attendance: 98, status: "Excellent" },
+  { id: 6, name: "Rayyan Malik", className: "9-C", avg: 64, attendance: 79, status: "Attention" }
 ];
 
 const navItems = [
@@ -102,6 +105,13 @@ const modules = [
     icon: BarChart3
   }
 ];
+
+function getStudentStatus(avg, attendance) {
+  if (avg >= 85 && attendance >= 90) return "Excellent";
+  if (avg >= 75 && attendance >= 85) return "Good";
+  if (avg >= 60 && attendance >= 78) return "Attention";
+  return "At Risk";
+}
 
 function generateAIAnswer(prompt, mode = "Ask") {
   const text = prompt.toLowerCase();
@@ -244,6 +254,7 @@ function Reveal({ children, className = "", delay = 0 }) {
     );
 
     observer.observe(node);
+
     return () => observer.disconnect();
   }, []);
 
@@ -268,12 +279,13 @@ function SectionHeading({ eyebrow, title, description, align = "left" }) {
   );
 }
 
-function DashboardPreview() {
+function DashboardPreview({ students }) {
   const bars = [54, 68, 61, 77, 72, 89, 82, 96, 88, 100, 91, 97];
 
   return (
     <div className="product-stage">
       <div className="stage-glow" />
+
       <div className="preview-window">
         <div className="preview-topbar">
           <div className="preview-dots">
@@ -299,7 +311,7 @@ function DashboardPreview() {
           <div className="preview-content">
             <div className="preview-heading">
               <div>
-                <span>MONDAY, 17 SEPTEMBER</span>
+                <span>17 SEPTEMBER 2026</span>
                 <h3>Good morning, Faizan.</h3>
               </div>
               <button>+ Add record</button>
@@ -329,6 +341,7 @@ function DashboardPreview() {
                   <span>Academic performance</span>
                   <MoreHorizontal size={16} />
                 </div>
+
                 <div className="preview-chart">
                   <div className="chart-lines">
                     <i />
@@ -336,6 +349,7 @@ function DashboardPreview() {
                     <i />
                     <i />
                   </div>
+
                   <div className="chart-bars">
                     {bars.map((height, index) => (
                       <span key={index} style={{ height: `${height}%` }} />
@@ -351,7 +365,9 @@ function DashboardPreview() {
                 <span>AI INSIGHT</span>
                 <strong>3 students may need attention.</strong>
                 <p>Attendance and marks indicate early intervention opportunities.</p>
-                <div className="preview-ai-link">Review signals <ArrowRight size={13} /></div>
+                <div className="preview-ai-link">
+                  Review signals <ArrowRight size={13} />
+                </div>
               </div>
             </div>
 
@@ -360,8 +376,9 @@ function DashboardPreview() {
                 <span>Student performance</span>
                 <span className="preview-view">View all</span>
               </div>
-              {studentsSeed.slice(0, 3).map((student) => (
-                <div className="preview-row" key={student.name}>
+
+              {students.slice(0, 3).map((student) => (
+                <div className="preview-row" key={student.id}>
                   <div className="student-mini">
                     <span>{student.name.slice(0, 2)}</span>
                     <div>
@@ -486,6 +503,7 @@ function HomeAI() {
         <div className="answer-tag">{answer.tag}</div>
         <h4>{answer.title}</h4>
         <p>{answer.body}</p>
+
         <div className="answer-list">
           {answer.bullets.map((bullet, index) => (
             <div key={index}>
@@ -499,24 +517,34 @@ function HomeAI() {
   );
 }
 
-function HomePage({ openApp }) {
-  const marqueeItems = ["STUDENT RECORDS", "ACADEMIC INTELLIGENCE", "SMART ATTENDANCE", "RESULTS", "EXAM MANAGEMENT", "AI INSIGHTS"];
+function HomePage({ openApp, students }) {
+  const marqueeItems = [
+    "STUDENT RECORDS",
+    "ACADEMIC INTELLIGENCE",
+    "SMART ATTENDANCE",
+    "RESULTS",
+    "EXAM MANAGEMENT",
+    "AI INSIGHTS"
+  ];
 
   return (
     <div className="site">
       <header className="public-nav">
         <Logo />
+
         <nav>
           <a href="#platform">Platform</a>
           <a href="#workflow">Workflow</a>
           <a href="#intelligence">AI Intelligence</a>
           <a href="#features">Features</a>
         </nav>
+
         <div className="nav-actions">
           <button className="nav-ai" onClick={() => openApp("ai")}>
             <Sparkles size={15} />
             Try AI
           </button>
+
           <button className="nav-cta" onClick={() => openApp("dashboard")}>
             Open SchoolMarks <ArrowUpRight size={16} />
           </button>
@@ -534,6 +562,7 @@ function HomePage({ openApp }) {
               <span className="pulse-dot" />
               ACADEMIC INTELLIGENCE PLATFORM
             </div>
+
             <h1>
               Every student.
               <br />
@@ -541,19 +570,23 @@ function HomePage({ openApp }) {
               <br />
               One clear system.
             </h1>
+
             <p>
               SchoolMarks brings students, academics, examinations, marks,
               attendance and performance intelligence into one beautifully
               connected workspace.
             </p>
+
             <div className="hero-buttons">
               <button className="primary-button" onClick={() => openApp("dashboard")}>
                 Explore the dashboard <ArrowRight size={17} />
               </button>
+
               <a href="#platform" className="secondary-button">
                 See how it works <ChevronRight size={16} />
               </a>
             </div>
+
             <div className="hero-proof">
               <div className="proof-avatars">
                 <span>AK</span>
@@ -561,6 +594,7 @@ function HomePage({ openApp }) {
                 <span>HR</span>
                 <span>+</span>
               </div>
+
               <div>
                 <strong>Built around academic clarity.</strong>
                 <small>One connected source of truth for your school.</small>
@@ -569,7 +603,7 @@ function HomePage({ openApp }) {
           </Reveal>
 
           <Reveal className="hero-product" delay={140}>
-            <DashboardPreview />
+            <DashboardPreview students={students} />
           </Reveal>
 
           <div className="hero-bottom-stats">
@@ -609,6 +643,7 @@ function HomePage({ openApp }) {
                 Exams, subjects and historical performance often sit somewhere
                 else. SchoolMarks connects the full picture.
               </p>
+
               <div className="problem-points">
                 <div><span>01</span><strong>Disconnected records</strong></div>
                 <div><span>02</span><strong>Manual reporting</strong></div>
@@ -621,21 +656,28 @@ function HomePage({ openApp }) {
                 <span>ACADEMIC SIGNALS</span>
                 <Activity size={16} />
               </div>
+
               <div className="signal-main">
                 <div className="signal-circle">
                   <strong>82</strong>
                   <span>overall</span>
                 </div>
+
                 <div className="signal-details">
                   <div><span>Marks</span><strong>86%</strong></div>
                   <div><span>Attendance</span><strong>93.8%</strong></div>
                   <div><span>Engagement</span><strong>79%</strong></div>
                 </div>
               </div>
+
               <div className="signal-warning">
-                <div><span className="warning-dot" /><strong>3 students need attention</strong></div>
+                <div>
+                  <span className="warning-dot" />
+                  <strong>3 students need attention</strong>
+                </div>
                 <ArrowUpRight size={15} />
               </div>
+
               <div className="signal-wave">
                 {[30, 44, 36, 58, 47, 74, 60, 88, 69, 82, 76, 96].map((height, i) => (
                   <span key={i} style={{ height: `${height}%` }} />
@@ -668,7 +710,11 @@ function HomePage({ openApp }) {
                 <div className="workflow-icon"><Icon size={21} /></div>
                 <h3>{title}</h3>
                 <p>{text}</p>
-                {index !== 4 && <div className="workflow-arrow"><ArrowRight size={16} /></div>}
+                {index !== 4 && (
+                  <div className="workflow-arrow">
+                    <ArrowRight size={16} />
+                  </div>
+                )}
               </Reveal>
             ))}
           </div>
@@ -686,13 +732,31 @@ function HomePage({ openApp }) {
           <div className="module-grid">
             {modules.map((module, index) => {
               const Icon = module.icon;
+
               return (
                 <Reveal className="module-card" delay={index * 60} key={module.number}>
                   <div className="module-number">{module.number}</div>
                   <div className="module-icon"><Icon size={22} /></div>
                   <h3>{module.title}</h3>
                   <p>{module.description}</p>
-                  <button onClick={() => openApp(module.number === "06" ? "performance" : "dashboard")}>
+
+                  <button
+                    onClick={() =>
+                      openApp(
+                        module.number === "01"
+                          ? "students"
+                          : module.number === "02"
+                            ? "academics"
+                            : module.number === "03"
+                              ? "exams"
+                              : module.number === "04"
+                                ? "marks"
+                                : module.number === "05"
+                                  ? "attendance"
+                                  : "performance"
+                      )
+                    }
+                  >
                     Explore module <ArrowUpRight size={15} />
                   </button>
                 </Reveal>
@@ -705,7 +769,9 @@ function HomePage({ openApp }) {
           <div className="intelligence-layout">
             <Reveal className="intelligence-copy">
               <div className="eyebrow">SCHOOLMARKS AI</div>
+
               <h2>Academic intelligence that actually helps you act.</h2>
+
               <p>
                 Ask questions in plain language. Analyze performance. Generate
                 quizzes. Build revision plans. Turn school data into practical
@@ -721,7 +787,10 @@ function HomePage({ openApp }) {
                 ].map(([Icon, title, text]) => (
                   <div key={title}>
                     <div><Icon size={17} /></div>
-                    <span><strong>{title}</strong><small>{text}</small></span>
+                    <span>
+                      <strong>{title}</strong>
+                      <small>{text}</small>
+                    </span>
                   </div>
                 ))}
               </div>
@@ -753,14 +822,26 @@ function HomePage({ openApp }) {
                   <span>AVERAGE PERFORMANCE</span>
                   <strong>82.4%</strong>
                 </div>
-                <div className="growth-badge"><TrendingUp size={14} /> +3.1%</div>
+
+                <div className="growth-badge">
+                  <TrendingUp size={14} /> +3.1%
+                </div>
               </div>
+
               <div className="large-chart">
-                <div className="chart-y"><span>100</span><span>75</span><span>50</span><span>25</span><span>0</span></div>
+                <div className="chart-y">
+                  <span>100</span>
+                  <span>75</span>
+                  <span>50</span>
+                  <span>25</span>
+                  <span>0</span>
+                </div>
+
                 <div className="large-chart-area">
                   <div className="large-grid-lines">
                     <i /><i /><i /><i /><i />
                   </div>
+
                   <svg viewBox="0 0 700 260" preserveAspectRatio="none">
                     <defs>
                       <linearGradient id="areaGradient" x1="0" x2="0" y1="0" y2="1">
@@ -768,10 +849,12 @@ function HomePage({ openApp }) {
                         <stop offset="100%" stopColor="#0b6041" stopOpacity="0" />
                       </linearGradient>
                     </defs>
+
                     <path
                       d="M0 210 C55 190 65 170 120 184 S190 130 240 150 S310 112 360 128 S430 84 480 102 S550 58 600 78 S660 45 700 50 L700 260 L0 260 Z"
                       fill="url(#areaGradient)"
                     />
+
                     <path
                       d="M0 210 C55 190 65 170 120 184 S190 130 240 150 S310 112 360 128 S430 84 480 102 S550 58 600 78 S660 45 700 50"
                       fill="none"
@@ -780,8 +863,16 @@ function HomePage({ openApp }) {
                       strokeLinecap="round"
                     />
                   </svg>
+
                   <div className="chart-months">
-                    <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span>
+                    <span>Jan</span>
+                    <span>Feb</span>
+                    <span>Mar</span>
+                    <span>Apr</span>
+                    <span>May</span>
+                    <span>Jun</span>
+                    <span>Jul</span>
+                    <span>Aug</span>
                   </div>
                 </div>
               </div>
@@ -795,6 +886,7 @@ function HomePage({ openApp }) {
                 <div className="metric-bar"><i style={{ width: "93.8%" }} /></div>
                 <small>+1.8% from last month</small>
               </Reveal>
+
               <Reveal className="metric-card" delay={90}>
                 <div className="metric-icon"><Trophy size={18} /></div>
                 <span>Top performers</span>
@@ -802,6 +894,7 @@ function HomePage({ openApp }) {
                 <div className="metric-bar"><i style={{ width: "68%" }} /></div>
                 <small>Above 90% average</small>
               </Reveal>
+
               <Reveal className="metric-card" delay={180}>
                 <div className="metric-icon"><CircleHelp size={18} /></div>
                 <span>Attention group</span>
@@ -829,6 +922,7 @@ function HomePage({ openApp }) {
               <strong>TRADITIONAL</strong>
               <strong className="schoolmarks-col">SCHOOLMARKS</strong>
             </div>
+
             {[
               ["Student records", "Scattered files", "Connected profiles"],
               ["Attendance", "Manual registers", "Live visibility"],
@@ -840,7 +934,9 @@ function HomePage({ openApp }) {
               <div className="compare-row" key={label}>
                 <strong>{label}</strong>
                 <span>{old}</span>
-                <span className="schoolmarks-col"><Check size={15} /> {current}</span>
+                <span className="schoolmarks-col">
+                  <Check size={15} /> {current}
+                </span>
               </div>
             ))}
           </Reveal>
@@ -848,10 +944,15 @@ function HomePage({ openApp }) {
 
         <section className="section cta-section">
           <div className="cta-glow" />
+
           <Reveal className="cta-content">
             <div className="eyebrow light">READY WHEN YOU ARE</div>
             <h2>Give your school a clearer view of what matters.</h2>
-            <p>Explore the SchoolMarks workspace and see the entire academic picture in one place.</p>
+            <p>
+              Explore the SchoolMarks workspace and see the entire academic
+              picture in one place.
+            </p>
+
             <button className="light-button" onClick={() => openApp("dashboard")}>
               Open SchoolMarks <ArrowRight size={17} />
             </button>
@@ -871,26 +972,37 @@ function HomePage({ openApp }) {
 function Sidebar({ page, setPage, open, setOpen }) {
   return (
     <>
-      <div className={`sidebar-backdrop ${open ? "show" : ""}`} onClick={() => setOpen(false)} />
+      <div
+        className={`sidebar-backdrop ${open ? "show" : ""}`}
+        onClick={() => setOpen(false)}
+      />
+
       <aside className={`app-sidebar ${open ? "open" : ""}`}>
         <div className="sidebar-head">
           <Logo />
-          <button className="mobile-close" onClick={() => setOpen(false)}><X size={19} /></button>
+
+          <button className="mobile-close" onClick={() => setOpen(false)}>
+            <X size={19} />
+          </button>
         </div>
 
         <div className="school-switcher">
           <div className="school-avatar">JM</div>
+
           <div>
             <strong>JEB School</strong>
             <span>Karachi Campus</span>
           </div>
+
           <ChevronRight size={15} />
         </div>
 
         <div className="sidebar-label">WORKSPACE</div>
+
         <nav className="sidebar-nav">
           {navItems.map((item) => {
             const Icon = item.icon;
+
             return (
               <button
                 key={item.id}
@@ -909,10 +1021,18 @@ function Sidebar({ page, setPage, open, setOpen }) {
         </nav>
 
         <div className="sidebar-bottom">
-          <button><Settings size={17} /> Settings</button>
+          <button>
+            <Settings size={17} /> Settings
+          </button>
+
           <div className="profile-mini">
             <div>FK</div>
-            <span><strong>Faizan Khan</strong><small>Administrator</small></span>
+
+            <span>
+              <strong>Faizan Khan</strong>
+              <small>Administrator</small>
+            </span>
+
             <MoreHorizontal size={17} />
           </div>
         </div>
@@ -927,7 +1047,13 @@ function Topbar({ page, setPage, setSidebarOpen }) {
   return (
     <header className="app-topbar">
       <div className="topbar-left">
-        <button className="mobile-menu" onClick={() => setSidebarOpen(true)}><Menu size={21} /></button>
+        <button
+          className="mobile-menu"
+          onClick={() => setSidebarOpen(true)}
+        >
+          <Menu size={21} />
+        </button>
+
         <div>
           <span>SchoolMarks / Workspace</span>
           <strong>{current?.label || "Overview"}</strong>
@@ -935,9 +1061,20 @@ function Topbar({ page, setPage, setSidebarOpen }) {
       </div>
 
       <div className="topbar-actions">
-        <button className="search-button"><Search size={18} /><span>Search</span><kbd>⌘ K</kbd></button>
-        <button className="icon-button"><Bell size={18} /><i /></button>
-        <button className="top-ai" onClick={() => setPage("ai")}><Sparkles size={15} /> AI Assistant</button>
+        <button className="search-button">
+          <Search size={18} />
+          <span>Search</span>
+          <kbd>⌘ K</kbd>
+        </button>
+
+        <button className="icon-button">
+          <Bell size={18} />
+          <i />
+        </button>
+
+        <button className="top-ai" onClick={() => setPage("ai")}>
+          <Sparkles size={15} /> AI Assistant
+        </button>
       </div>
     </header>
   );
@@ -949,6 +1086,7 @@ function StatCard({ icon: Icon, label, value, trend, negative = false }) {
       <div className="stat-icon"><Icon size={18} /></div>
       <span>{label}</span>
       <strong>{value}</strong>
+
       <div className={`stat-trend ${negative ? "negative" : ""}`}>
         {negative ? <TrendingDown size={13} /> : <TrendingUp size={13} />}
         {trend}
@@ -957,28 +1095,52 @@ function StatCard({ icon: Icon, label, value, trend, negative = false }) {
   );
 }
 
-function DashboardPage({ setPage }) {
+function DashboardPage({ setPage, students }) {
   const [range, setRange] = useState("8 months");
+
+  const average =
+    students.length > 0
+      ? Math.round(
+          students.reduce((total, student) => total + student.avg, 0) /
+            students.length
+        )
+      : 0;
+
+  const attendance =
+    students.length > 0
+      ? (
+          students.reduce((total, student) => total + student.attendance, 0) /
+          students.length
+        ).toFixed(1)
+      : "0.0";
+
+  const riskCount = students.filter((student) => student.status === "At Risk").length;
 
   return (
     <div className="page-stack">
       <div className="page-heading">
         <div>
-          <div className="page-eyebrow">MONDAY · 17 SEPTEMBER 2026</div>
+          <div className="page-eyebrow">17 SEPTEMBER 2026</div>
           <h1>Good morning, Faizan.</h1>
           <p>Here is what is happening across your school today.</p>
         </div>
+
         <div className="heading-actions">
-          <button className="outline-button"><RefreshCcw size={16} /> Refresh</button>
-          <button className="dark-button" onClick={() => setPage("ai")}><Sparkles size={16} /> Ask AI</button>
+          <button className="outline-button">
+            <RefreshCcw size={16} /> Refresh
+          </button>
+
+          <button className="dark-button" onClick={() => setPage("ai")}>
+            <Sparkles size={16} /> Ask AI
+          </button>
         </div>
       </div>
 
       <div className="dashboard-stat-grid">
         <StatCard icon={Users} label="Total students" value="1,248" trend="+8.4%" />
-        <StatCard icon={BarChart3} label="Average performance" value="82.4%" trend="+3.1%" />
-        <StatCard icon={UserCheck} label="Attendance rate" value="93.8%" trend="+1.8%" />
-        <StatCard icon={CircleHelp} label="Students at risk" value="18" trend="-12.2%" negative />
+        <StatCard icon={BarChart3} label="Average performance" value={`${average}%`} trend="+3.1%" />
+        <StatCard icon={UserCheck} label="Attendance rate" value={`${attendance}%`} trend="+1.8%" />
+        <StatCard icon={CircleHelp} label="Students at risk" value={riskCount} trend="-12.2%" negative />
       </div>
 
       <div className="dashboard-grid-main">
@@ -988,16 +1150,26 @@ function DashboardPage({ setPage }) {
               <span>PERFORMANCE OVERVIEW</span>
               <h2>Academic performance</h2>
             </div>
+
             <select value={range} onChange={(event) => setRange(event.target.value)}>
               <option>8 months</option>
               <option>6 months</option>
               <option>3 months</option>
             </select>
           </div>
+
           <div className="dashboard-big-chart">
-            <div className="big-chart-labels"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span></div>
+            <div className="big-chart-labels">
+              <span>100%</span>
+              <span>75%</span>
+              <span>50%</span>
+              <span>25%</span>
+              <span>0%</span>
+            </div>
+
             <div className="big-chart-area">
               {[1, 2, 3, 4, 5].map((item) => <i key={item} />)}
+
               <svg viewBox="0 0 760 260" preserveAspectRatio="none">
                 <path
                   d="M0 214 C60 205 70 174 132 187 S190 148 250 159 S320 116 380 137 S450 92 510 112 S580 68 630 82 S700 48 760 57"
@@ -1006,36 +1178,71 @@ function DashboardPage({ setPage }) {
                   strokeWidth="4"
                   strokeLinecap="round"
                 />
+
                 <path
                   d="M0 214 C60 205 70 174 132 187 S190 148 250 159 S320 116 380 137 S450 92 510 112 S580 68 630 82 S700 48 760 57 L760 260 L0 260 Z"
                   fill="#e7f6ef"
                 />
               </svg>
-              <div className="big-chart-months"><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span></div>
+
+              <div className="big-chart-months">
+                <span>Jan</span>
+                <span>Feb</span>
+                <span>Mar</span>
+                <span>Apr</span>
+                <span>May</span>
+                <span>Jun</span>
+                <span>Jul</span>
+                <span>Aug</span>
+              </div>
             </div>
           </div>
         </div>
 
         <div className="dashboard-ai-card">
-          <div className="dashboard-ai-orb"><Sparkles size={19} /></div>
+          <div className="dashboard-ai-orb">
+            <Sparkles size={19} />
+          </div>
+
           <div className="ai-card-label">AI ACADEMIC PULSE</div>
           <h2>3 signals worth reviewing today.</h2>
+
           <div className="ai-signal">
-            <span className="signal-icon warning"><CircleHelp size={15} /></span>
-            <div><strong>Attendance risk</strong><small>2 students below 80%</small></div>
+            <span className="signal-icon warning">
+              <CircleHelp size={15} />
+            </span>
+            <div>
+              <strong>Attendance risk</strong>
+              <small>2 students below 80%</small>
+            </div>
             <ChevronRight size={15} />
           </div>
+
           <div className="ai-signal">
-            <span className="signal-icon success"><TrendingUp size={15} /></span>
-            <div><strong>Class 9-A improved</strong><small>+6.4% this month</small></div>
+            <span className="signal-icon success">
+              <TrendingUp size={15} />
+            </span>
+            <div>
+              <strong>Class 9-A improved</strong>
+              <small>+6.4% this month</small>
+            </div>
             <ChevronRight size={15} />
           </div>
+
           <div className="ai-signal">
-            <span className="signal-icon neutral"><Lightbulb size={15} /></span>
-            <div><strong>Math needs focus</strong><small>Lowest subject average</small></div>
+            <span className="signal-icon neutral">
+              <Lightbulb size={15} />
+            </span>
+            <div>
+              <strong>Math needs focus</strong>
+              <small>Lowest subject average</small>
+            </div>
             <ChevronRight size={15} />
           </div>
-          <button onClick={() => setPage("ai")}>Explore with AI <ArrowRight size={15} /></button>
+
+          <button onClick={() => setPage("ai")}>
+            Explore with AI <ArrowRight size={15} />
+          </button>
         </div>
       </div>
 
@@ -1046,19 +1253,43 @@ function DashboardPage({ setPage }) {
               <span>STUDENTS</span>
               <h2>Performance snapshot</h2>
             </div>
-            <button className="text-button" onClick={() => setPage("students")}>View all <ArrowRight size={14} /></button>
+
+            <button className="text-button" onClick={() => setPage("students")}>
+              View all <ArrowRight size={14} />
+            </button>
           </div>
+
           <div className="data-table">
             <div className="table-row table-header">
-              <span>Student</span><span>Class</span><span>Average</span><span>Attendance</span><span>Status</span>
+              <span>Student</span>
+              <span>Class</span>
+              <span>Average</span>
+              <span>Attendance</span>
+              <span>Status</span>
             </div>
-            {studentsSeed.map((student) => (
-              <div className="table-row" key={student.name}>
-                <div className="table-student"><span>{student.name.split(" ").map((x) => x[0]).join("")}</span><strong>{student.name}</strong></div>
+
+            {students.slice(0, 6).map((student) => (
+              <div className="table-row" key={student.id}>
+                <div className="table-student">
+                  <span>{student.name.split(" ").map((x) => x[0]).join("")}</span>
+                  <strong>{student.name}</strong>
+                </div>
+
                 <span>{student.className}</span>
                 <strong>{student.avg}%</strong>
                 <span>{student.attendance}%</span>
-                <em className={`status-pill ${student.status === "At Risk" ? "risk" : student.status === "Attention" ? "attention" : ""}`}>{student.status}</em>
+
+                <em
+                  className={`status-pill ${
+                    student.status === "At Risk"
+                      ? "risk"
+                      : student.status === "Attention"
+                        ? "attention"
+                        : ""
+                  }`}
+                >
+                  {student.status}
+                </em>
               </div>
             ))}
           </div>
@@ -1066,9 +1297,13 @@ function DashboardPage({ setPage }) {
 
         <div className="side-card">
           <div className="card-heading">
-            <div><span>UPCOMING</span><h2>Examinations</h2></div>
+            <div>
+              <span>UPCOMING</span>
+              <h2>Examinations</h2>
+            </div>
             <CalendarDays size={18} />
           </div>
+
           {[
             ["18", "Sep", "Mathematics", "09:00 AM"],
             ["20", "Sep", "Computer Science", "10:30 AM"],
@@ -1076,8 +1311,16 @@ function DashboardPage({ setPage }) {
             ["26", "Sep", "English", "11:00 AM"]
           ].map(([day, month, subject, time]) => (
             <div className="exam-mini" key={subject}>
-              <div><strong>{day}</strong><span>{month}</span></div>
-              <span><strong>{subject}</strong><small>{time}</small></span>
+              <div>
+                <strong>{day}</strong>
+                <span>{month}</span>
+              </div>
+
+              <span>
+                <strong>{subject}</strong>
+                <small>{time}</small>
+              </span>
+
               <ChevronRight size={15} />
             </div>
           ))}
@@ -1090,16 +1333,19 @@ function DashboardPage({ setPage }) {
           <div><span>Today's attendance</span><strong>1,171 present</strong></div>
           <small>93.8%</small>
         </div>
+
         <div className="pulse-card">
           <div className="pulse-card-icon"><FileText size={18} /></div>
           <div><span>Marks entered</span><strong>84% complete</strong></div>
           <small>+12 today</small>
         </div>
+
         <div className="pulse-card">
           <div className="pulse-card-icon"><MessageSquareText size={18} /></div>
           <div><span>AI conversations</span><strong>126 this week</strong></div>
           <small>+24%</small>
         </div>
+
         <div className="pulse-card">
           <div className="pulse-card-icon"><Target size={18} /></div>
           <div><span>Academic goals</span><strong>72% on track</strong></div>
@@ -1110,17 +1356,188 @@ function DashboardPage({ setPage }) {
   );
 }
 
-function StudentsPage() {
+function StudentModal({ student, onClose, onSave }) {
+  const [form, setForm] = useState({
+    name: student?.name || "",
+    className: student?.className || "9-A",
+    avg: student?.avg ?? 80,
+    attendance: student?.attendance ?? 90
+  });
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const avg = Math.min(100, Math.max(0, Number(form.avg)));
+    const attendance = Math.min(100, Math.max(0, Number(form.attendance)));
+
+    onSave({
+      ...(student || {}),
+      name: form.name.trim(),
+      className: form.className,
+      avg,
+      attendance,
+      status: getStudentStatus(avg, attendance)
+    });
+  };
+
+  return (
+    <div className="student-modal-backdrop" onMouseDown={onClose}>
+      <div className="add-student-modal" onMouseDown={(event) => event.stopPropagation()}>
+        <div className="modal-head">
+          <div>
+            <span>{student ? "EDIT STUDENT" : "NEW STUDENT"}</span>
+            <h2>{student ? "Edit student" : "Add student"}</h2>
+          </div>
+
+          <button onClick={onClose}>
+            <X size={19} />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="student-form-grid">
+            <label>
+              <span>Student name</span>
+              <input
+                required
+                value={form.name}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    name: event.target.value
+                  }))
+                }
+                placeholder="e.g. Ali Khan"
+              />
+            </label>
+
+            <label>
+              <span>Class</span>
+              <select
+                className="select-field"
+                value={form.className}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    className: event.target.value
+                  }))
+                }
+              >
+                <option>9-A</option>
+                <option>9-B</option>
+                <option>9-C</option>
+                <option>10-A</option>
+                <option>10-B</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Average</span>
+              <input
+                type="number"
+                min="0"
+                max="100"
+                value={form.avg}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    avg: event.target.value
+                  }))
+                }
+              />
+            </label>
+
+            <label>
+              <span>Attendance</span>
+              <input
+                type="number"
+                min="0"
+                max="100"
+                value={form.attendance}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    attendance: event.target.value
+                  }))
+                }
+              />
+            </label>
+          </div>
+
+          <div className="modal-foot">
+            <button type="button" className="outline-button" onClick={onClose}>
+              Cancel
+            </button>
+
+            <button type="submit" className="save-student">
+              <Save size={15} />
+              {student ? "Save student" : "Add student"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function StudentsPage({ students, setStudents }) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingStudent, setEditingStudent] = useState(null);
+  const [menuId, setMenuId] = useState(null);
 
   const filtered = useMemo(() => {
-    return studentsSeed.filter((student) => {
-      const matchesSearch = student.name.toLowerCase().includes(search.toLowerCase()) || student.className.toLowerCase().includes(search.toLowerCase());
-      const matchesFilter = filter === "All" || student.status === filter;
+    return students.filter((student) => {
+      const query = search.toLowerCase();
+
+      const matchesSearch =
+        student.name.toLowerCase().includes(query) ||
+        student.className.toLowerCase().includes(query);
+
+      const matchesFilter =
+        filter === "All" || student.status === filter;
+
       return matchesSearch && matchesFilter;
     });
-  }, [search, filter]);
+  }, [students, search, filter]);
+
+  const openAdd = () => {
+    setEditingStudent(null);
+    setModalOpen(true);
+  };
+
+  const openEdit = (student) => {
+    setEditingStudent(student);
+    setModalOpen(true);
+    setMenuId(null);
+  };
+
+  const saveStudent = (student) => {
+    if (editingStudent) {
+      setStudents((current) =>
+        current.map((item) =>
+          item.id === editingStudent.id ? student : item
+        )
+      );
+    } else {
+      setStudents((current) => [
+        ...current,
+        {
+          ...student,
+          id: Date.now()
+        }
+      ]);
+    }
+
+    setModalOpen(false);
+    setEditingStudent(null);
+  };
+
+  const deleteStudent = (id) => {
+    setStudents((current) => current.filter((student) => student.id !== id));
+    setMenuId(null);
+  };
 
   return (
     <div className="page-stack">
@@ -1130,36 +1547,139 @@ function StudentsPage() {
           <h1>Students</h1>
           <p>Manage student profiles and monitor academic signals.</p>
         </div>
-        <button className="dark-button"><Plus size={16} /> Add student</button>
+
+        <button className="dark-button" onClick={openAdd}>
+          <Plus size={16} /> Add student
+        </button>
       </div>
 
       <div className="toolbar">
-        <div className="search-field"><Search size={17} /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search students or classes..." /></div>
+        <div className="search-field">
+          <Search size={17} />
+          <input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search students or classes..."
+          />
+        </div>
+
         <div className="filter-group">
           {["All", "Excellent", "Good", "Attention", "At Risk"].map((item) => (
-            <button className={filter === item ? "active" : ""} onClick={() => setFilter(item)} key={item}>{item}</button>
+            <button
+              className={filter === item ? "active" : ""}
+              onClick={() => setFilter(item)}
+              key={item}
+            >
+              {item}
+            </button>
           ))}
         </div>
       </div>
 
       <div className="large-table-card">
-        <div className="table-summary"><span>{filtered.length} students shown</span><button><MoreHorizontal size={18} /></button></div>
+        <div className="table-summary">
+          <span>{filtered.length} students shown</span>
+
+          <div className="table-summary-actions">
+            <button>
+              <Filter size={16} />
+            </button>
+
+            <button onClick={openAdd}>
+              <Plus size={17} />
+            </button>
+          </div>
+        </div>
+
         <div className="data-table students-table">
           <div className="table-row table-header">
-            <span>Student</span><span>Class</span><span>Average</span><span>Attendance</span><span>Status</span><span>Action</span>
+            <span>Student</span>
+            <span>Class</span>
+            <span>Average</span>
+            <span>Attendance</span>
+            <span>Status</span>
+            <span>Action</span>
           </div>
-          {filtered.map((student) => (
-            <div className="table-row" key={student.name}>
-              <div className="table-student"><span>{student.name.split(" ").map((x) => x[0]).join("")}</span><strong>{student.name}</strong></div>
-              <span>{student.className}</span>
-              <div className="score-cell"><strong>{student.avg}%</strong><div><i style={{ width: `${student.avg}%` }} /></div></div>
-              <span>{student.attendance}%</span>
-              <em className={`status-pill ${student.status === "At Risk" ? "risk" : student.status === "Attention" ? "attention" : ""}`}>{student.status}</em>
-              <button className="row-action"><MoreHorizontal size={17} /></button>
+
+          {filtered.length === 0 ? (
+            <div className="empty-state">
+              <Search size={22} />
+              <strong>No students found</strong>
+              <span>Try another search or filter.</span>
             </div>
-          ))}
+          ) : (
+            filtered.map((student) => (
+              <div className="table-row" key={student.id}>
+                <div className="table-student">
+                  <span>{student.name.split(" ").map((x) => x[0]).join("")}</span>
+                  <strong>{student.name}</strong>
+                </div>
+
+                <span>{student.className}</span>
+
+                <div className="score-cell">
+                  <strong>{student.avg}%</strong>
+                  <div>
+                    <i style={{ width: `${student.avg}%` }} />
+                  </div>
+                </div>
+
+                <span>{student.attendance}%</span>
+
+                <em
+                  className={`status-pill ${
+                    student.status === "At Risk"
+                      ? "risk"
+                      : student.status === "Attention"
+                        ? "attention"
+                        : ""
+                  }`}
+                >
+                  {student.status}
+                </em>
+
+                <div className="row-menu-wrap">
+                  <button
+                    className="row-action"
+                    onClick={() =>
+                      setMenuId((current) =>
+                        current === student.id ? null : student.id
+                      )
+                    }
+                  >
+                    <MoreHorizontal size={17} />
+                  </button>
+
+                  {menuId === student.id && (
+                    <div className="row-menu">
+                      <button onClick={() => openEdit(student)}>
+                        <Pencil size={14} />
+                        Edit
+                      </button>
+
+                      <button onClick={() => deleteStudent(student.id)}>
+                        <Trash2 size={14} />
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
+
+      {modalOpen && (
+        <StudentModal
+          student={editingStudent}
+          onClose={() => {
+            setModalOpen(false);
+            setEditingStudent(null);
+          }}
+          onSave={saveStudent}
+        />
+      )}
     </div>
   );
 }
@@ -1177,23 +1697,52 @@ function AcademicsPage() {
   return (
     <div className="page-stack">
       <div className="page-heading">
-        <div><div className="page-eyebrow">ACADEMIC MANAGEMENT</div><h1>Academics</h1><p>Keep classes, subjects and curriculum progress aligned.</p></div>
-        <button className="dark-button"><Plus size={16} /> Add subject</button>
+        <div>
+          <div className="page-eyebrow">ACADEMIC MANAGEMENT</div>
+          <h1>Academics</h1>
+          <p>Keep classes, subjects and curriculum progress aligned.</p>
+        </div>
+
+        <button className="dark-button">
+          <Plus size={16} /> Add subject
+        </button>
       </div>
 
       <div className="academic-hero">
-        <div><span>CURRICULUM PROGRESS</span><strong>76%</strong><p>Across all active subjects and classes</p></div>
-        <div className="academic-progress"><i /></div>
-        <div className="academic-meta"><span>Completed <strong>61 units</strong></span><span>Remaining <strong>19 units</strong></span></div>
+        <div>
+          <span>CURRICULUM PROGRESS</span>
+          <strong>76%</strong>
+          <p>Across all active subjects and classes</p>
+        </div>
+
+        <div className="academic-progress">
+          <i />
+        </div>
+
+        <div className="academic-meta">
+          <span>Completed <strong>61 units</strong></span>
+          <span>Remaining <strong>19 units</strong></span>
+        </div>
       </div>
 
       <div className="subject-grid">
         {subjects.map(([name, score, value, status]) => (
           <div className="subject-card" key={name}>
             <div className="subject-icon"><BookOpen size={18} /></div>
-            <div className="subject-head"><span>{name}</span><strong>{score}</strong></div>
-            <div className="subject-bar"><i style={{ width: `${value}%` }} /></div>
-            <div className="subject-foot"><span>Class average</span><em>{status}</em></div>
+
+            <div className="subject-head">
+              <span>{name}</span>
+              <strong>{score}</strong>
+            </div>
+
+            <div className="subject-bar">
+              <i style={{ width: `${value}%` }} />
+            </div>
+
+            <div className="subject-foot">
+              <span>Class average</span>
+              <em>{status}</em>
+            </div>
           </div>
         ))}
       </div>
@@ -1213,8 +1762,15 @@ function ExamsPage() {
   return (
     <div className="page-stack">
       <div className="page-heading">
-        <div><div className="page-eyebrow">EXAMINATIONS</div><h1>Examination center</h1><p>Plan assessments and keep every exam detail visible.</p></div>
-        <button className="dark-button"><Plus size={16} /> Create exam</button>
+        <div>
+          <div className="page-eyebrow">EXAMINATIONS</div>
+          <h1>Examination center</h1>
+          <p>Plan assessments and keep every exam detail visible.</p>
+        </div>
+
+        <button className="dark-button">
+          <Plus size={16} /> Create exam
+        </button>
       </div>
 
       <div className="exam-overview">
@@ -1224,14 +1780,34 @@ function ExamsPage() {
       </div>
 
       <div className="timeline-card">
-        <div className="card-heading"><div><span>EXAM CALENDAR</span><h2>Upcoming assessments</h2></div><button className="outline-button">Calendar view</button></div>
+        <div className="card-heading">
+          <div>
+            <span>EXAM CALENDAR</span>
+            <h2>Upcoming assessments</h2>
+          </div>
+
+          <button className="outline-button">Calendar view</button>
+        </div>
+
         <div className="exam-timeline">
           {exams.map(([day, month, subject, classes, time, status]) => (
             <div className="exam-line" key={subject}>
-              <div className="exam-date"><strong>{day}</strong><span>{month}</span></div>
+              <div className="exam-date">
+                <strong>{day}</strong>
+                <span>{month}</span>
+              </div>
+
               <div className="exam-line-dot" />
-              <div className="exam-info"><strong>{subject}</strong><span>{classes}</span></div>
-              <div className="exam-time"><Clock3 size={14} /> {time}</div>
+
+              <div className="exam-info">
+                <strong>{subject}</strong>
+                <span>{classes}</span>
+              </div>
+
+              <div className="exam-time">
+                <Clock3 size={14} /> {time}
+              </div>
+
               <em className={status === "Draft" ? "draft" : ""}>{status}</em>
             </div>
           ))}
@@ -1247,19 +1823,45 @@ function MarksPage() {
   return (
     <div className="page-stack">
       <div className="page-heading">
-        <div><div className="page-eyebrow">MARKS MANAGEMENT</div><h1>Marks & results</h1><p>Enter, review and publish academic results.</p></div>
-        <button className="dark-button" onClick={() => setSaved(true)}><Check size={16} /> {saved ? "Saved" : "Save changes"}</button>
+        <div>
+          <div className="page-eyebrow">MARKS MANAGEMENT</div>
+          <h1>Marks & results</h1>
+          <p>Enter, review and publish academic results.</p>
+        </div>
+
+        <button className="dark-button" onClick={() => setSaved(true)}>
+          <Check size={16} /> {saved ? "Saved" : "Save changes"}
+        </button>
       </div>
 
       <div className="marks-toolbar">
-        <div><span>EXAMINATION</span><strong>Mid Term Assessment · 2026</strong></div>
-        <div><span>CLASS</span><strong>Grade 9 · All sections</strong></div>
-        <div><span>SUBJECT</span><strong>Computer Science</strong></div>
+        <div>
+          <span>EXAMINATION</span>
+          <strong>Mid Term Assessment · 2026</strong>
+        </div>
+
+        <div>
+          <span>CLASS</span>
+          <strong>Grade 9 · All sections</strong>
+        </div>
+
+        <div>
+          <span>SUBJECT</span>
+          <strong>Computer Science</strong>
+        </div>
       </div>
 
       <div className="marks-card">
         <div className="data-table marks-table">
-          <div className="table-row table-header"><span>Student</span><span>Quiz</span><span>Midterm</span><span>Assignment</span><span>Total</span><span>Grade</span></div>
+          <div className="table-row table-header">
+            <span>Student</span>
+            <span>Quiz</span>
+            <span>Midterm</span>
+            <span>Assignment</span>
+            <span>Total</span>
+            <span>Grade</span>
+          </div>
+
           {[
             ["Ayaan Khan", 18, 44, 18, 80, "A"],
             ["Areeba Khan", 20, 48, 20, 88, "A+"],
@@ -1269,12 +1871,20 @@ function MarksPage() {
             ["Zayan Ahmed", 11, 27, 13, 51, "D"]
           ].map(([name, quiz, mid, assignment, total, grade]) => (
             <div className="table-row" key={name}>
-              <div className="table-student"><span>{name.split(" ").map((x) => x[0]).join("")}</span><strong>{name}</strong></div>
+              <div className="table-student">
+                <span>{name.split(" ").map((x) => x[0]).join("")}</span>
+                <strong>{name}</strong>
+              </div>
+
               <input defaultValue={quiz} />
               <input defaultValue={mid} />
               <input defaultValue={assignment} />
+
               <strong>{total}/100</strong>
-              <em className={`grade-badge ${grade === "D" ? "bad" : ""}`}>{grade}</em>
+
+              <em className={`grade-badge ${grade === "D" ? "bad" : ""}`}>
+                {grade}
+              </em>
             </div>
           ))}
         </div>
@@ -1283,7 +1893,7 @@ function MarksPage() {
   );
 }
 
-function ResultsPage() {
+function ResultsPage({ students }) {
   const distribution = [
     ["A+", 18, "24%"],
     ["A", 32, "42%"],
@@ -1292,11 +1902,22 @@ function ResultsPage() {
     ["D", 2, "2%"]
   ];
 
+  const topStudents = [...students]
+    .filter((student) => student.avg >= 80)
+    .sort((a, b) => b.avg - a.avg);
+
   return (
     <div className="page-stack">
       <div className="page-heading">
-        <div><div className="page-eyebrow">RESULTS INTELLIGENCE</div><h1>Results</h1><p>Understand achievement across your school at a glance.</p></div>
-        <button className="outline-button"><FileText size={16} /> Export report</button>
+        <div>
+          <div className="page-eyebrow">RESULTS INTELLIGENCE</div>
+          <h1>Results</h1>
+          <p>Understand achievement across your school at a glance.</p>
+        </div>
+
+        <button className="outline-button">
+          <FileText size={16} /> Export report
+        </button>
       </div>
 
       <div className="result-stat-grid">
@@ -1308,23 +1929,49 @@ function ResultsPage() {
 
       <div className="results-grid">
         <div className="distribution-card">
-          <div className="card-heading"><div><span>GRADE DISTRIBUTION</span><h2>Class results</h2></div><PieChart size={19} /></div>
+          <div className="card-heading">
+            <div>
+              <span>GRADE DISTRIBUTION</span>
+              <h2>Class results</h2>
+            </div>
+            <PieChart size={19} />
+          </div>
+
           <div className="distribution">
             {distribution.map(([grade, count, percent]) => (
               <div key={grade}>
-                <div className="distribution-label"><strong>{grade}</strong><span>{count} students</span><em>{percent}</em></div>
-                <div><i style={{ width: percent }} /></div>
+                <div className="distribution-label">
+                  <strong>{grade}</strong>
+                  <span>{count} students</span>
+                  <em>{percent}</em>
+                </div>
+
+                <div>
+                  <i style={{ width: percent }} />
+                </div>
               </div>
             ))}
           </div>
         </div>
 
         <div className="top-students-card">
-          <div className="card-heading"><div><span>LEADING STUDENTS</span><h2>Top performers</h2></div><Trophy size={19} /></div>
-          {studentsSeed.filter((x) => x.avg >= 80).sort((a, b) => b.avg - a.avg).map((student, index) => (
-            <div className="top-student" key={student.name}>
+          <div className="card-heading">
+            <div>
+              <span>LEADING STUDENTS</span>
+              <h2>Top performers</h2>
+            </div>
+            <Trophy size={19} />
+          </div>
+
+          {topStudents.map((student, index) => (
+            <div className="top-student" key={student.id}>
               <span className="rank">{String(index + 1).padStart(2, "0")}</span>
-              <div className="table-student"><span>{student.name.slice(0, 2)}</span><strong>{student.name}</strong></div>
+
+              <div className="table-student">
+                <span>{student.name.slice(0, 2)}</span>
+                <strong>{student.name}</strong>
+              </div>
+
               <strong>{student.avg}%</strong>
             </div>
           ))}
@@ -1334,46 +1981,108 @@ function ResultsPage() {
   );
 }
 
-function AttendancePage() {
-  const attendance = [
-    ["Areeba Khan", "9-B", 98, "Excellent"],
-    ["Ayaan Khan", "9-A", 96, "Excellent"],
-    ["Maham Ali", "9-A", 91, "Good"],
-    ["Hassan Raza", "9-C", 88, "Good"],
-    ["Rayyan Malik", "9-C", 79, "Attention"],
-    ["Zayan Ahmed", "9-B", 73, "At Risk"]
-  ];
+function AttendancePage({ students }) {
+  const attendance = [...students].sort((a, b) => b.attendance - a.attendance);
+
+  const average =
+    attendance.length > 0
+      ? (
+          attendance.reduce((total, student) => total + student.attendance, 0) /
+          attendance.length
+        ).toFixed(1)
+      : "0.0";
 
   return (
     <div className="page-stack">
       <div className="page-heading">
-        <div><div className="page-eyebrow">ATTENDANCE INTELLIGENCE</div><h1>Attendance</h1><p>See attendance trends before they become academic problems.</p></div>
-        <button className="dark-button"><Plus size={16} /> Record attendance</button>
+        <div>
+          <div className="page-eyebrow">ATTENDANCE INTELLIGENCE</div>
+          <h1>Attendance</h1>
+          <p>See attendance trends before they become academic problems.</p>
+        </div>
+
+        <button className="dark-button">
+          <Plus size={16} /> Record attendance
+        </button>
       </div>
 
       <div className="attendance-overview">
         <div className="attendance-ring">
-          <div><strong>93.8%</strong><span>overall</span></div>
+          <div>
+            <strong>{average}%</strong>
+            <span>overall</span>
+          </div>
         </div>
-        <div className="attendance-copy"><span>SCHOOL ATTENDANCE</span><h2>Strong overall attendance with a small intervention group.</h2><p>Two students are currently below the 80% threshold and should be reviewed.</p></div>
+
+        <div className="attendance-copy">
+          <span>SCHOOL ATTENDANCE</span>
+          <h2>Strong overall attendance with a small intervention group.</h2>
+          <p>
+            Two students are currently below the 80% threshold and should be reviewed.
+          </p>
+        </div>
+
         <div className="attendance-bars">
-          <div><span>Present</span><strong>93.8%</strong><i><b style={{ width: "93.8%" }} /></i></div>
-          <div><span>Absent</span><strong>4.2%</strong><i><b style={{ width: "4.2%" }} /></i></div>
-          <div><span>Leave</span><strong>2%</strong><i><b style={{ width: "2%" }} /></i></div>
+          <div>
+            <span>Present</span>
+            <strong>93.8%</strong>
+            <i><b style={{ width: "93.8%" }} /></i>
+          </div>
+
+          <div>
+            <span>Absent</span>
+            <strong>4.2%</strong>
+            <i><b style={{ width: "4.2%" }} /></i>
+          </div>
+
+          <div>
+            <span>Leave</span>
+            <strong>2%</strong>
+            <i><b style={{ width: "2%" }} /></i>
+          </div>
         </div>
       </div>
 
       <div className="large-table-card">
-        <div className="table-summary"><span>Student attendance</span><button><Filter size={16} /></button></div>
+        <div className="table-summary">
+          <span>Student attendance</span>
+          <button><Filter size={16} /></button>
+        </div>
+
         <div className="data-table">
-          <div className="table-row table-header"><span>Student</span><span>Class</span><span>Attendance</span><span>Monthly trend</span><span>Status</span></div>
-          {attendance.map(([name, className, percentage, status]) => (
-            <div className="table-row" key={name}>
-              <div className="table-student"><span>{name.slice(0, 2)}</span><strong>{name}</strong></div>
-              <span>{className}</span>
-              <strong>{percentage}%</strong>
-              <div className="trend-line"><i style={{ width: `${percentage}%` }} /></div>
-              <em className={`status-pill ${percentage < 80 ? "risk" : percentage < 90 ? "attention" : ""}`}>{status}</em>
+          <div className="table-row table-header">
+            <span>Student</span>
+            <span>Class</span>
+            <span>Attendance</span>
+            <span>Monthly trend</span>
+            <span>Status</span>
+          </div>
+
+          {attendance.map((student) => (
+            <div className="table-row" key={student.id}>
+              <div className="table-student">
+                <span>{student.name.slice(0, 2)}</span>
+                <strong>{student.name}</strong>
+              </div>
+
+              <span>{student.className}</span>
+              <strong>{student.attendance}%</strong>
+
+              <div className="trend-line">
+                <i style={{ width: `${student.attendance}%` }} />
+              </div>
+
+              <em
+                className={`status-pill ${
+                  student.attendance < 80
+                    ? "risk"
+                    : student.attendance < 90
+                      ? "attention"
+                      : ""
+                }`}
+              >
+                {student.status}
+              </em>
             </div>
           ))}
         </div>
@@ -1395,15 +2104,34 @@ function PerformancePage() {
   return (
     <div className="page-stack">
       <div className="page-heading">
-        <div><div className="page-eyebrow">PERFORMANCE ANALYTICS</div><h1>Performance</h1><p>Understand where students are improving and where support is needed.</p></div>
-        <button className="outline-button"><BarChart3 size={16} /> Generate report</button>
+        <div>
+          <div className="page-eyebrow">PERFORMANCE ANALYTICS</div>
+          <h1>Performance</h1>
+          <p>Understand where students are improving and where support is needed.</p>
+        </div>
+
+        <button className="outline-button">
+          <BarChart3 size={16} /> Generate report
+        </button>
       </div>
 
       <div className="performance-hero">
-        <div className="performance-score"><span>OVERALL SCORE</span><strong>82.4</strong><small>/ 100</small></div>
-        <div className="performance-copy"><h2>Academic momentum is positive.</h2><p>Four of six tracked subjects are moving upward this term.</p><div><TrendingUp size={15} /> +3.1% overall growth</div></div>
+        <div className="performance-score">
+          <span>OVERALL SCORE</span>
+          <strong>82.4</strong>
+          <small>/ 100</small>
+        </div>
+
+        <div className="performance-copy">
+          <h2>Academic momentum is positive.</h2>
+          <p>Four of six tracked subjects are moving upward this term.</p>
+          <div><TrendingUp size={15} /> +3.1% overall growth</div>
+        </div>
+
         <div className="performance-mini-chart">
-          {[42, 50, 47, 62, 58, 70, 67, 78, 74, 88, 82, 94].map((height, index) => <span key={index} style={{ height: `${height}%` }} />)}
+          {[42, 50, 47, 62, 58, 70, 67, 78, 74, 88, 82, 94].map((height, index) => (
+            <span key={index} style={{ height: `${height}%` }} />
+          ))}
         </div>
       </div>
 
@@ -1411,10 +2139,22 @@ function PerformancePage() {
         {subjects.map(([subject, score, change, direction], index) => (
           <Reveal className="performance-subject" delay={index * 50} key={subject}>
             <div className="subject-rank">{String(index + 1).padStart(2, "0")}</div>
-            <div className="performance-subject-name"><strong>{subject}</strong><span>School average</span></div>
+
+            <div className="performance-subject-name">
+              <strong>{subject}</strong>
+              <span>School average</span>
+            </div>
+
             <strong className="performance-score-small">{score}%</strong>
-            <div className="performance-progress"><i style={{ width: `${score}%` }} /></div>
-            <span className={`change ${direction}`} >{direction === "up" ? <TrendingUp size={13} /> : <TrendingDown size={13} />}{change}</span>
+
+            <div className="performance-progress">
+              <i style={{ width: `${score}%` }} />
+            </div>
+
+            <span className={`change ${direction}`}>
+              {direction === "up" ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
+              {change}
+            </span>
           </Reveal>
         ))}
       </div>
@@ -1426,6 +2166,7 @@ function AIPage() {
   const [mode, setMode] = useState("Ask");
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
+
   const [messages, setMessages] = useState([
     {
       role: "assistant",
@@ -1438,8 +2179,18 @@ function AIPage() {
     if (!value.trim() || typing) return;
 
     const prompt = value.trim();
+
     setInput("");
-    setMessages((current) => [...current, { role: "user", text: prompt, time: "Now" }]);
+
+    setMessages((current) => [
+      ...current,
+      {
+        role: "user",
+        text: prompt,
+        time: "Now"
+      }
+    ]);
+
     setTyping(true);
 
     setTimeout(() => {
@@ -1451,6 +2202,7 @@ function AIPage() {
           time: "Now"
         }
       ]);
+
       setTyping(false);
     }, 550);
   };
@@ -1482,19 +2234,35 @@ function AIPage() {
           <h1>AI Workspace</h1>
           <p>Your academic copilot for analysis, planning and everyday school decisions.</p>
         </div>
-        <button className="outline-button" onClick={clearChat}><RefreshCcw size={15} /> Clear conversation</button>
+
+        <button className="outline-button" onClick={clearChat}>
+          <RefreshCcw size={15} /> Clear conversation
+        </button>
       </div>
 
       <div className="ai-workspace">
         <div className="ai-chat">
           <div className="chat-header">
             <div className="chat-agent">
-              <div className="chat-agent-icon"><Sparkles size={18} /></div>
-              <div><strong>SchoolMarks AI</strong><span><i /> Online · Academic assistant</span></div>
+              <div className="chat-agent-icon">
+                <Sparkles size={18} />
+              </div>
+
+              <div>
+                <strong>SchoolMarks AI</strong>
+                <span><i /> Online · Academic assistant</span>
+              </div>
             </div>
+
             <div className="chat-modes">
               {["Ask", "Analyze", "Plan", "Quiz"].map((item) => (
-                <button key={item} className={mode === item ? "active" : ""} onClick={() => setMode(item)}>{item}</button>
+                <button
+                  key={item}
+                  className={mode === item ? "active" : ""}
+                  onClick={() => setMode(item)}
+                >
+                  {item}
+                </button>
               ))}
             </div>
           </div>
@@ -1502,7 +2270,12 @@ function AIPage() {
           <div className="chat-scroll">
             {messages.map((message, index) => (
               <div className={`chat-message ${message.role}`} key={index}>
-                {message.role === "assistant" && <div className="message-avatar"><Sparkles size={14} /></div>}
+                {message.role === "assistant" && (
+                  <div className="message-avatar">
+                    <Sparkles size={14} />
+                  </div>
+                )}
+
                 <div className="message-bubble">
                   {message.role === "user" ? (
                     <p>{message.text}</p>
@@ -1511,13 +2284,18 @@ function AIPage() {
                       <span className="answer-tag">{message.answer.tag}</span>
                       <h3>{message.answer.title}</h3>
                       <p>{message.answer.body}</p>
+
                       <div className="chat-answer-list">
                         {message.answer.bullets.map((bullet, bulletIndex) => (
-                          <div key={bulletIndex}><Check size={14} /><span>{bullet}</span></div>
+                          <div key={bulletIndex}>
+                            <Check size={14} />
+                            <span>{bullet}</span>
+                          </div>
                         ))}
                       </div>
                     </>
                   )}
+
                   <small>{message.time}</small>
                 </div>
               </div>
@@ -1525,8 +2303,15 @@ function AIPage() {
 
             {typing && (
               <div className="chat-message assistant">
-                <div className="message-avatar"><Sparkles size={14} /></div>
-                <div className="typing-bubble"><span /><span /><span /></div>
+                <div className="message-avatar">
+                  <Sparkles size={14} />
+                </div>
+
+                <div className="typing-bubble">
+                  <span />
+                  <span />
+                  <span />
+                </div>
               </div>
             )}
           </div>
@@ -1534,6 +2319,7 @@ function AIPage() {
           <div className="chat-composer">
             <div className="composer-input">
               <Sparkles size={16} />
+
               <input
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
@@ -1548,30 +2334,71 @@ function AIPage() {
                       : "Ask anything about your academic data..."
                 }
               />
-              <button onClick={() => sendMessage()} disabled={!input.trim() || typing}><Send size={17} /></button>
+
+              <button
+                onClick={() => sendMessage()}
+                disabled={!input.trim() || typing}
+              >
+                <Send size={17} />
+              </button>
             </div>
-            <small>SchoolMarks AI uses the academic context available in your workspace.</small>
+
+            <small>
+              SchoolMarks AI uses the academic context available in your workspace.
+            </small>
           </div>
         </div>
 
         <aside className="ai-tools">
-          <div className="ai-tools-head"><span>AI TOOLS</span><Zap size={16} /></div>
+          <div className="ai-tools-head">
+            <span>AI TOOLS</span>
+            <Zap size={16} />
+          </div>
+
           <h2>What do you want to do?</h2>
+
           <div className="tool-list">
             {tools.map(([Icon, title, description, prompt]) => (
-              <button className="tool-item" key={title} onClick={() => sendMessage(prompt)}>
+              <button
+                className="tool-item"
+                key={title}
+                onClick={() => sendMessage(prompt)}
+              >
                 <div><Icon size={17} /></div>
-                <span><strong>{title}</strong><small>{description}</small></span>
+
+                <span>
+                  <strong>{title}</strong>
+                  <small>{description}</small>
+                </span>
+
                 <ArrowUpRight size={14} />
               </button>
             ))}
           </div>
 
           <div className="live-signals">
-            <div><span>LIVE SCHOOL SIGNALS</span><Activity size={15} /></div>
-            <div><i /><span>93.8% attendance</span><strong>Healthy</strong></div>
-            <div><i /><span>82.4% performance</span><strong>Growing</strong></div>
-            <div><i className="warning" /><span>18 at-risk students</span><strong>Review</strong></div>
+            <div>
+              <span>LIVE SCHOOL SIGNALS</span>
+              <Activity size={15} />
+            </div>
+
+            <div>
+              <i />
+              <span>93.8% attendance</span>
+              <strong>Healthy</strong>
+            </div>
+
+            <div>
+              <i />
+              <span>82.4% performance</span>
+              <strong>Growing</strong>
+            </div>
+
+            <div>
+              <i className="warning" />
+              <span>18 at-risk students</span>
+              <strong>Review</strong>
+            </div>
           </div>
         </aside>
       </div>
@@ -1584,10 +2411,23 @@ function AppLayout({ page, setPage, children }) {
 
   return (
     <div className="app-shell">
-      <Sidebar page={page} setPage={setPage} open={sidebarOpen} setOpen={setSidebarOpen} />
+      <Sidebar
+        page={page}
+        setPage={setPage}
+        open={sidebarOpen}
+        setOpen={setSidebarOpen}
+      />
+
       <div className="app-main">
-        <Topbar page={page} setPage={setPage} setSidebarOpen={setSidebarOpen} />
-        <main className="app-content">{children}</main>
+        <Topbar
+          page={page}
+          setPage={setPage}
+          setSidebarOpen={setSidebarOpen}
+        />
+
+        <main className="app-content">
+          {children}
+        </main>
       </div>
     </div>
   );
@@ -1596,34 +2436,85 @@ function AppLayout({ page, setPage, children }) {
 export default function App() {
   const [page, setPage] = useState("home");
 
+  const [students, setStudents] = useState(
+    studentsSeed.map((student) => ({ ...student }))
+  );
+
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({
+      top: 0,
+      behavior: "instant"
+    });
   }, [page]);
 
   const openApp = (target) => {
     setPage(target);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
   };
 
   if (page === "home") {
-    return <HomePage openApp={openApp} />;
+    return (
+      <HomePage
+        openApp={openApp}
+        students={students}
+      />
+    );
   }
 
-  let content = <DashboardPage setPage={setPage} />;
+  let content = (
+    <DashboardPage
+      setPage={setPage}
+      students={students}
+    />
+  );
 
-  if (page === "students") content = <StudentsPage />;
-  if (page === "academics") content = <AcademicsPage />;
-  if (page === "exams") content = <ExamsPage />;
-  if (page === "marks") content = <MarksPage />;
-  if (page === "results") content = <ResultsPage />;
-  if (page === "attendance") content = <AttendancePage />;
-  if (page === "performance") content = <PerformancePage />;
-  if (page === "ai") content = <AIPage />;
+  if (page === "students") {
+    content = (
+      <StudentsPage
+        students={students}
+        setStudents={setStudents}
+      />
+    );
+  }
+
+  if (page === "academics") {
+    content = <AcademicsPage />;
+  }
+
+  if (page === "exams") {
+    content = <ExamsPage />;
+  }
+
+  if (page === "marks") {
+    content = <MarksPage />;
+  }
+
+  if (page === "results") {
+    content = <ResultsPage students={students} />;
+  }
+
+  if (page === "attendance") {
+    content = <AttendancePage students={students} />;
+  }
+
+  if (page === "performance") {
+    content = <PerformancePage />;
+  }
+
+  if (page === "ai") {
+    content = <AIPage />;
+  }
 
   return (
-    <AppLayout page={page} setPage={setPage}>
+    <AppLayout
+      page={page}
+      setPage={setPage}
+    >
       {content}
     </AppLayout>
   );
 }
-
