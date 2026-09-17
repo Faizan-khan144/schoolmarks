@@ -1,873 +1,1430 @@
-import { useMemo, useState } from "react"
-import {
-  ArrowDownUp,
-  ArrowUpRight,
-  Check,
-  ChevronDown,
-  ChevronRight,
-  Filter,
-  MoreHorizontal,
-  Plus,
-  Search,
-  SlidersHorizontal,
-  Sparkles,
-  Trash2,
-  UserRound,
-  Users,
-  X
-} from "lucide-react"
-import "./Students.css"
-
-const initialStudents = [
-  {
-    id: 1,
-    name: "Ayaan Khan",
-    roll: "901",
-    className: "9-A",
-    email: "ayaan@example.com",
-    phone: "+92 300 1234567",
-    attendance: 96,
-    average: 87,
-    status: "Excellent",
-    joined: "01 Aug 2026"
-  },
-  {
-    id: 2,
-    name: "Areeba Khan",
-    roll: "905",
-    className: "9-B",
-    email: "areeba@example.com",
-    phone: "+92 301 4567890",
-    attendance: 98,
-    average: 91,
-    status: "Excellent",
-    joined: "01 Aug 2026"
-  },
-  {
-    id: 3,
-    name: "Maham Ali",
-    roll: "903",
-    className: "9-A",
-    email: "maham@example.com",
-    phone: "+92 302 2345678",
-    attendance: 91,
-    average: 82,
-    status: "Good",
-    joined: "03 Aug 2026"
-  },
-  {
-    id: 4,
-    name: "Hassan Raza",
-    roll: "904",
-    className: "9-C",
-    email: "hassan@example.com",
-    phone: "+92 303 3456789",
-    attendance: 88,
-    average: 76,
-    status: "Good",
-    joined: "04 Aug 2026"
-  },
-  {
-    id: 5,
-    name: "Rayyan Malik",
-    roll: "906",
-    className: "9-C",
-    email: "rayyan@example.com",
-    phone: "+92 304 4567890",
-    attendance: 79,
-    average: 64,
-    status: "Attention",
-    joined: "06 Aug 2026"
-  },
-  {
-    id: 6,
-    name: "Zayan Ahmed",
-    roll: "902",
-    className: "9-B",
-    email: "zayan@example.com",
-    phone: "+92 305 5678901",
-    attendance: 73,
-    average: 51,
-    status: "At Risk",
-    joined: "07 Aug 2026"
-  },
-  {
-    id: 7,
-    name: "Hiba Fatima",
-    roll: "907",
-    className: "9-A",
-    email: "hiba@example.com",
-    phone: "+92 306 6789012",
-    attendance: 94,
-    average: 89,
-    status: "Excellent",
-    joined: "08 Aug 2026"
-  },
-  {
-    id: 8,
-    name: "Hamza Saeed",
-    roll: "908",
-    className: "9-B",
-    email: "hamza@example.com",
-    phone: "+92 307 7890123",
-    attendance: 86,
-    average: 73,
-    status: "Good",
-    joined: "10 Aug 2026"
-  },
-  {
-    id: 9,
-    name: "Alina Noor",
-    roll: "909",
-    className: "9-C",
-    email: "alina@example.com",
-    phone: "+92 308 8901234",
-    attendance: 97,
-    average: 94,
-    status: "Excellent",
-    joined: "11 Aug 2026"
-  }
-]
-
-const classes = ["All classes", "9-A", "9-B", "9-C"]
-
-const getInitials = name =>
-  name
-    .split(" ")
-    .map(part => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase()
-
-const getStatusClass = status => {
-  if (status === "Excellent") return "excellent"
-  if (status === "Good") return "good"
-  if (status === "Attention") return "attention"
-  return "risk"
+.students-page {
+  --students-ink: #172019;
+  --students-muted: #758078;
+  --students-soft: #9da69f;
+  --students-line: #e5eae5;
+  --students-paper: #f6f7f4;
+  --students-surface: #ffffff;
+  --students-green: #174b32;
+  --students-green-2: #2d7050;
+  --students-green-soft: #e7f0ea;
+  position: relative;
+  min-height: 100%;
+  padding: 34px 38px 56px;
+  overflow: hidden;
+  color: var(--students-ink);
+  background:
+    radial-gradient(
+      circle at 90% 0%,
+      rgba(23, 75, 50, 0.06),
+      transparent 27%
+    ),
+    var(--students-paper);
 }
 
-const getAvatarClass = id => {
-  const styles = ["sage", "sand", "lavender", "blue", "rose"]
-  return styles[id % styles.length]
+.students-page-glow {
+  position: absolute;
+  top: -170px;
+  right: -170px;
+  width: 390px;
+  height: 390px;
+  border-radius: 50%;
+  background: rgba(35, 105, 70, 0.035);
+  filter: blur(2px);
+  pointer-events: none;
 }
 
-function SummaryCard({ label, value, detail, icon: Icon, index }) {
-  return (
-    <article
-      className="students-summary-card"
-      style={{ "--student-delay": `${index * 65}ms` }}
-    >
-      <div className="students-summary-top">
-        <span>{label}</span>
-        <i>
-          <Icon size={17} />
-        </i>
-      </div>
-
-      <strong>{value}</strong>
-      <small>{detail}</small>
-    </article>
-  )
+.students-page-header,
+.students-summary-grid,
+.students-directory-card,
+.students-insight {
+  position: relative;
+  z-index: 1;
 }
 
-function StudentAvatar({ student, large = false }) {
-  return (
-    <span
-      className={`student-page-avatar ${getAvatarClass(student.id)} ${
-        large ? "large" : ""
-      }`}
-    >
-      {getInitials(student.name)}
-    </span>
-  )
+.students-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 28px;
+  animation: studentsEnter 0.65s ease both;
 }
 
-function StudentDetails({ student, onClose }) {
-  return (
-    <div className="student-drawer-backdrop" onClick={onClose}>
-      <aside
-        className="student-drawer"
-        onClick={event => event.stopPropagation()}
-      >
-        <div className="student-drawer-top">
-          <span>STUDENT PROFILE</span>
-          <button onClick={onClose}>
-            <X size={18} />
-          </button>
-        </div>
-
-        <div className="student-profile-header">
-          <StudentAvatar student={student} large />
-
-          <div>
-            <h2>{student.name}</h2>
-            <p>
-              Roll {student.roll} · Class {student.className}
-            </p>
-          </div>
-
-          <span className={`student-status ${getStatusClass(student.status)}`}>
-            {student.status}
-          </span>
-        </div>
-
-        <div className="student-profile-stats">
-          <div>
-            <span>Average</span>
-            <strong>{student.average}%</strong>
-            <small>academic performance</small>
-          </div>
-
-          <div>
-            <span>Attendance</span>
-            <strong>{student.attendance}%</strong>
-            <small>current attendance</small>
-          </div>
-        </div>
-
-        <div className="drawer-section">
-          <span className="drawer-label">CONTACT</span>
-
-          <div className="drawer-info">
-            <div>
-              <span>Email</span>
-              <strong>{student.email}</strong>
-            </div>
-
-            <div>
-              <span>Phone</span>
-              <strong>{student.phone}</strong>
-            </div>
-
-            <div>
-              <span>Joined</span>
-              <strong>{student.joined}</strong>
-            </div>
-          </div>
-        </div>
-
-        <div className="drawer-section">
-          <span className="drawer-label">PERFORMANCE SIGNAL</span>
-
-          <div className="student-signal">
-            <div className="signal-icon">
-              <Sparkles size={16} />
-            </div>
-
-            <div>
-              <strong>
-                {student.status === "Excellent"
-                  ? "Consistently performing above target"
-                  : student.status === "At Risk"
-                    ? "Academic intervention recommended"
-                    : "Performance should be monitored"}
-              </strong>
-
-              <p>
-                SchoolMarks can use this profile for performance,
-                attendance and result analysis.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="drawer-actions">
-          <button className="drawer-primary">
-            View full profile
-            <ArrowUpRight size={15} />
-          </button>
-
-          <button className="drawer-secondary">
-            Record marks
-          </button>
-        </div>
-      </aside>
-    </div>
-  )
+.students-page-kicker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 13px;
+  color: var(--students-green);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
 }
 
-function AddStudentModal({ onClose, onAdd }) {
-  const [form, setForm] = useState({
-    name: "",
-    roll: "",
-    className: "9-A",
-    email: "",
-    phone: ""
-  })
-
-  const update = (field, value) => {
-    setForm(current => ({
-      ...current,
-      [field]: value
-    }))
-  }
-
-  const submit = event => {
-    event.preventDefault()
-
-    if (!form.name.trim() || !form.roll.trim()) return
-
-    onAdd({
-      id: Date.now(),
-      name: form.name.trim(),
-      roll: form.roll.trim(),
-      className: form.className,
-      email: form.email.trim() || "Not provided",
-      phone: form.phone.trim() || "Not provided",
-      attendance: 100,
-      average: 0,
-      status: "Attention",
-      joined: new Date().toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric"
-      })
-    })
-
-    onClose()
-  }
-
-  return (
-    <div className="student-modal-backdrop" onClick={onClose}>
-      <div
-        className="add-student-modal"
-        onClick={event => event.stopPropagation()}
-      >
-        <div className="add-modal-header">
-          <div>
-            <span>STUDENT DIRECTORY</span>
-            <h2>Add a student</h2>
-            <p>Create a new student record in SchoolMarks.</p>
-          </div>
-
-          <button onClick={onClose}>
-            <X size={18} />
-          </button>
-        </div>
-
-        <form onSubmit={submit}>
-          <div className="student-form-grid">
-            <label>
-              <span>Full name</span>
-              <input
-                value={form.name}
-                onChange={event => update("name", event.target.value)}
-                placeholder="e.g. Ahmed Khan"
-                autoFocus
-              />
-            </label>
-
-            <label>
-              <span>Roll number</span>
-              <input
-                value={form.roll}
-                onChange={event => update("roll", event.target.value)}
-                placeholder="e.g. 910"
-              />
-            </label>
-
-            <label>
-              <span>Class</span>
-              <div className="select-field">
-                <select
-                  value={form.className}
-                  onChange={event =>
-                    update("className", event.target.value)
-                  }
-                >
-                  <option>9-A</option>
-                  <option>9-B</option>
-                  <option>9-C</option>
-                  <option>10-A</option>
-                  <option>10-B</option>
-                </select>
-                <ChevronDown size={15} />
-              </div>
-            </label>
-
-            <label>
-              <span>Email</span>
-              <input
-                value={form.email}
-                onChange={event => update("email", event.target.value)}
-                placeholder="student@example.com"
-                type="email"
-              />
-            </label>
-
-            <label className="full">
-              <span>Phone</span>
-              <input
-                value={form.phone}
-                onChange={event => update("phone", event.target.value)}
-                placeholder="+92 300 0000000"
-              />
-            </label>
-          </div>
-
-          <div className="add-modal-footer">
-            <button
-              type="button"
-              className="cancel-student"
-              onClick={onClose}
-            >
-              Cancel
-            </button>
-
-            <button type="submit" className="save-student">
-              <Check size={15} />
-              Create student
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  )
+.students-page-kicker span {
+  width: 22px;
+  height: 1px;
+  background: var(--students-green);
 }
 
-export default function Students() {
-  const [students, setStudents] = useState(initialStudents)
-  const [search, setSearch] = useState("")
-  const [selectedClass, setSelectedClass] = useState("All classes")
-  const [statusFilter, setStatusFilter] = useState("All status")
-  const [sortBy, setSortBy] = useState("name")
-  const [selectedStudent, setSelectedStudent] = useState(null)
-  const [showAdd, setShowAdd] = useState(false)
-  const [showFilters, setShowFilters] = useState(false)
-  const [selectedIds, setSelectedIds] = useState([])
+.students-page-header h1 {
+  margin: 0;
+  font-size: clamp(32px, 3vw, 46px);
+  line-height: 1;
+  letter-spacing: -0.06em;
+  font-weight: 700;
+}
 
-  const filteredStudents = useMemo(() => {
-    const query = search.trim().toLowerCase()
+.students-page-header h1 em {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  letter-spacing: -0.045em;
+}
 
-    const result = students.filter(student => {
-      const matchesSearch =
-        !query ||
-        `${student.name} ${student.roll} ${student.className} ${student.email}`
-          .toLowerCase()
-          .includes(query)
+.students-page-header p {
+  max-width: 570px;
+  margin: 12px 0 0;
+  color: var(--students-muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
 
-      const matchesClass =
-        selectedClass === "All classes" ||
-        student.className === selectedClass
+.students-add-button {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 17px;
+  border: 0;
+  border-radius: 13px;
+  color: #fff;
+  background: var(--students-green);
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(23, 75, 50, 0.13);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-      const matchesStatus =
-        statusFilter === "All status" ||
-        student.status === statusFilter
+.students-add-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 17px 34px rgba(23, 75, 50, 0.18);
+}
 
-      return matchesSearch && matchesClass && matchesStatus
-    })
+.students-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 11px;
+  margin-bottom: 14px;
+}
 
-    return [...result].sort((a, b) => {
-      if (sortBy === "performance") return b.average - a.average
-      if (sortBy === "attendance") return b.attendance - a.attendance
-      if (sortBy === "roll") return Number(a.roll) - Number(b.roll)
+.students-summary-card {
+  min-height: 135px;
+  padding: 19px;
+  border: 1px solid var(--students-line);
+  border-radius: 19px;
+  background: rgba(255, 255, 255, 0.84);
+  animation: studentsEnter 0.65s ease var(--student-delay) both;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
 
-      return a.name.localeCompare(b.name)
-    })
-  }, [students, search, selectedClass, statusFilter, sortBy])
+.students-summary-card:hover {
+  transform: translateY(-4px);
+  border-color: #d4ddd6;
+  box-shadow: 0 18px 40px rgba(25, 45, 34, 0.055);
+}
 
-  const stats = useMemo(() => {
-    const average =
-      students.reduce((sum, student) => sum + student.average, 0) /
-      (students.length || 1)
+.students-summary-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-    const attendance =
-      students.reduce((sum, student) => sum + student.attendance, 0) /
-      (students.length || 1)
+.students-summary-top > span {
+  color: #89928c;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
 
-    const atRisk = students.filter(
-      student => student.status === "At Risk"
-    ).length
+.students-summary-top i {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: var(--students-green);
+  background: var(--students-green-soft);
+}
 
-    return {
-      total: students.length,
-      average: average.toFixed(1),
-      attendance: attendance.toFixed(1),
-      atRisk
-    }
-  }, [students])
+.students-summary-card > strong {
+  display: block;
+  margin-top: 14px;
+  font-size: 28px;
+  letter-spacing: -0.055em;
+}
 
-  const allVisibleSelected =
-    filteredStudents.length > 0 &&
-    filteredStudents.every(student => selectedIds.includes(student.id))
+.students-summary-card > small {
+  display: block;
+  margin-top: 6px;
+  color: var(--students-muted);
+  font-size: 9px;
+}
 
-  const toggleStudent = id => {
-    setSelectedIds(current =>
-      current.includes(id)
-        ? current.filter(item => item !== id)
-        : [...current, id]
-    )
+.students-directory-card {
+  border: 1px solid var(--students-line);
+  border-radius: 21px;
+  background: rgba(255, 255, 255, 0.9);
+  overflow: hidden;
+  animation: studentsEnter 0.7s ease 0.16s both;
+}
+
+.students-directory-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 25px 20px;
+}
+
+.students-section-label {
+  color: #8c958f;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.students-directory-header h2 {
+  margin: 7px 0 0;
+  font-size: 20px;
+  letter-spacing: -0.04em;
+}
+
+.students-directory-meta {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  color: var(--students-soft);
+  font-size: 9px;
+}
+
+.selected-delete {
+  height: 31px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  border: 1px solid #efd9d7;
+  border-radius: 9px;
+  color: #a34f47;
+  background: #fff8f7;
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.students-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 25px 18px;
+}
+
+.students-search-box {
+  width: min(400px, 100%);
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 11px;
+  border: 1px solid var(--students-line);
+  border-radius: 10px;
+  color: #9ca59f;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.students-search-box:focus-within {
+  border-color: #b9cbbf;
+  box-shadow: 0 0 0 3px rgba(23, 75, 50, 0.045);
+}
+
+.students-search-box input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--students-ink);
+  font-size: 10px;
+}
+
+.students-search-box input::placeholder {
+  color: #a7aea9;
+}
+
+.students-search-box button {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #9aa29c;
+  cursor: pointer;
+}
+
+.students-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.student-select-wrap,
+.student-sort-wrap {
+  height: 38px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--students-line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--students-muted);
+}
+
+.student-select-wrap select,
+.student-sort-wrap select {
+  height: 100%;
+  appearance: none;
+  border: 0;
+  outline: 0;
+  padding: 0 31px 0 11px;
+  color: var(--students-ink);
+  background: transparent;
+  font-size: 9px;
+  cursor: pointer;
+}
+
+.student-select-wrap svg {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+}
+
+.student-sort-wrap {
+  padding-left: 10px;
+}
+
+.student-sort-wrap select {
+  padding-left: 6px;
+}
+
+.filter-button,
+.more-directory {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid var(--students-line);
+  border-radius: 10px;
+  color: var(--students-muted);
+  background: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-button {
+  padding: 0 11px;
+}
+
+.filter-button:hover,
+.filter-button.active {
+  border-color: #c6d4ca;
+  color: var(--students-green);
+  background: #f5f8f5;
+}
+
+.more-directory {
+  width: 38px;
+}
+
+.advanced-filters {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 15px 25px;
+  border-top: 1px solid var(--students-line);
+  border-bottom: 1px solid var(--students-line);
+  background: #fafbf9;
+  animation: filterOpen 0.25s ease both;
+}
+
+.advanced-filters > div > span {
+  display: block;
+  margin-bottom: 8px;
+  color: #89928c;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.filter-chips button {
+  height: 28px;
+  padding: 0 9px;
+  border: 1px solid var(--students-line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--students-muted);
+  font-size: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.filter-chips button.active {
+  border-color: #bdd0c2;
+  color: var(--students-green);
+  background: var(--students-green-soft);
+}
+
+.clear-filters {
+  border: 0;
+  background: transparent;
+  color: var(--students-green);
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.student-table {
+  width: 100%;
+}
+
+.student-table-header {
+  min-height: 39px;
+  display: grid;
+  grid-template-columns: 30px minmax(230px, 1.55fr) 0.65fr 0.85fr 0.85fr 0.65fr 20px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 25px;
+  background: #f7f8f6;
+  color: #9aa29c;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+}
+
+.student-table-body {
+  padding: 0 10px;
+}
+
+.student-table-row {
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: 30px minmax(230px, 1.55fr) 0.65fr 0.85fr 0.85fr 0.65fr 20px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 15px;
+  border-bottom: 1px solid #edf0ed;
+  animation: rowEnter 0.45s ease var(--row-delay) both;
+  transition: background 0.2s ease;
+}
+
+.student-table-row:hover,
+.student-table-row.selected {
+  background: #f8faf8;
+}
+
+.student-table-row:last-child {
+  border-bottom: 0;
+}
+
+.student-checkbox {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  display: block;
+  cursor: pointer;
+}
+
+.student-checkbox input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.student-checkbox span {
+  width: 16px;
+  height: 16px;
+  display: block;
+  border: 1px solid #d4dbd5;
+  border-radius: 5px;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.student-checkbox input:checked + span {
+  border-color: var(--students-green);
+  background: var(--students-green);
+  box-shadow: inset 0 0 0 3px #fff;
+}
+
+.student-identity {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.student-page-avatar {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.student-page-avatar.large {
+  width: 58px;
+  height: 58px;
+  border-radius: 17px;
+  font-size: 13px;
+}
+
+.student-page-avatar.sage {
+  color: #236345;
+  background: #e4f0e7;
+}
+
+.student-page-avatar.sand {
+  color: #856839;
+  background: #f3ebdb;
+}
+
+.student-page-avatar.lavender {
+  color: #6f557c;
+  background: #eee8f2;
+}
+
+.student-page-avatar.blue {
+  color: #4e6381;
+  background: #e9eef5;
+}
+
+.student-page-avatar.rose {
+  color: #955c58;
+  background: #f5e8e6;
+}
+
+.student-identity > span:last-child {
+  min-width: 0;
+}
+
+.student-identity strong,
+.student-identity small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.student-identity strong {
+  color: var(--students-ink);
+  font-size: 10px;
+}
+
+.student-identity small {
+  max-width: 245px;
+  margin-top: 4px;
+  color: var(--students-muted);
+  font-size: 8px;
+}
+
+.student-class-cell strong,
+.student-class-cell small {
+  display: block;
+}
+
+.student-class-cell strong {
+  font-size: 10px;
+}
+
+.student-class-cell small {
+  margin-top: 4px;
+  color: var(--students-soft);
+  font-size: 8px;
+}
+
+.student-performance-cell strong,
+.student-attendance-cell strong {
+  display: block;
+  font-size: 10px;
+}
+
+.student-performance-cell > div,
+.student-attendance-cell > div {
+  width: 57px;
+  height: 4px;
+  margin-top: 6px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: #e9ede9;
+}
+
+.student-performance-cell > div span,
+.student-attendance-cell > div span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--students-green);
+  transition: width 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.student-attendance-cell > div span {
+  background: #6b8977;
+}
+
+.student-status {
+  width: fit-content;
+  padding: 5px 8px;
+  border-radius: 99px;
+  font-size: 7px;
+  font-weight: 800;
+}
+
+.student-status.excellent {
+  color: #246b46;
+  background: #e5f1e8;
+}
+
+.student-status.good {
+  color: #416d58;
+  background: #edf3ef;
+}
+
+.student-status.attention {
+  color: #916f35;
+  background: #f5efdf;
+}
+
+.student-status.risk {
+  color: #a34f47;
+  background: #f7e9e7;
+}
+
+.student-row-arrow {
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  color: #a2aaa4;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.student-row-arrow:hover {
+  color: var(--students-green);
+  background: var(--students-green-soft);
+}
+
+.students-empty {
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: var(--students-muted);
+  text-align: center;
+}
+
+.students-empty > div {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 11px;
+  border-radius: 13px;
+  color: var(--students-green);
+  background: var(--students-green-soft);
+}
+
+.students-empty strong {
+  font-size: 12px;
+  color: var(--students-ink);
+}
+
+.students-empty p {
+  margin: 5px 0 0;
+  font-size: 9px;
+}
+
+.students-directory-footer {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 0 25px;
+  border-top: 1px solid var(--students-line);
+  color: var(--students-soft);
+  font-size: 9px;
+}
+
+.students-directory-footer strong {
+  color: var(--students-ink);
+}
+
+.directory-pagination {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.directory-pagination button,
+.directory-pagination span {
+  height: 28px;
+  min-width: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--students-line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--students-muted);
+  font-size: 8px;
+}
+
+.directory-pagination button {
+  padding: 0 8px;
+  cursor: pointer;
+}
+
+.directory-pagination button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.directory-pagination span {
+  border-color: #c7d7cc;
+  color: var(--students-green);
+  background: var(--students-green-soft);
+  font-weight: 800;
+}
+
+.students-insight {
+  min-height: 93px;
+  display: grid;
+  grid-template-columns: 45px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+  padding: 18px 21px;
+  border: 1px solid #dfe7e0;
+  border-radius: 19px;
+  background: #eaf2ec;
+  animation: studentsEnter 0.7s ease 0.25s both;
+}
+
+.students-insight-icon {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  color: #fff;
+  background: var(--students-green);
+}
+
+.students-insight > div:nth-child(2) > span {
+  color: #60816e;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.students-insight h3 {
+  margin: 4px 0 3px;
+  font-size: 14px;
+  letter-spacing: -0.02em;
+}
+
+.students-insight p {
+  margin: 0;
+  color: #718078;
+  font-size: 9px;
+}
+
+.students-insight > button {
+  height: 37px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 13px;
+  border: 1px solid #d2dfd5;
+  border-radius: 10px;
+  color: var(--students-green);
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.student-drawer-backdrop,
+.student-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(16, 25, 19, 0.32);
+  backdrop-filter: blur(11px);
+  animation: overlayIn 0.2s ease both;
+}
+
+.student-drawer-backdrop {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.student-drawer {
+  width: min(460px, 100%);
+  height: 100%;
+  overflow-y: auto;
+  padding: 27px;
+  background: #fff;
+  box-shadow: -25px 0 70px rgba(16, 34, 24, 0.13);
+  animation: drawerIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.student-drawer-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.student-drawer-top > span {
+  color: #8b948e;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.student-drawer-top button,
+.add-modal-header > button {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--students-line);
+  border-radius: 9px;
+  color: var(--students-muted);
+  background: #fff;
+  cursor: pointer;
+}
+
+.student-profile-header {
+  display: grid;
+  grid-template-columns: 58px 1fr auto;
+  align-items: center;
+  gap: 13px;
+  margin-top: 32px;
+}
+
+.student-profile-header h2 {
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: -0.045em;
+}
+
+.student-profile-header p {
+  margin: 5px 0 0;
+  color: var(--students-muted);
+  font-size: 9px;
+}
+
+.student-status {
+  width: fit-content;
+}
+
+.student-profile-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-top: 28px;
+}
+
+.student-profile-stats > div {
+  padding: 16px;
+  border: 1px solid var(--students-line);
+  border-radius: 14px;
+  background: #fafbfa;
+}
+
+.student-profile-stats span,
+.student-profile-stats strong,
+.student-profile-stats small {
+  display: block;
+}
+
+.student-profile-stats span {
+  color: var(--students-muted);
+  font-size: 8px;
+}
+
+.student-profile-stats strong {
+  margin-top: 7px;
+  font-size: 22px;
+  letter-spacing: -0.05em;
+}
+
+.student-profile-stats small {
+  margin-top: 3px;
+  color: var(--students-soft);
+  font-size: 8px;
+}
+
+.drawer-section {
+  margin-top: 28px;
+}
+
+.drawer-label {
+  color: #8b948e;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.drawer-info {
+  margin-top: 11px;
+  border: 1px solid var(--students-line);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.drawer-info > div {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--students-line);
+}
+
+.drawer-info > div:last-child {
+  border-bottom: 0;
+}
+
+.drawer-info span,
+.drawer-info strong {
+  display: block;
+}
+
+.drawer-info span {
+  color: var(--students-soft);
+  font-size: 8px;
+}
+
+.drawer-info strong {
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.student-signal {
+  display: flex;
+  gap: 11px;
+  margin-top: 11px;
+  padding: 14px;
+  border-radius: 14px;
+  color: #547061;
+  background: #eaf2ec;
+}
+
+.signal-icon {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  color: #fff;
+  background: var(--students-green);
+}
+
+.student-signal strong {
+  display: block;
+  color: var(--students-ink);
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.student-signal p {
+  margin: 5px 0 0;
+  color: #718078;
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.drawer-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.drawer-primary,
+.drawer-secondary {
+  height: 39px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 13px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.drawer-primary {
+  flex: 1;
+  border: 0;
+  color: #fff;
+  background: var(--students-green);
+}
+
+.drawer-secondary {
+  border: 1px solid var(--students-line);
+  color: var(--students-ink);
+  background: #fff;
+}
+
+.student-modal-backdrop {
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.add-student-modal {
+  width: min(560px, 100%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 23px;
+  background: #fff;
+  box-shadow: 0 35px 90px rgba(15, 35, 24, 0.2);
+  animation: modalIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  overflow: hidden;
+}
+
+.add-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 25px 25px 20px;
+  border-bottom: 1px solid var(--students-line);
+}
+
+.add-modal-header > div > span {
+  color: #8b948e;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.add-modal-header h2 {
+  margin: 7px 0 5px;
+  font-size: 21px;
+  letter-spacing: -0.04em;
+}
+
+.add-modal-header p {
+  margin: 0;
+  color: var(--students-muted);
+  font-size: 9px;
+}
+
+.add-student-modal form {
+  padding: 21px 25px 23px;
+}
+
+.student-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px;
+}
+
+.student-form-grid label {
+  display: block;
+}
+
+.student-form-grid label.full {
+  grid-column: 1 / -1;
+}
+
+.student-form-grid label > span {
+  display: block;
+  margin-bottom: 6px;
+  color: #727d75;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.student-form-grid input,
+.select-field {
+  width: 100%;
+  height: 40px;
+  box-sizing: border-box;
+  border: 1px solid var(--students-line);
+  border-radius: 10px;
+  outline: 0;
+  background: #fbfcfb;
+  color: var(--students-ink);
+  font-size: 10px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.student-form-grid input {
+  padding: 0 11px;
+}
+
+.student-form-grid input:focus,
+.select-field:focus-within {
+  border-color: #afc4b5;
+  box-shadow: 0 0 0 3px rgba(23, 75, 50, 0.045);
+}
+
+.student-form-grid input::placeholder {
+  color: #a8afaa;
+}
+
+.select-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.select-field select {
+  width: 100%;
+  height: 100%;
+  appearance: none;
+  border: 0;
+  outline: 0;
+  padding: 0 31px 0 11px;
+  color: var(--students-ink);
+  background: transparent;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.select-field svg {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+  color: var(--students-muted);
+}
+
+.add-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--students-line);
+}
+
+.cancel-student,
+.save-student {
+  height: 39px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.cancel-student {
+  border: 1px solid var(--students-line);
+  color: var(--students-muted);
+  background: #fff;
+}
+
+.save-student {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  color: #fff;
+  background: var(--students-green);
+}
+
+@keyframes studentsEnter {
+  from {
+    opacity: 0;
+    transform: translateY(13px);
   }
 
-  const toggleAll = () => {
-    const visibleIds = filteredStudents.map(student => student.id)
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-    if (allVisibleSelected) {
-      setSelectedIds(current =>
-        current.filter(id => !visibleIds.includes(id))
-      )
-    } else {
-      setSelectedIds(current => [
-        ...new Set([...current, ...visibleIds])
-      ])
-    }
+@keyframes rowEnter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
   }
 
-  const addStudent = student => {
-    setStudents(current => [...current, student])
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes overlayIn {
+  from {
+    opacity: 0;
   }
 
-  const deleteSelected = () => {
-    if (!selectedIds.length) return
+  to {
+    opacity: 1;
+  }
+}
 
-    setStudents(current =>
-      current.filter(student => !selectedIds.includes(student.id))
-    )
-
-    setSelectedIds([])
+@keyframes drawerIn {
+  from {
+    opacity: 0;
+    transform: translateX(35px);
   }
 
-  return (
-    <div className="students-page">
-      <div className="students-page-glow" />
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 
-      <header className="students-page-header">
-        <div>
-          <div className="students-page-kicker">
-            <span />
-            SCHOOLMARKS · DIRECTORY
-          </div>
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
 
-          <h1>
-            Students
-            <em> directory.</em>
-          </h1>
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
 
-          <p>
-            Keep every student record organized, searchable and ready for
-            action.
-          </p>
-        </div>
+@keyframes filterOpen {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
 
-        <button
-          className="students-add-button"
-          onClick={() => setShowAdd(true)}
-        >
-          <Plus size={17} />
-          Add student
-        </button>
-      </header>
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-      <section className="students-summary-grid">
-        <SummaryCard
-          index={0}
-          label="TOTAL STUDENTS"
-          value={stats.total}
-          detail="active records"
-          icon={Users}
-        />
+@media (max-width: 1180px) {
+  .students-summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-        <SummaryCard
-          index={1}
-          label="AVG. PERFORMANCE"
-          value={`${stats.average}%`}
-          detail="across all students"
-          icon={Sparkles}
-        />
+  .student-table-header,
+  .student-table-row {
+    grid-template-columns:
+      30px
+      minmax(210px, 1.4fr)
+      0.65fr
+      0.8fr
+      0.8fr
+      0.65fr
+      20px;
+  }
+}
 
-        <SummaryCard
-          index={2}
-          label="AVG. ATTENDANCE"
-          value={`${stats.attendance}%`}
-          detail="current school average"
-          icon={Check}
-        />
+@media (max-width: 950px) {
+  .students-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
 
-        <SummaryCard
-          index={3}
-          label="AT RISK"
-          value={stats.atRisk}
-          detail="requires attention"
-          icon={SlidersHorizontal}
-        />
-      </section>
+  .students-search-box {
+    width: 100%;
+  }
 
-      <section className="students-directory-card">
-        <div className="students-directory-header">
-          <div>
-            <span className="students-section-label">ALL RECORDS</span>
-            <h2>Student directory</h2>
-          </div>
+  .students-toolbar-actions {
+    width: 100%;
+  }
 
-          <div className="students-directory-meta">
-            <span>{filteredStudents.length} visible</span>
+  .student-select-wrap,
+  .student-sort-wrap {
+    flex: 1;
+  }
 
-            {selectedIds.length > 0 && (
-              <button
-                className="selected-delete"
-                onClick={deleteSelected}
-              >
-                <Trash2 size={14} />
-                Delete {selectedIds.length}
-              </button>
-            )}
-          </div>
-        </div>
+  .student-select-wrap select,
+  .student-sort-wrap select {
+    width: 100%;
+  }
 
-        <div className="students-toolbar">
-          <div className="students-search-box">
-            <Search size={16} />
-            <input
-              value={search}
-              onChange={event => setSearch(event.target.value)}
-              placeholder="Search by name, roll number or class..."
-            />
+  .student-table {
+    overflow-x: auto;
+  }
 
-            {search && (
-              <button onClick={() => setSearch("")}>
-                <X size={14} />
-              </button>
-            )}
-          </div>
+  .student-table-header,
+  .student-table-row {
+    min-width: 820px;
+  }
+}
 
-          <div className="students-toolbar-actions">
-            <div className="student-select-wrap">
-              <select
-                value={selectedClass}
-                onChange={event => setSelectedClass(event.target.value)}
-              >
-                {classes.map(item => (
-                  <option key={item}>{item}</option>
-                ))}
-              </select>
-              <ChevronDown size={14} />
-            </div>
+@media (max-width: 720px) {
+  .students-page {
+    padding: 25px 18px 42px;
+  }
 
-            <button
-              className={`filter-button ${showFilters ? "active" : ""}`}
-              onClick={() => setShowFilters(current => !current)}
-            >
-              <Filter size={15} />
-              Filters
-            </button>
+  .students-page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 
-            <div className="student-sort-wrap">
-              <ArrowDownUp size={14} />
+  .students-add-button {
+    width: 100%;
+    justify-content: center;
+  }
 
-              <select
-                value={sortBy}
-                onChange={event => setSortBy(event.target.value)}
-              >
-                <option value="name">Name</option>
-                <option value="roll">Roll number</option>
-                <option value="performance">Performance</option>
-                <option value="attendance">Attendance</option>
-              </select>
-            </div>
+  .students-summary-grid {
+    gap: 8px;
+  }
 
-            <button className="more-directory">
-              <MoreHorizontal size={17} />
-            </button>
-          </div>
-        </div>
+  .students-summary-card {
+    min-height: 125px;
+    padding: 15px;
+  }
 
-        {showFilters && (
-          <div className="advanced-filters">
-            <div>
-              <span>Status</span>
+  .students-summary-card > strong {
+    font-size: 25px;
+  }
 
-              <div className="filter-chips">
-                {[
-                  "All status",
-                  "Excellent",
-                  "Good",
-                  "Attention",
-                  "At Risk"
-                ].map(status => (
-                  <button
-                    key={status}
-                    className={
-                      statusFilter === status ? "active" : ""
-                    }
-                    onClick={() => setStatusFilter(status)}
-                  >
-                    {status}
-                  </button>
-                ))}
-              </div>
-            </div>
+  .students-directory-header {
+    padding: 19px;
+  }
 
-            <button
-              className="clear-filters"
-              onClick={() => {
-                setStatusFilter("All status")
-                setSelectedClass("All classes")
-                setSearch("")
-              }}
-            >
-              Clear all
-            </button>
-          </div>
-        )}
+  .students-toolbar {
+    padding: 0 19px 17px;
+  }
 
-        <div className="student-table">
-          <div className="student-table-header">
-            <label className="student-checkbox">
-              <input
-                type="checkbox"
-                checked={allVisibleSelected}
-                onChange={toggleAll}
-              />
-              <span />
-            </label>
+  .students-toolbar-actions {
+    flex-wrap: wrap;
+  }
 
-            <span>STUDENT</span>
-            <span>CLASS</span>
-            <span>PERFORMANCE</span>
-            <span>ATTENDANCE</span>
-            <span>STATUS</span>
-            <span />
-          </div>
+  .student-select-wrap,
+  .student-sort-wrap {
+    flex: 1 1 calc(50% - 5px);
+  }
 
-          <div className="student-table-body">
-            {filteredStudents.map((student, index) => {
-              const selected = selectedIds.includes(student.id)
+  .filter-button {
+    flex: 1;
+  }
 
-              return (
-                <div
-                  className={`student-table-row ${selected ? "selected" : ""}`}
-                  key={student.id}
-                  style={{ "--row-delay": `${index * 35}ms` }}
-                >
-                  <label className="student-checkbox">
-                    <input
-                      type="checkbox"
-                      checked={selected}
-                      onChange={() => toggleStudent(student.id)}
-                    />
-                    <span />
-                  </label>
+  .more-directory {
+    flex: 0 0 38px;
+  }
 
-                  <button
-                    className="student-identity"
-                    onClick={() => setSelectedStudent(student)}
-                  >
-                    <StudentAvatar student={student} />
+  .advanced-filters {
+    padding: 14px 19px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
 
-                    <span>
-                      <strong>{student.name}</strong>
-                      <small>
-                        Roll {student.roll} · {student.email}
-                      </small>
-                    </span>
-                  </button>
+  .students-insight {
+    grid-template-columns: 43px 1fr;
+  }
 
-                  <div className="student-class-cell">
-                    <strong>{student.className}</strong>
-                    <small>2026</small>
-                  </div>
+  .students-insight > button {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+}
 
-                  <div className="student-performance-cell">
-                    <strong>{student.average}%</strong>
-                    <div>
-                      <span
-                        style={{
-                          width: `${student.average}%`
-                        }}
-                      />
-                    </div>
-                  </div>
+@media (max-width: 500px) {
+  .students-page {
+    padding: 20px 13px 35px;
+  }
 
-                  <div className="student-attendance-cell">
-                    <strong>{student.attendance}%</strong>
-                    <div>
-                      <span
-                        style={{
-                          width: `${student.attendance}%`
-                        }}
-                      />
-                    </div>
-                  </div>
+  .students-page-header h1 {
+    font-size: 34px;
+  }
 
-                  <span
-                    className={`student-status ${getStatusClass(
-                      student.status
-                    )}`}
-                  >
-                    {student.status}
-                  </span>
+  .students-summary-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 
-                  <button
-                    className="student-row-arrow"
-                    onClick={() => setSelectedStudent(student)}
-                  >
-                    <ChevronRight size={16} />
-                  </button>
-                </div>
-              )
-            })}
+  .students-summary-card {
+    border-radius: 15px;
+  }
 
-            {!filteredStudents.length && (
-              <div className="students-empty">
-                <div>
-                  <Search size={22} />
-                </div>
-                <strong>No students found</strong>
-                <p>
-                  Try another search term or clear your filters.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
+  .students-summary-top > span {
+    max-width: 70px;
+    line-height: 1.35;
+  }
 
-        <footer className="students-directory-footer">
-          <span>
-            Showing <strong>{filteredStudents.length}</strong> of{" "}
-            <strong>{students.length}</strong> students
-          </span>
+  .students-directory-card {
+    border-radius: 17px;
+  }
 
-          <div className="directory-pagination">
-            <button disabled>Previous</button>
-            <span>1</span>
-            <button>Next</button>
-          </div>
-        </footer>
-      </section>
+  .students-directory-header {
+    align-items: flex-start;
+    gap: 12px;
+    flex-direction: column;
+  }
 
-      <section className="students-insight">
-        <div className="students-insight-icon">
-          <Sparkles size={20} />
-        </div>
+  .students-directory-meta {
+    width: 100%;
+    justify-content: space-between;
+  }
 
-        <div>
-          <span>STUDENT INTELLIGENCE</span>
-          <h3>Everything important starts with a clean student record.</h3>
-          <p>
-            Performance, attendance, marks and results can all be connected
-            to these profiles as the SchoolMarks system grows.
-          </p>
-        </div>
+  .students-directory-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 14px 19px;
+  }
 
-        <button>
-          Explore insights
-          <ArrowUpRight size={15} />
-        </button>
-      </section>
+  .student-profile-header {
+    grid-template-columns: 58px 1fr;
+  }
 
-      {selectedStudent && (
-        <StudentDetails
-          student={selectedStudent}
-          onClose={() => setSelectedStudent(null)}
-        />
-      )}
+  .student-profile-header .student-status {
+    grid-column: 2;
+  }
 
-      {showAdd && (
-        <AddStudentModal
-          onClose={() => setShowAdd(false)}
-          onAdd={addStudent}
-        />
-      )}
-    </div>
-  )
+  .student-drawer {
+    padding: 21px;
+  }
+
+  .student-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .student-form-grid label.full {
+    grid-column: auto;
+  }
 }
