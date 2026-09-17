@@ -1,251 +1,130 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Activity,
-  ArrowDownRight,
   ArrowRight,
+  Award,
   BarChart3,
+  Bell,
   BookOpen,
+  BrainCircuit,
   CalendarDays,
   Check,
   ChevronDown,
   ClipboardCheck,
+  FileText,
   GraduationCap,
   LayoutDashboard,
+  LineChart,
   Menu,
-  PieChart,
   Search,
   Settings,
-  ShieldCheck,
   Sparkles,
+  Target,
   TrendingUp,
   UserCheck,
   Users,
   X,
+  Zap
 } from "lucide-react";
-import Dashboard from "./pages/system/Dashboard";
 
-const navItems = [
-  { label: "Platform", id: "platform" },
-  { label: "Capabilities", id: "capabilities" },
-  { label: "Workflow", id: "workflow" },
-  { label: "Insights", id: "insights" },
-  { label: "FAQ", id: "faq" },
+const students = [
+  { name: "Ayaan Khan", className: "9-A", average: 87, attendance: 96 },
+  { name: "Hania Ahmed", className: "9-A", average: 82, attendance: 93 },
+  { name: "Rayyan Ali", className: "9-B", average: 74, attendance: 88 },
+  { name: "Maham Noor", className: "9-B", average: 69, attendance: 84 },
+  { name: "Zayan Sheikh", className: "9-A", average: 51, attendance: 73 },
+  { name: "Areeba Khan", className: "9-B", average: 58, attendance: 78 }
 ];
 
 const modules = [
   {
     icon: Users,
-    number: "01",
     title: "Student Management",
-    text: "Keep every student record organized across classes, sections, profiles, and academic history.",
+    text: "Keep student profiles, classes, sections and academic records connected."
   },
   {
     icon: BookOpen,
-    number: "02",
     title: "Academic Management",
-    text: "Structure classes, subjects, sections and academic sessions from one connected workspace.",
+    text: "Organize subjects, classes and academic structures from one place."
   },
   {
     icon: ClipboardCheck,
-    number: "03",
     title: "Examinations",
-    text: "Create exams, configure subjects and manage the complete examination cycle without scattered files.",
+    text: "Create examinations, schedules and assessment structures without spreadsheets."
   },
   {
     icon: BarChart3,
-    number: "04",
     title: "Marks & Results",
-    text: "Record marks, calculate results automatically and keep academic records consistent.",
+    text: "Enter marks once and turn them into calculated results automatically."
   },
   {
-    icon: CalendarDays,
-    number: "05",
+    icon: UserCheck,
     title: "Attendance Intelligence",
-    text: "Track attendance patterns and identify students who may need attention before problems grow.",
+    text: "Track attendance patterns and quickly identify students needing attention."
   },
   {
-    icon: TrendingUp,
-    number: "06",
+    icon: LineChart,
     title: "Performance Analytics",
-    text: "Turn marks and attendance into trends, rankings and actionable academic insights.",
-  },
+    text: "See class trends, subject performance, rankings and academic signals."
+  }
 ];
 
 const capabilities = [
   {
-    tier: "T1",
-    label: "Core",
-    title: "Everything a school needs",
-    text: "The operational foundation for managing everyday academic records.",
-    items: [
-      "Student records",
-      "Classes & sections",
-      "Subjects",
-      "Academic sessions",
-      "Examinations",
-      "Attendance records",
-    ],
+    type: "CORE",
+    title: "Everything your school needs",
+    items: ["Student records", "Classes & sections", "Subjects", "Examinations"]
   },
   {
-    tier: "T2",
-    label: "Intelligence",
-    title: "Understand what the data says",
-    text: "Move beyond storing information and start seeing academic patterns.",
-    items: [
-      "Performance analysis",
-      "Attendance insights",
-      "Class rankings",
-      "Subject trends",
-      "At-risk students",
-      "Progress tracking",
-    ],
+    type: "INTELLIGENCE",
+    title: "Turn data into signals",
+    items: ["Performance analysis", "Attendance insights", "Rankings", "At-risk detection"]
   },
   {
-    tier: "T3",
-    label: "Advanced",
-    title: "Make school operations smarter",
-    text: "Connected workflows designed to reduce repetitive administrative work.",
-    items: [
-      "Automatic result calculation",
-      "Smart alerts",
-      "Trend analysis",
-      "Report generation",
-      "Data backup",
-      "Custom school settings",
-    ],
-  },
+    type: "ADVANCED",
+    title: "Move beyond spreadsheets",
+    items: ["Automatic calculations", "Smart alerts", "Trend analysis", "Report generation"]
+  }
 ];
 
 const workflow = [
   {
     number: "01",
     title: "Add your school",
-    text: "Set up your school profile, academic session and basic structure.",
-    icon: SchoolIcon,
+    text: "Set up your school structure and create the academic foundation.",
+    icon: GraduationCap
   },
   {
     number: "02",
     title: "Configure academics",
-    text: "Create classes, sections and subjects around your school's system.",
-    icon: BookOpen,
+    text: "Add classes, sections and subjects so everything has a clear structure.",
+    icon: BookOpen
   },
   {
     number: "03",
     title: "Manage students",
-    text: "Build organized student records that remain connected to academic data.",
-    icon: Users,
+    text: "Create student records and connect them to their academic groups.",
+    icon: Users
   },
   {
     number: "04",
-    title: "Record marks & attendance",
-    text: "Enter examination marks and attendance without maintaining separate sheets.",
-    icon: ClipboardCheck,
+    title: "Record attendance",
+    text: "Track attendance and surface patterns that deserve attention.",
+    icon: CalendarDays
   },
   {
     number: "05",
-    title: "Analyze performance",
-    text: "See trends, rankings, attendance patterns and students needing attention.",
-    icon: TrendingUp,
+    title: "Enter marks",
+    text: "Record assessment marks without calculating everything manually.",
+    icon: ClipboardCheck
   },
   {
     number: "06",
-    title: "Generate results & reports",
-    text: "Turn your school's data into clear results and useful reports.",
-    icon: PieChart,
-  },
+    title: "Generate intelligence",
+    text: "Turn academic data into performance insights, rankings and results.",
+    icon: BrainCircuit
+  }
 ];
-
-const workflowPreview = [
-  {
-    kicker: "School setup",
-    title: "Your school structure",
-    description: "Everything begins with a clean academic foundation.",
-    stats: [
-      ["Classes", "24"],
-      ["Sections", "38"],
-      ["Subjects", "46"],
-    ],
-    accent: "setup",
-  },
-  {
-    kicker: "Academic configuration",
-    title: "Connected academics",
-    description: "Classes, sections and subjects stay linked.",
-    stats: [
-      ["Classes", "24"],
-      ["Subjects", "46"],
-      ["Session", "2026–27"],
-    ],
-    accent: "academic",
-  },
-  {
-    kicker: "Student records",
-    title: "Every student in context",
-    description: "Student records connect directly to academic history.",
-    stats: [
-      ["Students", "1,248"],
-      ["Active", "1,221"],
-      ["New", "42"],
-    ],
-    accent: "students",
-  },
-  {
-    kicker: "Daily records",
-    title: "Marks & attendance",
-    description: "Record everyday academic activity in one workspace.",
-    stats: [
-      ["Present", "94.8%"],
-      ["Marked", "1,183"],
-      ["Pending", "12"],
-    ],
-    accent: "records",
-  },
-  {
-    kicker: "Academic intelligence",
-    title: "See the trends",
-    description: "Connected data becomes useful academic information.",
-    stats: [
-      ["Average", "78.6%"],
-      ["Improved", "+4.8%"],
-      ["Focus", "12"],
-    ],
-    accent: "insight",
-  },
-  {
-    kicker: "Results & reports",
-    title: "Ready to act",
-    description: "Turn school data into structured results and reports.",
-    stats: [
-      ["Results", "08"],
-      ["Reports", "24"],
-      ["Ready", "100%"],
-    ],
-    accent: "results",
-  },
-];
-
-const faqs = [
-  [
-    "Is SchoolMarks a complete school management system?",
-    "SchoolMarks is designed as a connected school management platform covering students, academics, examinations, marks, results, attendance, performance and reporting.",
-  ],
-  [
-    "Does SchoolMarks require a backend?",
-    "The current project can work as a frontend-first system using browser LocalStorage. A backend can be connected later for authentication, multi-user access and cloud synchronization.",
-  ],
-  [
-    "Can schools customize the system?",
-    "Yes. The planned settings system supports school branding, themes, colors, typography and other school-level preferences.",
-  ],
-  [
-    "Can I backup school data?",
-    "The platform architecture is designed to support local export and import so school data can be backed up and restored when needed.",
-  ],
-];
-
-function SchoolIcon({ size = 18 }) {
-  return <GraduationCap size={size} />;
-}
 
 function useInView(options = {}) {
   const ref = useRef(null);
@@ -253,7 +132,6 @@ function useInView(options = {}) {
 
   useEffect(() => {
     const node = ref.current;
-
     if (!node) return;
 
     const observer = new IntersectionObserver(
@@ -263,10 +141,7 @@ function useInView(options = {}) {
           observer.disconnect();
         }
       },
-      {
-        threshold: 0.14,
-        ...options,
-      }
+      { threshold: 0.12, ...options }
     );
 
     observer.observe(node);
@@ -277,17 +152,19 @@ function useInView(options = {}) {
   return [ref, visible];
 }
 
-function useCountUp(target, duration = 1300, enabled = false) {
+function useCountUp(target, duration = 1400, active = true) {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!active) return;
 
+    let start;
     let frame;
-    const start = performance.now();
 
-    const animate = (time) => {
-      const progress = Math.min((time - start) / duration, 1);
+    const animate = (timestamp) => {
+      if (!start) start = timestamp;
+
+      const progress = Math.min((timestamp - start) / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
 
       setValue(Math.round(target * eased));
@@ -300,104 +177,166 @@ function useCountUp(target, duration = 1300, enabled = false) {
     frame = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(frame);
-  }, [target, duration, enabled]);
+  }, [target, duration, active]);
 
   return value;
 }
 
-function Logo({ compact = false }) {
-  return (
-    <div className={`brand ${compact ? "brand-compact" : ""}`}>
-      <img
-        src="/logo/schoolmarks-logo.png"
-        alt="SchoolMarks"
-        className="brand-logo"
-      />
+function useScrollProgress(ref) {
+  const [progress, setProgress] = useState(0);
 
-      {!compact && (
-        <div className="brand-copy">
-          <strong>SchoolMarks</strong>
-          <span>School management, simplified.</span>
-        </div>
-      )}
+  useEffect(() => {
+    const update = () => {
+      const node = ref.current;
+      if (!node) return;
+
+      const rect = node.getBoundingClientRect();
+      const viewport = window.innerHeight;
+      const total = rect.height - viewport * 0.75;
+
+      if (total <= 0) return;
+
+      const raw = (viewport * 0.25 - rect.top) / total;
+      setProgress(Math.max(0, Math.min(1, raw)));
+    };
+
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [ref]);
+
+  return progress;
+}
+
+function Logo({ dark = false }) {
+  return (
+    <div className={`brand ${dark ? "brand-dark" : ""}`}>
+      <div className="brand-mark">
+        <img src="/logo/schoolmarks-logo.png" alt="SchoolMarks" />
+      </div>
+      <div>
+        <strong>SchoolMarks</strong>
+        <span>School Management</span>
+      </div>
     </div>
   );
 }
 
-function AnimatedNumber({ value, suffix = "", decimals = 0 }) {
-  const [ref, visible] = useInView();
-  const count = useCountUp(value, 1300, visible);
-
-  const display =
-    decimals > 0
-      ? (count / Math.pow(10, decimals)).toFixed(decimals)
-      : count.toLocaleString();
-
+function MiniChart({ active = false }) {
   return (
-    <span ref={ref}>
-      {display}
-      {suffix}
-    </span>
-  );
-}
-
-function MiniLineChart({ animated = false }) {
-  return (
-    <svg
-      className={`mini-line-chart ${animated ? "drawn" : ""}`}
-      viewBox="0 0 500 180"
-      preserveAspectRatio="none"
-    >
+    <svg className={`mini-chart ${active ? "chart-active" : ""}`} viewBox="0 0 420 150">
       <path
-        className="chart-stroke"
-        d="M0 135 C45 122 55 128 92 106 C128 85 150 110 184 92 C218 74 236 87 270 70 C305 52 320 70 355 49 C390 28 418 48 450 30 C468 19 486 27 500 18"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="3"
+        className="chart-grid"
+        d="M0 125 H420 M0 90 H420 M0 55 H420 M0 20 H420"
       />
       <path
-        d="M0 135 C45 122 55 128 92 106 C128 85 150 110 184 92 C218 74 236 87 270 70 C305 52 320 70 355 49 C390 28 418 48 450 30 C468 19 486 27 500 18 L500 180 L0 180 Z"
-        fill="currentColor"
-        opacity=".07"
+        className="chart-area"
+        d="M0 121 C35 116 50 104 78 108 C106 112 118 88 147 93 C174 98 188 72 216 79 C244 86 256 58 283 63 C312 69 328 40 351 47 C378 54 393 26 420 31 L420 150 L0 150 Z"
       />
+      <path
+        className="chart-line"
+        d="M0 121 C35 116 50 104 78 108 C106 112 118 88 147 93 C174 98 188 72 216 79 C244 86 256 58 283 63 C312 69 328 40 351 47 C378 54 393 26 420 31"
+      />
+      <circle className="chart-dot" cx="420" cy="31" r="5" />
     </svg>
   );
 }
 
-function ProductDashboardPreview({ compact = false }) {
-  const [active, setActive] = useState("Overview");
-  const [ref, visible] = useInView();
-
-  const nav = [
-    ["Overview", LayoutDashboard],
-    ["Students", Users],
-    ["Academics", BookOpen],
-    ["Examinations", ClipboardCheck],
-    ["Marks", BarChart3],
-    ["Results", PieChart],
-    ["Attendance", CalendarDays],
-    ["Performance", TrendingUp],
-  ];
+function ProgressRing({ value = 94 }) {
+  const circumference = 2 * Math.PI * 43;
+  const offset = circumference - (value / 100) * circumference;
 
   return (
-    <div
-      ref={ref}
-      className={`product-window ${compact ? "product-window-compact" : ""} ${
-        visible ? "is-visible" : ""
-      }`}
-    >
-      <div className="window-topbar">
+    <div className="progress-ring">
+      <svg viewBox="0 0 100 100">
+        <circle className="ring-bg" cx="50" cy="50" r="43" />
+        <circle
+          className="ring-value"
+          cx="50"
+          cy="50"
+          r="43"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+        />
+      </svg>
+      <div className="ring-label">
+        <strong>{value}%</strong>
+        <span>Attendance</span>
+      </div>
+    </div>
+  );
+}
+
+function DashboardPreview({ mode = 5, compact = false }) {
+  const [live, setLive] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLive(true), 700);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const modeData = {
+    0: {
+      title: "School setup",
+      stat1: "1",
+      stat2: "9",
+      stat3: "12",
+      insight: "Your academic workspace is ready."
+    },
+    1: {
+      title: "Academic structure",
+      stat1: "9",
+      stat2: "12",
+      stat3: "24",
+      insight: "Classes, subjects and sections connected."
+    },
+    2: {
+      title: "Student management",
+      stat1: "248",
+      stat2: "9",
+      stat3: "96%",
+      insight: "248 student profiles are connected."
+    },
+    3: {
+      title: "Attendance",
+      stat1: "94.6%",
+      stat2: "234",
+      stat3: "14",
+      insight: "14 students may need attendance follow-up."
+    },
+    4: {
+      title: "Marks & assessments",
+      stat1: "78.4%",
+      stat2: "6",
+      stat3: "92",
+      insight: "Assessment data has been processed."
+    },
+    5: {
+      title: "Academic intelligence",
+      stat1: "82.7%",
+      stat2: "12",
+      stat3: "06",
+      insight: "6 students need additional attention."
+    }
+  };
+
+  const data = modeData[mode] || modeData[5];
+
+  return (
+    <div className={`product-window ${compact ? "product-compact" : ""}`}>
+      <div className="window-top">
         <div className="window-dots">
-          <span />
-          <span />
-          <span />
+          <i />
+          <i />
+          <i />
         </div>
-
-        <div className="window-address">
-          schoolmarks.local/dashboard
-        </div>
-
-        <div className="window-live">
+        <div className="window-url">app.schoolmarks.local/dashboard</div>
+        <div className={`live-status ${live ? "is-live" : ""}`}>
           <span />
           Live
         </div>
@@ -405,182 +344,162 @@ function ProductDashboardPreview({ compact = false }) {
 
       <div className="product-body">
         <aside className="product-sidebar">
-          <div className="product-side-brand">
-            <div className="product-logo-mark">S</div>
-            <div>
-              <strong>SchoolMarks</strong>
-              <span>School Admin</span>
+          <div className="sidebar-brand">
+            <div className="sidebar-logo">S</div>
+            <span>SchoolMarks</span>
+          </div>
+
+          {[
+            [LayoutDashboard, "Overview"],
+            [Users, "Students"],
+            [BookOpen, "Academics"],
+            [ClipboardCheck, "Exams"],
+            [BarChart3, "Marks"],
+            [Award, "Results"],
+            [CalendarDays, "Attendance"],
+            [LineChart, "Performance"],
+            [FileText, "Reports"]
+          ].map(([Icon, label], index) => (
+            <div
+              className={`sidebar-item ${index === 0 ? "active" : ""}`}
+              key={label}
+            >
+              <Icon size={15} />
+              <span>{label}</span>
             </div>
-          </div>
+          ))}
 
-          <div className="product-nav">
-            {nav.map(([label, Icon]) => (
-              <button
-                key={label}
-                className={active === label ? "active" : ""}
-                onClick={() => setActive(label)}
-              >
-                <Icon size={14} />
-                <span>{label}</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="product-side-bottom">
-            <button>
-              <Settings size={14} />
-              Settings
-            </button>
+          <div className="sidebar-bottom">
+            <Settings size={15} />
+            <span>Settings</span>
           </div>
         </aside>
 
         <main className="product-main">
-          <div className="product-heading">
+          <div className="product-header">
             <div>
-              <span className="product-kicker">School overview</span>
-              <h3>Good morning, Admin</h3>
-              <p>Here's what's happening across your school.</p>
+              <span className="eyebrow-small">SCHOOL OVERVIEW</span>
+              <h3>{data.title}</h3>
+              <p>Academic Year 2026–27</p>
             </div>
 
-            <div className="product-avatar">FK</div>
+            <div className="product-user">
+              <div className="notification">
+                <Bell size={15} />
+                <span />
+              </div>
+              <div className="avatar">FK</div>
+            </div>
           </div>
 
           <div className="product-stats">
-            <div className="product-stat stat-enter">
+            <div className="product-stat">
               <span>Total Students</span>
-              <strong>
-                <AnimatedNumber value={1248} />
-              </strong>
-              <small>+42 this session</small>
+              <strong>{data.stat1}</strong>
+              <small>
+                <TrendingUp size={11} /> +8.2%
+              </small>
             </div>
 
-            <div className="product-stat stat-enter">
+            <div className="product-stat">
               <span>Attendance</span>
-              <strong>94.8%</strong>
-              <small>+2.1% this month</small>
+              <strong>{data.stat2}</strong>
+              <small>
+                <TrendingUp size={11} /> Healthy
+              </small>
             </div>
 
-            <div className="product-stat stat-enter">
-              <span>Average Result</span>
-              <strong>78.6%</strong>
-              <small>+4.8% vs previous</small>
-            </div>
-
-            <div className="product-stat stat-enter">
-              <span>Examinations</span>
-              <strong>08</strong>
-              <small>03 upcoming</small>
+            <div className="product-stat">
+              <span>Performance</span>
+              <strong>{data.stat3}</strong>
+              <small>
+                <Activity size={11} /> Updated
+              </small>
             </div>
           </div>
 
           <div className="product-grid">
-            <div className="product-panel chart-panel">
-              <div className="panel-heading">
+            <div className="dashboard-card chart-card">
+              <div className="card-heading">
                 <div>
-                  <span>Performance overview</span>
-                  <strong>Academic trend</strong>
+                  <span>Performance trend</span>
+                  <strong>Class average</strong>
                 </div>
+                <button>Last 6 exams <ChevronDown size={12} /></button>
+              </div>
+              <MiniChart active={live} />
+              <div className="chart-footer">
+                <strong>82.7%</strong>
+                <span>+6.4% from previous period</span>
+              </div>
+            </div>
 
-                <button>
-                  2026–27 <ChevronDown size={12} />
-                </button>
+            <div className="dashboard-card attendance-card">
+              <div className="card-heading">
+                <div>
+                  <span>Attendance health</span>
+                  <strong>Overall attendance</strong>
+                </div>
+              </div>
+              <ProgressRing value={mode === 3 ? 94 : 91} />
+              <div className="attendance-meta">
+                <span><i className="dot-green" /> Present</span>
+                <span><i className="dot-yellow" /> Late</span>
+                <span><i className="dot-red" /> Absent</span>
+              </div>
+            </div>
+
+            <div className="dashboard-card table-card">
+              <div className="card-heading">
+                <div>
+                  <span>Recent students</span>
+                  <strong>Academic performance</strong>
+                </div>
+                <button>View all <ArrowRight size={12} /></button>
               </div>
 
-              <div className="chart-area">
-                <div className="chart-y">
-                  <span>100</span>
-                  <span>75</span>
-                  <span>50</span>
-                  <span>25</span>
-                  <span>0</span>
-                </div>
-
-                <div className="chart">
-                  <div className="chart-grid-line line-1" />
-                  <div className="chart-grid-line line-2" />
-                  <div className="chart-grid-line line-3" />
-                  <div className="chart-grid-line line-4" />
-
-                  <MiniLineChart animated={visible} />
-
-                  <div className="chart-labels">
-                    <span>Aug</span>
-                    <span>Sep</span>
-                    <span>Oct</span>
-                    <span>Nov</span>
-                    <span>Dec</span>
-                    <span>Jan</span>
+              <div className="student-table">
+                {students.slice(0, 4).map((student, index) => (
+                  <div className="student-row" key={student.name}>
+                    <div className="student-person">
+                      <div className={`student-avatar avatar-${index}`}>{student.name.charAt(0)}</div>
+                      <div>
+                        <strong>{student.name}</strong>
+                        <span>{student.className}</span>
+                      </div>
+                    </div>
+                    <div className="student-score">
+                      <strong>{student.average}%</strong>
+                      <span className={student.average < 60 ? "score-risk" : ""}>
+                        {student.average < 60 ? "Attention" : "On track"}
+                      </span>
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
             </div>
 
-            <div className="product-panel attendance-panel">
-              <div className="panel-heading">
+            <div className="dashboard-card intelligence-card">
+              <div className="ai-heading">
+                <div className="ai-icon">
+                  <Sparkles size={16} />
+                </div>
                 <div>
-                  <span>Attendance</span>
-                  <strong>Today's overview</strong>
-                </div>
-
-                <CalendarDays size={16} />
-              </div>
-
-              <div className="attendance-ring">
-                <div className="ring">
-                  <strong>94.8%</strong>
-                  <span>Present</span>
+                  <span>SchoolMarks Intelligence</span>
+                  <strong>Smart insight</strong>
                 </div>
               </div>
 
-              <div className="attendance-legend">
-                <span>
-                  <i /> Present <b>1,183</b>
-                </span>
-                <span>
-                  <i /> Absent <b>65</b>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="product-panel table-panel">
-            <div className="panel-heading">
-              <div>
-                <span>Students</span>
-                <strong>Recent academic activity</strong>
+              <div className="ai-insight">
+                <Target size={15} />
+                <p>{data.insight}</p>
               </div>
 
-              <button>
-                View all <ArrowRight size={12} />
-              </button>
-            </div>
-
-            <div className="mini-table">
-              <div className="mini-row mini-head">
-                <span>Student</span>
-                <span>Class</span>
-                <span>Average</span>
-                <span>Status</span>
+              <div className="ai-tags">
+                <span>Performance</span>
+                <span>Attendance</span>
+                <span>Results</span>
               </div>
-
-              {[
-                ["Ayesha Khan", "IX-A", "91.4%", "Excellent"],
-                ["Ahmed Raza", "IX-B", "86.8%", "Good"],
-                ["Hania Noor", "VIII-A", "79.2%", "On track"],
-                ["Huzaifa Ali", "IX-A", "68.7%", "Needs focus"],
-              ].map((row) => (
-                <div className="mini-row" key={row[0]}>
-                  <span className="student-cell">
-                    <i>{row[0][0]}</i>
-                    {row[0]}
-                  </span>
-                  <span>{row[1]}</span>
-                  <span>{row[2]}</span>
-                  <span>
-                    <em>{row[3]}</em>
-                  </span>
-                </div>
-              ))}
             </div>
           </div>
         </main>
@@ -589,96 +508,131 @@ function ProductDashboardPreview({ compact = false }) {
   );
 }
 
-function WorkflowPreview({ active }) {
-  const item = workflowPreview[active];
+function IntelligenceDemo() {
+  const [query, setQuery] = useState("");
+  const [answer, setAnswer] = useState(
+    "Ask about students, attendance, marks, performance or results."
+  );
+  const [thinking, setThinking] = useState(false);
+
+  const analyze = (value) => {
+    const q = value.toLowerCase();
+
+    if (q.includes("attendance")) {
+      return "Overall attendance is 86.9%. 2 students are below the 80% attention threshold.";
+    }
+
+    if (
+      q.includes("struggling") ||
+      q.includes("attention") ||
+      q.includes("risk")
+    ) {
+      return "6 students need attention. Zayan Sheikh has 51% average and 73% attendance.";
+    }
+
+    if (q.includes("top") || q.includes("best") || q.includes("ranking")) {
+      return "Ayaan Khan currently leads the demo ranking with an 87% academic average.";
+    }
+
+    if (q.includes("subject") || q.includes("weak")) {
+      return "Mathematics is currently the weakest subject area in this demo dataset.";
+    }
+
+    if (q.includes("class") || q.includes("performance")) {
+      return "The overall demo class average is 70.3%, with a positive trend across recent assessments.";
+    }
+
+    if (q.includes("result") || q.includes("marks")) {
+      return "92 assessment records have been processed. The current average is 78.4%.";
+    }
+
+    return "I can analyze students, attendance, marks, performance, rankings and results.";
+  };
+
+  const ask = (preset = query) => {
+    if (!preset.trim()) return;
+
+    setThinking(true);
+
+    setTimeout(() => {
+      setAnswer(analyze(preset));
+      setThinking(false);
+    }, 500);
+  };
 
   return (
-    <div className="workflow-preview-shell">
-      <div className="workflow-preview-top">
-        <div className="preview-browser-dots">
-          <span />
-          <span />
-          <span />
+    <div className="intelligence-demo">
+      <div className="assistant-top">
+        <div className="assistant-brand">
+          <div className="assistant-icon">
+            <BrainCircuit size={20} />
+          </div>
+          <div>
+            <span>SchoolMarks Intelligence</span>
+            <strong>Academic analysis engine</strong>
+          </div>
         </div>
-
-        <span>schoolmarks.local</span>
-
-        <div className="preview-status">
-          <i />
-          Connected
-        </div>
+        <span className="local-badge">Runs locally</span>
       </div>
 
-      <div className={`workflow-preview ${item.accent}`} key={active}>
-        <div className="preview-sidebar">
-          <div className="preview-sidebar-logo">S</div>
+      <div className="assistant-content">
+        <div className="assistant-copy">
+          <span className="section-kicker">INTELLIGENCE LAYER</span>
+          <h3>Ask your school data a question.</h3>
+          <p>
+            A frontend-only intelligence engine can already turn marks,
+            attendance and student data into useful signals.
+          </p>
 
-          <div className="preview-sidebar-lines">
-            <span className="active" />
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
+          <div className="suggestion-row">
+            {[
+              "Who needs attention?",
+              "Show attendance",
+              "Who is ranking first?"
+            ].map((item) => (
+              <button key={item} onClick={() => {
+                setQuery(item);
+                ask(item);
+              }}>
+                {item}
+              </button>
+            ))}
           </div>
         </div>
 
-        <div className="preview-content">
-          <div className="preview-content-header">
-            <div>
-              <span>{item.kicker}</span>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
+        <div className="assistant-panel">
+          <div className="assistant-messages">
+            <div className="assistant-message system-message">
+              <Sparkles size={14} />
+              <span>SchoolMarks Intelligence</span>
             </div>
 
-            <div className="preview-avatar">FK</div>
+            <div className="assistant-message user-message">
+              {query || "Who needs attention?"}
+            </div>
+
+            <div className={`assistant-message result-message ${thinking ? "thinking" : ""}`}>
+              <div className="result-icon">
+                <BrainCircuit size={15} />
+              </div>
+              <p>
+                {thinking ? "Analyzing academic data..." : answer}
+              </p>
+            </div>
           </div>
 
-          <div className="preview-stat-grid">
-            {item.stats.map(([label, value], index) => (
-              <div key={label} className={`preview-stat preview-stat-${index}`}>
-                <span>{label}</span>
-                <strong>{value}</strong>
-                <i />
-              </div>
-            ))}
-          </div>
-
-          <div className="preview-large-panel">
-            <div className="preview-panel-heading">
-              <div>
-                <span>School intelligence</span>
-                <strong>
-                  {active < 4 ? "Connected school data" : "Ready for reporting"}
-                </strong>
-              </div>
-              <Activity size={16} />
-            </div>
-
-            <div className="preview-graph">
-              <div className="preview-graph-grid">
-                <span />
-                <span />
-                <span />
-                <span />
-              </div>
-
-              <svg viewBox="0 0 500 140" preserveAspectRatio="none">
-                <path
-                  d="M0 115 C55 110 65 86 110 94 C155 102 172 65 218 74 C263 84 282 49 320 60 C365 71 382 28 420 42 C454 54 474 25 500 19"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                />
-              </svg>
-            </div>
-
-            <div className="preview-bottom-lines">
-              <span />
-              <span />
-              <span />
-              <span />
-            </div>
+          <div className="assistant-input">
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") ask();
+              }}
+              placeholder="Ask something about your school..."
+            />
+            <button onClick={() => ask()}>
+              <ArrowRight size={16} />
+            </button>
           </div>
         </div>
       </div>
@@ -686,338 +640,312 @@ function WorkflowPreview({ active }) {
   );
 }
 
-function Home({ onOpenDashboard }) {
-  const [openFaq, setOpenFaq] = useState(0);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [workflowActive, setWorkflowActive] = useState(0);
+function WorkflowExperience() {
+  const sectionRef = useRef(null);
+  const progress = useScrollProgress(sectionRef);
+  const active = Math.min(
+    workflow.length - 1,
+    Math.floor(progress * workflow.length)
+  );
 
+  const activeData = workflow[active];
+
+  return (
+    <section className="workflow-section" ref={sectionRef}>
+      <div className="container workflow-container">
+        <div className="workflow-intro reveal">
+          <span className="section-kicker">THE SCHOOLMARKS FLOW</span>
+          <h2>
+            Your school data should
+            <span> move with you.</span>
+          </h2>
+          <p>
+            Instead of jumping between registers, spreadsheets and separate
+            calculations, every academic workflow connects inside one system.
+          </p>
+        </div>
+
+        <div className="workflow-stage">
+          <div className="workflow-steps">
+            {workflow.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  className={`workflow-step ${index === active ? "active" : ""} ${index < active ? "complete" : ""}`}
+                  key={item.number}
+                >
+                  <div className="workflow-number">{item.number}</div>
+                  <div className="workflow-step-content">
+                    <div className="workflow-icon">
+                      <Icon size={17} />
+                    </div>
+                    <div>
+                      <h3>{item.title}</h3>
+                      <p>{item.text}</p>
+                    </div>
+                  </div>
+                  <div className="workflow-line" />
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="workflow-product">
+            <div className="workflow-product-sticky">
+              <div className="workflow-label">
+                <span className="live-dot" />
+                LIVE PRODUCT EXPERIENCE
+              </div>
+
+              <div className="workflow-product-title">
+                <div>
+                  <span>Step {active + 1} / {workflow.length}</span>
+                  <h3>{activeData.title}</h3>
+                </div>
+                <div className="workflow-progress">
+                  <span style={{ width: `${progress * 100}%` }} />
+                </div>
+              </div>
+
+              <DashboardPreview mode={active} compact />
+
+              <div className="workflow-floating-note">
+                <Sparkles size={14} />
+                <span>Product state updates as you scroll</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Home({ onOpenDashboard }) {
   const [heroRef, heroVisible] = useInView();
   const [problemRef, problemVisible] = useInView();
-  const [solutionRef, solutionVisible] = useInView();
+  const [modulesRef, modulesVisible] = useInView();
   const [capabilitiesRef, capabilitiesVisible] = useInView();
-  const [insightRef, insightVisible] = useInView();
-  const [comparisonRef, comparisonVisible] = useInView();
+  const [intelRef, intelVisible] = useInView();
+  const [compareRef, compareVisible] = useInView();
 
-  useEffect(() => {
-    const elements = document.querySelectorAll("[data-workflow-step]");
+  const studentsCount = useCountUp(248, 1300, heroVisible);
+  const classesCount = useCountUp(12, 1000, heroVisible);
+  const performanceCount = useCountUp(82, 1200, heroVisible);
 
-    if (!elements.length) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = Number(entry.target.dataset.workflowStep);
-            setWorkflowActive(index);
-          }
-        });
-      },
-      {
-        threshold: 0.55,
-        rootMargin: "-15% 0px -35% 0px",
-      }
-    );
-
-    elements.forEach((element) => observer.observe(element));
-
-    return () => observer.disconnect();
-  }, []);
+  const [mobileMenu, setMobileMenu] = useState(false);
 
   const scrollTo = (id) => {
-    document.getElementById(id)?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-
-    setMenuOpen(false);
+    setMobileMenu(false);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <div className="site-shell">
-      <div className="announcement">
-        <div className="container announcement-inner">
-          <span className="announcement-dot" />
-          <span>SchoolMarks · A connected school management platform</span>
-
-          <button onClick={() => scrollTo("platform")}>
-            Explore platform <ArrowRight size={13} />
-          </button>
-        </div>
-      </div>
-
-      <header className="site-header">
+    <div className="site">
+      <nav className="public-nav">
         <div className="container nav-inner">
           <Logo />
 
-          <nav className={menuOpen ? "mobile-open" : ""}>
-            {navItems.map((item) => (
-              <button key={item.id} onClick={() => scrollTo(item.id)}>
-                {item.label}
-              </button>
-            ))}
-
-            <button className="nav-mobile-cta" onClick={onOpenDashboard}>
-              Open platform <ArrowRight size={15} />
-            </button>
-          </nav>
-
-          <div className="nav-actions">
-            <button className="nav-link-button" onClick={() => scrollTo("faq")}>
-              Questions?
-            </button>
-
-            <button
-              className="button button-dark"
-              onClick={onOpenDashboard}
-            >
-              Open platform
-              <ArrowRight size={15} />
-            </button>
+          <div className={`nav-links ${mobileMenu ? "mobile-open" : ""}`}>
+            <button onClick={() => scrollTo("features")}>Platform</button>
+            <button onClick={() => scrollTo("workflow")}>How it works</button>
+            <button onClick={() => scrollTo("intelligence")}>Intelligence</button>
+            <button onClick={() => scrollTo("about")}>Why SchoolMarks</button>
           </div>
 
-          <button
-            className="mobile-menu-button"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            {menuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+          <div className="nav-actions">
+            <button className="nav-login" onClick={onOpenDashboard}>
+              Open platform
+            </button>
+            <button className="nav-menu" onClick={() => setMobileMenu(!mobileMenu)}>
+              {mobileMenu ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
-      </header>
+      </nav>
 
       <main>
-        <section
-          className={`hero ${heroVisible ? "is-visible" : ""}`}
-          ref={heroRef}
-        >
+        <section className="hero" ref={heroRef}>
+          <div className="hero-grid" />
           <div className="hero-orb orb-one" />
           <div className="hero-orb orb-two" />
-          <div className="hero-grid-lines" />
 
-          <div className="container hero-grid">
-            <div className="hero-content">
-              <div className="eyebrow hero-reveal">
-                <Sparkles size={14} />
-                The intelligence layer for modern schools
+          <div className="container hero-container">
+            <div className={`hero-copy ${heroVisible ? "visible" : ""}`}>
+              <div className="hero-eyebrow">
+                <span className="status-dot" />
+                Built for modern schools
               </div>
 
-              <h1 className="hero-reveal delay-1">
-                Run your school
-                <span> from one connected system.</span>
+              <h1>
+                The intelligence layer
+                <span> for modern schools.</span>
               </h1>
 
-              <p className="hero-description hero-reveal delay-2">
-                Students, academics, attendance, examinations, marks,
-                results and performance — connected in one school management
-                platform built to make school operations clearer.
+              <p>
+                Students, academics, attendance, examinations and performance —
+                connected in one school management platform.
               </p>
 
-              <div className="hero-actions hero-reveal delay-3">
-                <button
-                  className="button button-primary"
-                  onClick={onOpenDashboard}
-                >
+              <div className="hero-actions">
+                <button className="primary-button" onClick={onOpenDashboard}>
                   Open SchoolMarks
                   <ArrowRight size={17} />
                 </button>
 
-                <button
-                  className="text-button"
-                  onClick={() => scrollTo("platform")}
-                >
+                <button className="secondary-button" onClick={() => scrollTo("workflow")}>
                   Explore the platform
-                  <ArrowDownRight size={16} />
                 </button>
               </div>
 
-              <div className="hero-proof hero-reveal delay-4">
-                <div className="proof-item">
-                  <strong>01</strong>
-                  <span>Unified records</span>
+              <div className="hero-trust">
+                <div>
+                  <strong>{studentsCount}+</strong>
+                  <span>Student records</span>
                 </div>
-
-                <div className="proof-item">
-                  <strong>02</strong>
-                  <span>Academic intelligence</span>
+                <div>
+                  <strong>{classesCount}</strong>
+                  <span>Academic groups</span>
                 </div>
-
-                <div className="proof-item">
-                  <strong>03</strong>
-                  <span>Clear reporting</span>
+                <div>
+                  <strong>{performanceCount}%</strong>
+                  <span>Demo performance</span>
                 </div>
               </div>
             </div>
 
-            <div className="hero-visual hero-reveal delay-2">
-              <div className="hero-visual-label">
-                <span className="live-dot" />
-                Live platform preview
+            <div className={`hero-product ${heroVisible ? "visible" : ""}`}>
+              <div className="hero-product-glow" />
+              <div className="floating-pill pill-top">
+                <Sparkles size={14} />
+                <span>Live intelligence</span>
               </div>
 
-              <ProductDashboardPreview />
+              <DashboardPreview />
 
-              <div className="floating-card floating-card-one">
-                <div className="floating-icon">
-                  <TrendingUp size={16} />
-                </div>
-
-                <div>
-                  <span>Performance</span>
-                  <strong>+12.4%</strong>
-                </div>
-              </div>
-
-              <div className="floating-card floating-card-two">
-                <div className="floating-icon">
-                  <UserCheck size={16} />
-                </div>
-
-                <div>
-                  <span>Attendance today</span>
-                  <strong>94.8%</strong>
-                </div>
+              <div className="floating-pill pill-bottom">
+                <TrendingUp size={14} />
+                <span>Performance +6.4%</span>
               </div>
             </div>
           </div>
 
-          <div className="container hero-bottom hero-reveal delay-4">
-            <span>Designed around the complete school workflow</span>
+          <div className="hero-scroll">
+            <span>Scroll to explore</span>
+            <div className="scroll-line"><i /></div>
+          </div>
+        </section>
 
+        <section className="trust-strip">
+          <div className="container trust-inner">
+            <span>ONE PLATFORM FOR</span>
             <div>
-              <span>Students</span>
+              <span>Schools</span>
               <span>Academics</span>
               <span>Examinations</span>
-              <span>Results</span>
               <span>Attendance</span>
-              <span>Analytics</span>
+              <span>Performance</span>
+              <span>Results</span>
             </div>
           </div>
         </section>
 
-        <section
-          className={`problem-section section-light reveal-section ${
-            problemVisible ? "is-visible" : ""
-          }`}
-          ref={problemRef}
-        >
+        <section className="problem-section section" ref={problemRef}>
           <div className="container">
-            <div className="section-heading centered">
-              <span className="section-number">01 / THE PROBLEM</span>
+            <div className={`problem-layout ${problemVisible ? "visible" : ""}`}>
+              <div className="section-copy">
+                <span className="section-kicker">THE PROBLEM</span>
+                <h2>
+                  School data shouldn't
+                  <span> live everywhere.</span>
+                </h2>
+                <p>
+                  Paper registers, scattered spreadsheets, manual calculations
+                  and disconnected attendance records make simple academic
+                  decisions harder than they should be.
+                </p>
 
-              <h2>
-                School data shouldn't live
-                <span> in six different places.</span>
-              </h2>
-
-              <p>
-                Paper registers, spreadsheets, manual calculations and
-                disconnected records make everyday school management harder
-                than it needs to be.
-              </p>
-            </div>
-
-            <div className="problem-grid">
-              {[
-                [
-                  "01",
-                  "Scattered records",
-                  "Student information ends up across registers, files, spreadsheets and different systems.",
-                  "Paper + spreadsheets",
-                ],
-                [
-                  "02",
-                  "Manual calculations",
-                  "Marks, percentages, grades and rankings can turn result preparation into repetitive administrative work.",
-                  "Repetitive work",
-                ],
-                [
-                  "03",
-                  "Limited visibility",
-                  "Raw attendance and marks don't automatically explain what is happening with student performance.",
-                  "Data without insight",
-                ],
-                [
-                  "04",
-                  "Delayed decisions",
-                  "When information isn't connected, identifying academic trends or students needing attention takes longer.",
-                  "Decisions come late",
-                ],
-              ].map(([number, title, text, line], index) => (
-                <div
-                  className="problem-card reveal-card"
-                  style={{ "--delay": `${index * 100}ms` }}
-                  key={number}
-                >
-                  <span>{number}</span>
-                  <h3>{title}</h3>
-                  <p>{text}</p>
-
-                  <div className="problem-line">
-                    <i />
-                    {line}
-                  </div>
+                <div className="problem-list">
+                  {[
+                    ["01", "Paper registers", "Information gets trapped in physical records."],
+                    ["02", "Scattered spreadsheets", "Different files create different versions of the truth."],
+                    ["03", "Manual calculations", "Results take unnecessary time to prepare."],
+                    ["04", "No performance visibility", "Important student signals stay hidden."]
+                  ].map(([number, title, text]) => (
+                    <div className="problem-item" key={number}>
+                      <span>{number}</span>
+                      <div>
+                        <strong>{title}</strong>
+                        <p>{text}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-
-            <div className="problem-conclusion reveal-card">
-              <div>
-                <span>THE SHIFT</span>
-                <strong>
-                  From managing records to understanding them.
-                </strong>
               </div>
 
-              <ArrowRight size={20} />
+              <div className="problem-visual">
+                <div className="scattered-card card-paper">
+                  <FileText size={18} />
+                  <span>Attendance Register</span>
+                  <small>38 pages</small>
+                </div>
+
+                <div className="scattered-card card-sheet">
+                  <BarChart3 size={18} />
+                  <span>Marks.xlsx</span>
+                  <small>Last edited yesterday</small>
+                </div>
+
+                <div className="scattered-card card-notice">
+                  <Bell size={18} />
+                  <span>Teacher message</span>
+                  <small>“Which students are below 60%?”</small>
+                </div>
+
+                <div className="convergence">
+                  <div className="convergence-ring">
+                    <div>
+                      <Sparkles size={22} />
+                    </div>
+                  </div>
+                  <span>SchoolMarks</span>
+                  <strong>One connected system</strong>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        <section
-          className={`solution-section reveal-section ${
-            solutionVisible ? "is-visible" : ""
-          }`}
-          ref={solutionRef}
-          id="platform"
-        >
+        <section className="solution-section section" id="features" ref={modulesRef}>
           <div className="container">
-            <div className="section-heading">
-              <span className="section-number">02 / THE SOLUTION</span>
-
-              <h2>
-                One platform for the
-                <span> whole school.</span>
-              </h2>
-
+            <div className={`section-heading ${modulesVisible ? "visible" : ""}`}>
+              <div>
+                <span className="section-kicker">THE SOLUTION</span>
+                <h2>
+                  One platform.
+                  <span> Every school workflow.</span>
+                </h2>
+              </div>
               <p>
-                SchoolMarks brings the core academic and administrative
-                workflows together so every piece of information has context.
+                SchoolMarks connects the everyday operations of a school so
+                your team can spend less time managing data and more time using it.
               </p>
             </div>
 
-            <div className="module-grid">
+            <div className={`module-grid ${modulesVisible ? "visible" : ""}`}>
               {modules.map((module, index) => {
                 const Icon = module.icon;
 
                 return (
-                  <div
-                    className="module-card reveal-card"
-                    style={{ "--delay": `${index * 90}ms` }}
-                    key={module.number}
-                  >
-                    <div className="module-top">
-                      <div className="module-icon">
-                        <Icon size={19} />
-                      </div>
-
-                      <span>{module.number}</span>
+                  <div className="module-card" key={module.title}>
+                    <div className="module-number">0{index + 1}</div>
+                    <div className="module-icon">
+                      <Icon size={20} />
                     </div>
-
                     <h3>{module.title}</h3>
                     <p>{module.text}</p>
-
-                    <div className="module-link">
-                      Explore module
-                      <ArrowRight size={14} />
+                    <div className="module-arrow">
+                      <ArrowRight size={15} />
                     </div>
                   </div>
                 );
@@ -1026,408 +954,179 @@ function Home({ onOpenDashboard }) {
           </div>
         </section>
 
-        <section className="platform-showcase">
-          <div className="container">
-            <div className="showcase-intro">
-              <div>
-                <span className="section-number">
-                  03 / INSIDE THE PLATFORM
-                </span>
+        <WorkflowExperience />
 
+        <section className="capabilities-section section" ref={capabilitiesRef}>
+          <div className="container">
+            <div className={`section-heading ${capabilitiesVisible ? "visible" : ""}`}>
+              <div>
+                <span className="section-kicker">CAPABILITY STACK</span>
                 <h2>
-                  See your school
-                  <span> at a glance.</span>
+                  Start simple.
+                  <span> Grow into intelligence.</span>
                 </h2>
               </div>
-
               <p>
-                A clear operational view for administrators — built around the
-                information schools actually need every day.
+                The foundation handles school operations. The intelligence layer
+                helps you understand what the data is saying.
               </p>
             </div>
 
-            <div className="showcase-window showcase-reveal">
-              <ProductDashboardPreview />
-            </div>
-
-            <div className="showcase-notes">
-              <div>
-                <strong>01</strong>
-                <span>Live overview</span>
-                <p>
-                  Key school metrics without digging through records.
-                </p>
-              </div>
-
-              <div>
-                <strong>02</strong>
-                <span>Connected records</span>
-                <p>
-                  Students, exams and results remain part of one system.
-                </p>
-              </div>
-
-              <div>
-                <strong>03</strong>
-                <span>Actionable insight</span>
-                <p>
-                  Performance information becomes easier to understand.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          className={`capabilities-section reveal-section ${
-            capabilitiesVisible ? "is-visible" : ""
-          }`}
-          ref={capabilitiesRef}
-          id="capabilities"
-        >
-          <div className="container">
-            <div className="section-heading centered">
-              <span className="section-number">04 / CAPABILITY STACK</span>
-
-              <h2>
-                From must-haves
-                <span> to intelligence.</span>
-              </h2>
-
-              <p>
-                Every layer builds on the previous one — from reliable school
-                records to deeper academic understanding.
-              </p>
-            </div>
-
-            <div className="capability-grid">
+            <div className={`capability-grid ${capabilitiesVisible ? "visible" : ""}`}>
               {capabilities.map((capability, index) => (
-                <div
-                  className="capability-card reveal-card"
-                  style={{ "--delay": `${index * 140}ms` }}
-                  key={capability.tier}
-                >
-                  <div className="capability-header">
-                    <div>
-                      <span>{capability.tier}</span>
-                      <small>{capability.label}</small>
-                    </div>
-
-                    <ArrowDownRight size={18} />
-                  </div>
-
+                <div className={`capability-card capability-${index}`} key={capability.type}>
+                  <span className="capability-type">{capability.type}</span>
+                  <div className="capability-line" />
                   <h3>{capability.title}</h3>
-                  <p>{capability.text}</p>
-
-                  <div className="capability-list">
-                    {capability.items.map((item, itemIndex) => (
-                      <div
-                        key={item}
-                        style={{
-                          "--item-delay": `${itemIndex * 50}ms`,
-                        }}
-                      >
+                  <ul>
+                    {capability.items.map((item) => (
+                      <li key={item}>
                         <Check size={14} />
-                        <span>{item}</span>
-                      </div>
+                        {item}
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section
-          className={`workflow-section workflow-story ${
-            workflowActive >= 0 ? "story-ready" : ""
-          }`}
-          id="workflow"
-        >
+        <section className="intelligence-section section" id="intelligence" ref={intelRef}>
           <div className="container">
-            <div className="section-heading centered workflow-heading">
-              <span className="section-number">05 / THE WORKFLOW</span>
-
+            <div className={`intelligence-header ${intelVisible ? "visible" : ""}`}>
+              <span className="section-kicker">SCHOOLMARKS INTELLIGENCE</span>
               <h2>
-                From daily records to
-                <span> school-wide intelligence.</span>
+                Your data already knows
+                <span> more than you think.</span>
               </h2>
-
               <p>
-                Follow the journey of your school's data from setup to useful
-                academic insight.
+                Frontend intelligence can analyze structured school data and
+                turn it into useful academic signals — without a backend.
               </p>
             </div>
 
-            <div className="workflow-story-grid">
-              <div className="workflow-steps">
-                <div
-                  className="workflow-progress"
-                  style={{
-                    "--progress":
-                      `${(workflowActive / (workflow.length - 1)) * 100}%`,
-                  }}
-                />
+            <IntelligenceDemo />
 
-                {workflow.map((step, index) => {
-                  const Icon = step.icon;
-
-                  return (
-                    <div
-                      className={`workflow-story-step ${
-                        workflowActive === index ? "active" : ""
-                      }`}
-                      data-workflow-step={index}
-                      key={step.number}
-                    >
-                      <div className="workflow-story-number">
-                        {step.number}
-                      </div>
-
-                      <div className="workflow-story-node">
-                        <Icon size={16} />
-                      </div>
-
-                      <div className="workflow-story-copy">
-                        <h3>{step.title}</h3>
-                        <p>{step.text}</p>
-                      </div>
-
-                      <ArrowRight
-                        className="workflow-story-arrow"
-                        size={17}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="workflow-sticky-preview">
-                <div className="workflow-sticky-inner">
-                  <div className="workflow-active-label">
-                    <span>
-                      Step {String(workflowActive + 1).padStart(2, "0")}
-                    </span>
-
-                    <i />
-                    Live workflow
-                  </div>
-
-                  <WorkflowPreview active={workflowActive} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          className={`intelligence-section reveal-section ${
-            insightVisible ? "is-visible" : ""
-          }`}
-          ref={insightRef}
-          id="insights"
-        >
-          <div className="container intelligence-grid">
-            <div className="intelligence-copy">
-              <span className="section-number">
-                06 / ACADEMIC INTELLIGENCE
+            <div className="intelligence-note">
+              <Zap size={15} />
+              <span>
+                This demo uses local browser-side analysis. A secure AI API can
+                be added later through a serverless backend.
               </span>
-
-              <h2>
-                Don't just store
-                <span> student data.</span>
-                Understand it.
-              </h2>
-
-              <p>
-                SchoolMarks connects marks, attendance and academic history to
-                create a clearer picture of student and class performance.
-              </p>
-
-              <div className="intelligence-points">
-                <div>
-                  <div className="point-icon">
-                    <TrendingUp size={16} />
-                  </div>
-
-                  <div>
-                    <strong>Performance trends</strong>
-                    <span>
-                      See how academic performance changes over time.
-                    </span>
-                  </div>
-                </div>
-
-                <div>
-                  <div className="point-icon">
-                    <BarChart3 size={16} />
-                  </div>
-
-                  <div>
-                    <strong>Subject analysis</strong>
-                    <span>
-                      Understand which subjects need more attention.
-                    </span>
-                  </div>
-                </div>
-
-                <div>
-                  <div className="point-icon">
-                    <ShieldCheck size={16} />
-                  </div>
-
-                  <div>
-                    <strong>Early visibility</strong>
-                    <span>
-                      Spot students whose performance or attendance is
-                      changing.
-                    </span>
-                  </div>
-                </div>
-              </div>
             </div>
+          </div>
+        </section>
 
-            <div className="analytics-board">
-              <div className="analytics-top">
-                <div>
-                  <span>Performance intelligence</span>
-                  <strong>Class IX · 2026–27</strong>
-                </div>
+        <section className="analytics-section section">
+          <div className="container">
+            <div className="analytics-layout">
+              <div className="analytics-copy">
+                <span className="section-kicker">SEE THE SIGNAL</span>
+                <h2>
+                  From raw marks
+                  <span> to academic decisions.</span>
+                </h2>
+                <p>
+                  SchoolMarks doesn't stop at storing marks. The platform can
+                  surface trends, rankings and students who may need support.
+                </p>
 
-                <div className="analytics-select">
-                  This term <ChevronDown size={13} />
-                </div>
-              </div>
-
-              <div className="analytics-main">
-                <div className="analytics-score">
-                  <span>Average performance</span>
-                  <strong>78.6%</strong>
-
-                  <small>
-                    <TrendingUp size={12} />
-                    4.8% from previous term
-                  </small>
-                </div>
-
-                <div className="analytics-bars">
-                  {[
-                    ["Math", 88],
-                    ["Science", 81],
-                    ["English", 76],
-                    ["Computer", 92],
-                    ["Urdu", 71],
-                  ].map(([label, value], index) => (
-                    <div
-                      className="analytics-bar-row"
-                      key={label}
-                      style={{ "--bar-delay": `${index * 110}ms` }}
-                    >
-                      <span>{label}</span>
-
-                      <div>
-                        <i
-                          className={insightVisible ? "animated" : ""}
-                          style={{ "--bar-width": `${value}%` }}
-                        />
-                      </div>
-
-                      <strong>{value}%</strong>
+                <div className="signal-list">
+                  <div>
+                    <div className="signal-icon"><TrendingUp size={17} /></div>
+                    <div>
+                      <strong>Performance trends</strong>
+                      <span>Compare assessment performance over time.</span>
                     </div>
-                  ))}
+                  </div>
+                  <div>
+                    <div className="signal-icon"><Target size={17} /></div>
+                    <div>
+                      <strong>At-risk detection</strong>
+                      <span>Find students below defined academic thresholds.</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="signal-icon"><Award size={17} /></div>
+                    <div>
+                      <strong>Rankings & results</strong>
+                      <span>Generate consistent academic calculations.</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="analytics-bottom">
-                <div>
-                  <span>Top performers</span>
-                  <strong>24 students</strong>
-                </div>
-
-                <div>
-                  <span>On track</span>
-                  <strong>68 students</strong>
-                </div>
-
-                <div>
-                  <span>Needs attention</span>
-                  <strong>12 students</strong>
+              <div className="analytics-visual">
+                <DashboardPreview mode={5} />
+                <div className="analytics-float">
+                  <div className="analytics-float-icon">
+                    <BrainCircuit size={15} />
+                  </div>
+                  <div>
+                    <span>Insight detected</span>
+                    <strong>Mathematics needs attention</strong>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section
-          className={`comparison-section reveal-section ${
-            comparisonVisible ? "is-visible" : ""
-          }`}
-          ref={comparisonRef}
-        >
+        <section className="compare-section section" id="about" ref={compareRef}>
           <div className="container">
-            <div className="section-heading centered">
-              <span className="section-number">07 / THE DIFFERENCE</span>
-
+            <div className={`compare-heading ${compareVisible ? "visible" : ""}`}>
+              <span className="section-kicker">THE DIFFERENCE</span>
               <h2>
-                Traditional management
-                <span> vs. the connected way.</span>
+                Stop managing school data.
+                <span> Start using it.</span>
               </h2>
-
-              <p>
-                SchoolMarks is designed to replace disconnected workflows with
-                one clearer operating layer.
-              </p>
             </div>
 
-            <div className="comparison">
+            <div className={`comparison ${compareVisible ? "visible" : ""}`}>
               <div className="comparison-column traditional">
-                <div className="comparison-heading">
+                <div className="comparison-header">
                   <span>Traditional</span>
-                  <small>Fragmented · Manual · Delayed</small>
+                  <small>Fragmented</small>
                 </div>
-
                 {[
                   "Paper registers and spreadsheets",
-                  "Manual result calculations",
+                  "Manual calculations",
                   "Separate attendance records",
-                  "Scattered student information",
+                  "Delayed result preparation",
                   "Limited performance visibility",
-                  "Reports take additional work",
-                ].map((item, index) => (
-                  <div
-                    className="comparison-row reveal-row"
-                    style={{ "--delay": `${index * 80}ms` }}
-                    key={item}
-                  >
-                    <span className="comparison-x">×</span>
-                    {item}
+                  "Data scattered across files"
+                ].map((item) => (
+                  <div className="comparison-row" key={item}>
+                    <X size={15} />
+                    <span>{item}</span>
                   </div>
                 ))}
+              </div>
+
+              <div className="comparison-center">
+                <div className="comparison-logo">
+                  <img src="/logo/schoolmarks-logo.png" alt="" />
+                </div>
+                <span>vs</span>
               </div>
 
               <div className="comparison-column modern">
-                <div className="comparison-heading">
+                <div className="comparison-header">
                   <span>SchoolMarks</span>
-                  <small>Unified · Connected · Insightful</small>
+                  <small>Connected</small>
                 </div>
-
                 {[
                   "Digital student records",
-                  "Automatic result calculations",
-                  "Connected attendance tracking",
-                  "One academic workspace",
-                  "Performance intelligence",
-                  "Structured reports and results",
-                ].map((item, index) => (
-                  <div
-                    className="comparison-row reveal-row"
-                    style={{ "--delay": `${index * 100}ms` }}
-                    key={item}
-                  >
-                    <span className="comparison-check">
-                      <Check size={12} />
-                    </span>
-                    {item}
+                  "Automatic calculations",
+                  "Unified attendance intelligence",
+                  "Instant result preparation",
+                  "Performance analytics",
+                  "One connected academic system"
+                ].map((item) => (
+                  <div className="comparison-row" key={item}>
+                    <Check size={15} />
+                    <span>{item}</span>
                   </div>
                 ))}
               </div>
@@ -1435,111 +1134,47 @@ function Home({ onOpenDashboard }) {
           </div>
         </section>
 
-        <section className="faq-section" id="faq">
-          <div className="container faq-grid">
-            <div className="faq-intro">
-              <span className="section-number">08 / QUESTIONS</span>
-
-              <h2>
-                Built to be
-                <span> straightforward.</span>
-              </h2>
-
-              <p>
-                A few things you may want to know before opening the platform.
-              </p>
-
-              <button
-                className="button button-outline"
-                onClick={onOpenDashboard}
-              >
-                Open SchoolMarks
-                <ArrowRight size={15} />
-              </button>
-            </div>
-
-            <div className="faq-list">
-              {faqs.map(([question, answer], index) => (
-                <div
-                  className={`faq-item ${
-                    openFaq === index ? "open" : ""
-                  }`}
-                  key={question}
-                >
-                  <button
-                    onClick={() =>
-                      setOpenFaq(openFaq === index ? -1 : index)
-                    }
-                  >
-                    <span>{question}</span>
-                    <ChevronDown size={18} />
-                  </button>
-
-                  <div className="faq-answer">
-                    <p>{answer}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="final-cta">
+        <section className="cta-section">
           <div className="container">
             <div className="cta-box">
-              <div className="cta-grid-pattern" />
-
-              <div className="cta-orb cta-orb-one" />
-              <div className="cta-orb cta-orb-two" />
-
-              <div className="cta-content">
-                <span className="cta-label">
-                  <Sparkles size={14} />
-                  SCHOOLMARKS
-                </span>
-
+              <div className="cta-grid" />
+              <div className="cta-copy">
+                <span className="section-kicker">READY WHEN YOU ARE</span>
                 <h2>
                   Your school already has
                   <span> the data.</span>
                 </h2>
-
                 <p>
-                  SchoolMarks turns that data into organized records,
-                  connected workflows and clearer academic intelligence.
+                  SchoolMarks turns that data into a connected academic
+                  experience.
                 </p>
 
-                <button
-                  className="button button-white"
-                  onClick={onOpenDashboard}
-                >
+                <button className="primary-button light-button" onClick={onOpenDashboard}>
                   Open SchoolMarks
-                  <ArrowRight size={16} />
+                  <ArrowRight size={17} />
                 </button>
               </div>
 
-              <div className="cta-mini-dashboard">
-                <div className="cta-mini-top">
-                  <span />
-                  <span />
-                  <span />
-                </div>
-
-                <div className="cta-mini-content">
-                  <div className="mini-stat-large">
-                    <span>School performance</span>
-                    <strong>78.6%</strong>
+              <div className="cta-product">
+                <div className="cta-mini-card">
+                  <BrainCircuit size={18} />
+                  <div>
+                    <span>Intelligence</span>
+                    <strong>6 students need attention</strong>
                   </div>
-
-                  <div className="mini-bars">
-                    {[48, 62, 55, 76, 68, 88, 82].map((height, index) => (
-                      <i
-                        key={index}
-                        style={{
-                          "--bar-height": `${height}%`,
-                          "--bar-delay": `${index * 80}ms`,
-                        }}
-                      />
-                    ))}
+                </div>
+                <div className="cta-mini-card">
+                  <TrendingUp size={18} />
+                  <div>
+                    <span>Performance</span>
+                    <strong>+6.4% this term</strong>
+                  </div>
+                </div>
+                <div className="cta-mini-card">
+                  <ClipboardCheck size={18} />
+                  <div>
+                    <span>Results</span>
+                    <strong>92 assessments processed</strong>
                   </div>
                 </div>
               </div>
@@ -1548,185 +1183,139 @@ function Home({ onOpenDashboard }) {
         </section>
       </main>
 
-      <footer className="site-footer">
-        <div className="container">
-          <div className="footer-main">
-            <div className="footer-brand">
-              <Logo />
-
-              <p>
-                A connected school management platform for modern academic
-                operations.
-              </p>
-            </div>
-
-            <div className="footer-links">
-              <div>
-                <span>Platform</span>
-                <button onClick={() => scrollTo("platform")}>
-                  Overview
-                </button>
-                <button onClick={() => scrollTo("capabilities")}>
-                  Capabilities
-                </button>
-                <button onClick={() => scrollTo("workflow")}>
-                  How it works
-                </button>
-              </div>
-
-              <div>
-                <span>Insights</span>
-                <button onClick={() => scrollTo("insights")}>
-                  Performance
-                </button>
-                <button onClick={() => scrollTo("insights")}>
-                  Analytics
-                </button>
-                <button onClick={() => scrollTo("faq")}>FAQ</button>
-              </div>
-
-              <div>
-                <span>System</span>
-                <button onClick={onOpenDashboard}>
-                  Open platform
-                </button>
-                <button onClick={onOpenDashboard}>
-                  School Admin
-                </button>
-                <button onClick={onOpenDashboard}>Dashboard</button>
-              </div>
-            </div>
+      <footer className="footer">
+        <div className="container footer-inner">
+          <Logo dark />
+          <div className="footer-copy">
+            <span>SchoolMarks</span>
+            <p>Connected school management for modern academic teams.</p>
           </div>
-
-          <div className="footer-bottom">
-            <span>© 2026 SchoolMarks. All rights reserved.</span>
-            <span>Built for smarter school management.</span>
-          </div>
+          <span className="footer-year">© 2026 SchoolMarks</span>
         </div>
       </footer>
     </div>
   );
 }
 
-function AccessModal({ onContinue, onClose }) {
+function AccessModal({ onClose }) {
+  const [loading, setLoading] = useState(false);
+
+  const enter = () => {
+    setLoading(true);
+
+    setTimeout(() => {
+      onClose();
+    }, 650);
+  };
+
   return (
     <div className="modal-backdrop" onMouseDown={onClose}>
-      <div
-        className="access-modal"
-        onMouseDown={(event) => event.stopPropagation()}
-      >
+      <div className="access-modal" onMouseDown={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>
           <X size={18} />
         </button>
 
         <div className="modal-icon">
-          <LayoutDashboard size={21} />
+          <LayoutDashboard size={22} />
         </div>
 
-        <span className="modal-kicker">SCHOOLMARKS PLATFORM</span>
-
+        <span className="section-kicker">SCHOOLMARKS PLATFORM</span>
         <h2>Open your school workspace.</h2>
-
         <p>
-          Continue into the SchoolMarks management system to manage students,
-          academics, examinations, results, attendance and performance.
+          Continue into the management platform and explore your academic
+          dashboard.
         </p>
 
-        <div className="access-details">
+        <div className="access-preview">
           <div>
             <span>Workspace</span>
             <strong>School Admin</strong>
           </div>
-
           <div>
             <span>Academic year</span>
             <strong>2026–27</strong>
           </div>
-
-          <div>
-            <span>Storage</span>
-            <strong>Local workspace</strong>
-          </div>
+          <Check size={17} />
         </div>
 
-        <button
-          className="button button-primary modal-continue"
-          onClick={onContinue}
-        >
-          Continue to platform
-          <ArrowRight size={16} />
+        <button className="primary-button modal-button" onClick={enter}>
+          {loading ? "Opening workspace..." : "Continue to platform"}
+          {!loading && <ArrowRight size={17} />}
         </button>
 
-        <button className="modal-back" onClick={onClose}>
-          Return to home
-        </button>
+        <span className="modal-note">
+          Your data remains stored locally in this browser.
+        </span>
       </div>
     </div>
   );
 }
 
-function App() {
+function Dashboard({ onBack }) {
+  return (
+    <div className="app-shell">
+      <header className="app-topbar">
+        <Logo />
+        <button className="back-home" onClick={onBack}>
+          ← Back to Home
+        </button>
+      </header>
+
+      <div className="dashboard-placeholder">
+        <div className="dashboard-placeholder-card">
+          <div className="placeholder-icon">
+            <LayoutDashboard size={26} />
+          </div>
+          <span className="section-kicker">SCHOOLMARKS PLATFORM</span>
+          <h1>Dashboard workspace</h1>
+          <p>
+            Your existing SchoolMarks dashboard can continue here. The new
+            homepage is now ready to connect to your actual management modules.
+          </p>
+          <div className="placeholder-stats">
+            <div>
+              <strong>248</strong>
+              <span>Students</span>
+            </div>
+            <div>
+              <strong>12</strong>
+              <span>Classes</span>
+            </div>
+            <div>
+              <strong>82%</strong>
+              <span>Performance</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function App() {
   const [page, setPage] = useState("home");
   const [access, setAccess] = useState(false);
 
-  const openDashboard = () => {
-    setAccess(true);
-  };
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [page]);
 
-  const continueDashboard = () => {
-    setAccess(false);
-    setPage("dashboard");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  if (page === "dashboard") {
+    return <Dashboard onBack={() => setPage("home")} />;
+  }
 
   return (
     <>
-      {page === "home" ? (
-        <Home onOpenDashboard={openDashboard} />
-      ) : (
-        <div className="app-page">
-          <div className="app-navbar">
-            <div className="container app-navbar-inner">
-              <Logo compact />
-
-              <div className="app-navbar-right">
-                <button
-                  className="app-home-button"
-                  onClick={() => {
-                    setPage("home");
-                    window.scrollTo({
-                      top: 0,
-                      behavior: "smooth",
-                    });
-                  }}
-                >
-                  Back to Home
-                </button>
-
-                <div className="app-user">
-                  <div className="app-user-avatar">FK</div>
-
-                  <div>
-                    <strong>School Admin</strong>
-                    <span>SchoolMarks</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <Dashboard />
-        </div>
-      )}
+      <Home onOpenDashboard={() => setAccess(true)} />
 
       {access && (
         <AccessModal
-          onContinue={continueDashboard}
-          onClose={() => setAccess(false)}
+          onClose={() => {
+            setAccess(false);
+            setPage("dashboard");
+          }}
         />
       )}
     </>
   );
 }
-
-export default App;
