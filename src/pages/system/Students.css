@@ -1,676 +1,1430 @@
-```jsx
-function StudentsPage() {
-  const [students, setStudents] = useState([
-    { id: 1, name: "Ayaan Khan", roll: "901", className: "9-A", avg: 87, attendance: 96, status: "Excellent" },
-    { id: 2, name: "Zayan Ahmed", roll: "902", className: "9-B", avg: 51, attendance: 73, status: "At Risk" },
-    { id: 3, name: "Maham Ali", roll: "903", className: "9-A", avg: 82, attendance: 91, status: "Good" },
-    { id: 4, name: "Hassan Raza", roll: "904", className: "9-C", avg: 76, attendance: 88, status: "Good" },
-    { id: 5, name: "Areeba Khan", roll: "905", className: "9-B", avg: 91, attendance: 98, status: "Excellent" },
-    { id: 6, name: "Rayyan Malik", roll: "906", className: "9-C", avg: 64, attendance: 79, status: "Attention" }
-  ]);
-
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("All");
-  const [showAdd, setShowAdd] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState(null);
-
-  const filtered = useMemo(() => {
-    const query = search.toLowerCase().trim();
-
-    return students.filter((student) => {
-      const matchesSearch =
-        student.name.toLowerCase().includes(query) ||
-        student.className.toLowerCase().includes(query) ||
-        String(student.roll).includes(query);
-
-      const matchesFilter =
-        filter === "All" || student.status === filter;
-
-      return matchesSearch && matchesFilter;
-    });
-  }, [students, search, filter]);
-
-  const addStudent = (student) => {
-    setStudents((current) => [
-      ...current,
-      {
-        ...student,
-        id: Date.now()
-      }
-    ]);
-
-    setSearch("");
-    setFilter("All");
-    setShowAdd(false);
-  };
-
-  return (
-    <div className="page-stack">
-      <div className="page-heading">
-        <div>
-          <div className="page-eyebrow">STUDENT MANAGEMENT</div>
-          <h1>Students</h1>
-          <p>Manage student profiles and monitor academic signals.</p>
-        </div>
-
-        <button
-          type="button"
-          className="dark-button"
-          onClick={() => setShowAdd(true)}
-        >
-          <Plus size={16} />
-          Add student
-        </button>
-      </div>
-
-      <div className="toolbar">
-        <div className="search-field">
-          <Search size={17} />
-
-          <input
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Search students or classes..."
-          />
-        </div>
-
-        <div className="filter-group">
-          {["All", "Excellent", "Good", "Attention", "At Risk"].map((item) => (
-            <button
-              type="button"
-              className={filter === item ? "active" : ""}
-              onClick={() => setFilter(item)}
-              key={item}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="large-table-card">
-        <div className="table-summary">
-          <span>{filtered.length} students shown</span>
-
-          <button type="button">
-            <MoreHorizontal size={18} />
-          </button>
-        </div>
-
-        <div className="data-table students-table">
-          <div className="table-row table-header">
-            <span>Student</span>
-            <span>Class</span>
-            <span>Average</span>
-            <span>Attendance</span>
-            <span>Status</span>
-            <span>Action</span>
-          </div>
-
-          {filtered.map((student) => (
-            <div className="table-row" key={student.id}>
-              <button
-                type="button"
-                className="table-student"
-                onClick={() => setSelectedStudent(student)}
-              >
-                <span>
-                  {student.name
-                    .split(" ")
-                    .map((x) => x[0])
-                    .join("")}
-                </span>
-
-                <strong>{student.name}</strong>
-              </button>
-
-              <span>{student.className}</span>
-
-              <div className="score-cell">
-                <strong>{student.avg}%</strong>
-
-                <div>
-                  <i style={{ width: `${student.avg}%` }} />
-                </div>
-              </div>
-
-              <span>{student.attendance}%</span>
-
-              <em
-                className={`status-pill ${
-                  student.status === "At Risk"
-                    ? "risk"
-                    : student.status === "Attention"
-                      ? "attention"
-                      : ""
-                }`}
-              >
-                {student.status}
-              </em>
-
-              <button
-                type="button"
-                className="row-action"
-                onClick={() => setSelectedStudent(student)}
-              >
-                <MoreHorizontal size={17} />
-              </button>
-            </div>
-          ))}
-
-          {!filtered.length && (
-            <div
-              style={{
-                padding: "50px 20px",
-                textAlign: "center",
-                color: "#758078"
-              }}
-            >
-              No students found.
-            </div>
-          )}
-        </div>
-      </div>
-
-      {showAdd && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 9999,
-            background: "rgba(15, 25, 19, 0.48)",
-            backdropFilter: "blur(8px)",
-            display: "grid",
-            placeItems: "center",
-            padding: "20px"
-          }}
-          onClick={() => setShowAdd(false)}
-        >
-          <div
-            style={{
-              width: "100%",
-              maxWidth: "520px",
-              background: "#ffffff",
-              borderRadius: "22px",
-              boxShadow: "0 30px 80px rgba(0,0,0,.18)",
-              overflow: "hidden"
-            }}
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div
-              style={{
-                padding: "26px 28px",
-                borderBottom: "1px solid #e8ece8",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "flex-start"
-              }}
-            >
-              <div>
-                <div
-                  style={{
-                    fontSize: "10px",
-                    fontWeight: 800,
-                    letterSpacing: ".14em",
-                    color: "#758078",
-                    marginBottom: "7px"
-                  }}
-                >
-                  STUDENT MANAGEMENT
-                </div>
-
-                <h2
-                  style={{
-                    margin: 0,
-                    color: "#172019",
-                    fontSize: "25px",
-                    letterSpacing: "-.04em"
-                  }}
-                >
-                  Add student
-                </h2>
-
-                <p
-                  style={{
-                    margin: "7px 0 0",
-                    color: "#758078",
-                    fontSize: "13px"
-                  }}
-                >
-                  Create a new student record.
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setShowAdd(false)}
-                style={{
-                  width: "36px",
-                  height: "36px",
-                  borderRadius: "10px",
-                  border: "1px solid #e5eae5",
-                  background: "#f6f7f4",
-                  display: "grid",
-                  placeItems: "center",
-                  cursor: "pointer"
-                }}
-              >
-                <X size={17} />
-              </button>
-            </div>
-
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-
-                const formData = new FormData(event.currentTarget);
-
-                const name = String(formData.get("name") || "").trim();
-                const roll = String(formData.get("roll") || "").trim();
-                const className = String(formData.get("className") || "9-A");
-                const email = String(formData.get("email") || "").trim();
-
-                if (!name || !roll) {
-                  return;
-                }
-
-                const duplicate = students.some(
-                  (student) =>
-                    String(student.roll).toLowerCase() === roll.toLowerCase()
-                );
-
-                if (duplicate) {
-                  window.alert(`Roll number ${roll} is already assigned.`);
-                  return;
-                }
-
-                addStudent({
-                  name,
-                  roll,
-                  className,
-                  avg: 0,
-                  attendance: 100,
-                  status: "Attention",
-                  email: email || "Not provided"
-                });
-              }}
-            >
-              <div
-                style={{
-                  padding: "26px 28px",
-                  display: "grid",
-                  gap: "18px"
-                }}
-              >
-                <label>
-                  <span
-                    style={{
-                      display: "block",
-                      fontSize: "11px",
-                      fontWeight: 800,
-                      color: "#39443d",
-                      marginBottom: "7px"
-                    }}
-                  >
-                    Full name
-                  </span>
-
-                  <input
-                    name="name"
-                    type="text"
-                    placeholder="e.g. Ahmed Khan"
-                    autoFocus
-                    required
-                    style={{
-                      width: "100%",
-                      height: "44px",
-                      border: "1px solid #dfe5df",
-                      borderRadius: "10px",
-                      padding: "0 13px",
-                      outline: "none",
-                      fontSize: "13px",
-                      boxSizing: "border-box"
-                    }}
-                  />
-                </label>
-
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "14px"
-                  }}
-                >
-                  <label>
-                    <span
-                      style={{
-                        display: "block",
-                        fontSize: "11px",
-                        fontWeight: 800,
-                        color: "#39443d",
-                        marginBottom: "7px"
-                      }}
-                    >
-                      Roll number
-                    </span>
-
-                    <input
-                      name="roll"
-                      type="text"
-                      inputMode="numeric"
-                      placeholder="e.g. 910"
-                      required
-                      style={{
-                        width: "100%",
-                        height: "44px",
-                        border: "1px solid #dfe5df",
-                        borderRadius: "10px",
-                        padding: "0 13px",
-                        outline: "none",
-                        fontSize: "13px",
-                        boxSizing: "border-box"
-                      }}
-                    />
-                  </label>
-
-                  <label>
-                    <span
-                      style={{
-                        display: "block",
-                        fontSize: "11px",
-                        fontWeight: 800,
-                        color: "#39443d",
-                        marginBottom: "7px"
-                      }}
-                    >
-                      Class
-                    </span>
-
-                    <select
-                      name="className"
-                      defaultValue="9-A"
-                      style={{
-                        width: "100%",
-                        height: "44px",
-                        border: "1px solid #dfe5df",
-                        borderRadius: "10px",
-                        padding: "0 13px",
-                        outline: "none",
-                        fontSize: "13px",
-                        background: "#fff"
-                      }}
-                    >
-                      <option value="9-A">9-A</option>
-                      <option value="9-B">9-B</option>
-                      <option value="9-C">9-C</option>
-                      <option value="10-A">10-A</option>
-                      <option value="10-B">10-B</option>
-                    </select>
-                  </label>
-                </div>
-
-                <label>
-                  <span
-                    style={{
-                      display: "block",
-                      fontSize: "11px",
-                      fontWeight: 800,
-                      color: "#39443d",
-                      marginBottom: "7px"
-                    }}
-                  >
-                    Email
-                  </span>
-
-                  <input
-                    name="email"
-                    type="text"
-                    placeholder="student@example.com"
-                    style={{
-                      width: "100%",
-                      height: "44px",
-                      border: "1px solid #dfe5df",
-                      borderRadius: "10px",
-                      padding: "0 13px",
-                      outline: "none",
-                      fontSize: "13px",
-                      boxSizing: "border-box"
-                    }}
-                  />
-                </label>
-              </div>
-
-              <div
-                style={{
-                  padding: "18px 28px",
-                  borderTop: "1px solid #e8ece8",
-                  background: "#fafbf9",
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "10px"
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={() => setShowAdd(false)}
-                  style={{
-                    height: "42px",
-                    padding: "0 18px",
-                    borderRadius: "10px",
-                    border: "1px solid #dfe5df",
-                    background: "#fff",
-                    color: "#39443d",
-                    fontWeight: 700,
-                    cursor: "pointer"
-                  }}
-                >
-                  Cancel
-                </button>
-
-                <button
-                  type="submit"
-                  className="dark-button"
-                  style={{
-                    height: "42px"
-                  }}
-                >
-                  <Check size={15} />
-                  Create student
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {selectedStudent && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 9998,
-            background: "rgba(15, 25, 19, .35)",
-            backdropFilter: "blur(6px)",
-            display: "grid",
-            placeItems: "center",
-            padding: "20px"
-          }}
-          onClick={() => setSelectedStudent(null)}
-        >
-          <div
-            style={{
-              width: "100%",
-              maxWidth: "460px",
-              background: "#fff",
-              borderRadius: "20px",
-              padding: "28px",
-              boxShadow: "0 30px 80px rgba(0,0,0,.18)"
-            }}
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "flex-start"
-              }}
-            >
-              <div>
-                <div
-                  style={{
-                    width: "52px",
-                    height: "52px",
-                    borderRadius: "15px",
-                    background: "#e7f0ea",
-                    color: "#174b32",
-                    display: "grid",
-                    placeItems: "center",
-                    fontWeight: 900,
-                    marginBottom: "15px"
-                  }}
-                >
-                  {selectedStudent.name
-                    .split(" ")
-                    .map((x) => x[0])
-                    .join("")}
-                </div>
-
-                <h2
-                  style={{
-                    margin: 0,
-                    fontSize: "24px",
-                    color: "#172019"
-                  }}
-                >
-                  {selectedStudent.name}
-                </h2>
-
-                <p
-                  style={{
-                    margin: "6px 0 0",
-                    color: "#758078"
-                  }}
-                >
-                  Roll {selectedStudent.roll} · Class{" "}
-                  {selectedStudent.className}
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setSelectedStudent(null)}
-                style={{
-                  border: 0,
-                  background: "#f5f7f4",
-                  width: "35px",
-                  height: "35px",
-                  borderRadius: "10px",
-                  cursor: "pointer"
-                }}
-              >
-                <X size={17} />
-              </button>
-            </div>
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "12px",
-                marginTop: "24px"
-              }}
-            >
-              <div
-                style={{
-                  padding: "18px",
-                  background: "#f6f7f4",
-                  borderRadius: "14px"
-                }}
-              >
-                <span
-                  style={{
-                    display: "block",
-                    fontSize: "10px",
-                    color: "#758078",
-                    fontWeight: 800,
-                    marginBottom: "6px"
-                  }}
-                >
-                  AVERAGE
-                </span>
-
-                <strong
-                  style={{
-                    fontSize: "25px",
-                    color: "#174b32"
-                  }}
-                >
-                  {selectedStudent.avg}%
-                </strong>
-              </div>
-
-              <div
-                style={{
-                  padding: "18px",
-                  background: "#f6f7f4",
-                  borderRadius: "14px"
-                }}
-              >
-                <span
-                  style={{
-                    display: "block",
-                    fontSize: "10px",
-                    color: "#758078",
-                    fontWeight: 800,
-                    marginBottom: "6px"
-                  }}
-                >
-                  ATTENDANCE
-                </span>
-
-                <strong
-                  style={{
-                    fontSize: "25px",
-                    color: "#174b32"
-                  }}
-                >
-                  {selectedStudent.attendance}%
-                </strong>
-              </div>
-            </div>
-
-            <div
-              style={{
-                marginTop: "12px",
-                padding: "16px 18px",
-                border: "1px solid #e5eae5",
-                borderRadius: "14px"
-              }}
-            >
-              <span
-                style={{
-                  fontSize: "10px",
-                  fontWeight: 800,
-                  color: "#758078"
-                }}
-              >
-                STATUS
-              </span>
-
-              <strong
-                style={{
-                  display: "block",
-                  marginTop: "5px",
-                  color: "#172019"
-                }}
-              >
-                {selectedStudent.status}
-              </strong>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+.students-page {
+  --students-ink: #172019;
+  --students-muted: #758078;
+  --students-soft: #9da69f;
+  --students-line: #e5eae5;
+  --students-paper: #f6f7f4;
+  --students-surface: #ffffff;
+  --students-green: #174b32;
+  --students-green-2: #2d7050;
+  --students-green-soft: #e7f0ea;
+  position: relative;
+  min-height: 100%;
+  padding: 34px 38px 56px;
+  overflow: hidden;
+  color: var(--students-ink);
+  background:
+    radial-gradient(
+      circle at 90% 0%,
+      rgba(23, 75, 50, 0.06),
+      transparent 27%
+    ),
+    var(--students-paper);
 }
-```
+
+.students-page-glow {
+  position: absolute;
+  top: -170px;
+  right: -170px;
+  width: 390px;
+  height: 390px;
+  border-radius: 50%;
+  background: rgba(35, 105, 70, 0.035);
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.students-page-header,
+.students-summary-grid,
+.students-directory-card,
+.students-insight {
+  position: relative;
+  z-index: 1;
+}
+
+.students-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 28px;
+  animation: studentsEnter 0.65s ease both;
+}
+
+.students-page-kicker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 13px;
+  color: var(--students-green);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.students-page-kicker span {
+  width: 22px;
+  height: 1px;
+  background: var(--students-green);
+}
+
+.students-page-header h1 {
+  margin: 0;
+  font-size: clamp(32px, 3vw, 46px);
+  line-height: 1;
+  letter-spacing: -0.06em;
+  font-weight: 700;
+}
+
+.students-page-header h1 em {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  letter-spacing: -0.045em;
+}
+
+.students-page-header p {
+  max-width: 570px;
+  margin: 12px 0 0;
+  color: var(--students-muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.students-add-button {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 17px;
+  border: 0;
+  border-radius: 13px;
+  color: #fff;
+  background: var(--students-green);
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(23, 75, 50, 0.13);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.students-add-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 17px 34px rgba(23, 75, 50, 0.18);
+}
+
+.students-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 11px;
+  margin-bottom: 14px;
+}
+
+.students-summary-card {
+  min-height: 135px;
+  padding: 19px;
+  border: 1px solid var(--students-line);
+  border-radius: 19px;
+  background: rgba(255, 255, 255, 0.84);
+  animation: studentsEnter 0.65s ease var(--student-delay) both;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.students-summary-card:hover {
+  transform: translateY(-4px);
+  border-color: #d4ddd6;
+  box-shadow: 0 18px 40px rgba(25, 45, 34, 0.055);
+}
+
+.students-summary-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.students-summary-top > span {
+  color: #89928c;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.students-summary-top i {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: var(--students-green);
+  background: var(--students-green-soft);
+}
+
+.students-summary-card > strong {
+  display: block;
+  margin-top: 14px;
+  font-size: 28px;
+  letter-spacing: -0.055em;
+}
+
+.students-summary-card > small {
+  display: block;
+  margin-top: 6px;
+  color: var(--students-muted);
+  font-size: 9px;
+}
+
+.students-directory-card {
+  border: 1px solid var(--students-line);
+  border-radius: 21px;
+  background: rgba(255, 255, 255, 0.9);
+  overflow: hidden;
+  animation: studentsEnter 0.7s ease 0.16s both;
+}
+
+.students-directory-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 25px 20px;
+}
+
+.students-section-label {
+  color: #8c958f;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.students-directory-header h2 {
+  margin: 7px 0 0;
+  font-size: 20px;
+  letter-spacing: -0.04em;
+}
+
+.students-directory-meta {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  color: var(--students-soft);
+  font-size: 9px;
+}
+
+.selected-delete {
+  height: 31px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  border: 1px solid #efd9d7;
+  border-radius: 9px;
+  color: #a34f47;
+  background: #fff8f7;
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.students-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 25px 18px;
+}
+
+.students-search-box {
+  width: min(400px, 100%);
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 11px;
+  border: 1px solid var(--students-line);
+  border-radius: 10px;
+  color: #9ca59f;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.students-search-box:focus-within {
+  border-color: #b9cbbf;
+  box-shadow: 0 0 0 3px rgba(23, 75, 50, 0.045);
+}
+
+.students-search-box input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--students-ink);
+  font-size: 10px;
+}
+
+.students-search-box input::placeholder {
+  color: #a7aea9;
+}
+
+.students-search-box button {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #9aa29c;
+  cursor: pointer;
+}
+
+.students-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.student-select-wrap,
+.student-sort-wrap {
+  height: 38px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--students-line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--students-muted);
+}
+
+.student-select-wrap select,
+.student-sort-wrap select {
+  height: 100%;
+  appearance: none;
+  border: 0;
+  outline: 0;
+  padding: 0 31px 0 11px;
+  color: var(--students-ink);
+  background: transparent;
+  font-size: 9px;
+  cursor: pointer;
+}
+
+.student-select-wrap svg {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+}
+
+.student-sort-wrap {
+  padding-left: 10px;
+}
+
+.student-sort-wrap select {
+  padding-left: 6px;
+}
+
+.filter-button,
+.more-directory {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid var(--students-line);
+  border-radius: 10px;
+  color: var(--students-muted);
+  background: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-button {
+  padding: 0 11px;
+}
+
+.filter-button:hover,
+.filter-button.active {
+  border-color: #c6d4ca;
+  color: var(--students-green);
+  background: #f5f8f5;
+}
+
+.more-directory {
+  width: 38px;
+}
+
+.advanced-filters {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 15px 25px;
+  border-top: 1px solid var(--students-line);
+  border-bottom: 1px solid var(--students-line);
+  background: #fafbf9;
+  animation: filterOpen 0.25s ease both;
+}
+
+.advanced-filters > div > span {
+  display: block;
+  margin-bottom: 8px;
+  color: #89928c;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.filter-chips button {
+  height: 28px;
+  padding: 0 9px;
+  border: 1px solid var(--students-line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--students-muted);
+  font-size: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.filter-chips button.active {
+  border-color: #bdd0c2;
+  color: var(--students-green);
+  background: var(--students-green-soft);
+}
+
+.clear-filters {
+  border: 0;
+  background: transparent;
+  color: var(--students-green);
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.student-table {
+  width: 100%;
+}
+
+.student-table-header {
+  min-height: 39px;
+  display: grid;
+  grid-template-columns: 30px minmax(230px, 1.55fr) 0.65fr 0.85fr 0.85fr 0.65fr 20px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 25px;
+  background: #f7f8f6;
+  color: #9aa29c;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+}
+
+.student-table-body {
+  padding: 0 10px;
+}
+
+.student-table-row {
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: 30px minmax(230px, 1.55fr) 0.65fr 0.85fr 0.85fr 0.65fr 20px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 15px;
+  border-bottom: 1px solid #edf0ed;
+  animation: rowEnter 0.45s ease var(--row-delay) both;
+  transition: background 0.2s ease;
+}
+
+.student-table-row:hover,
+.student-table-row.selected {
+  background: #f8faf8;
+}
+
+.student-table-row:last-child {
+  border-bottom: 0;
+}
+
+.student-checkbox {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  display: block;
+  cursor: pointer;
+}
+
+.student-checkbox input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.student-checkbox span {
+  width: 16px;
+  height: 16px;
+  display: block;
+  border: 1px solid #d4dbd5;
+  border-radius: 5px;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.student-checkbox input:checked + span {
+  border-color: var(--students-green);
+  background: var(--students-green);
+  box-shadow: inset 0 0 0 3px #fff;
+}
+
+.student-identity {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.student-page-avatar {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.student-page-avatar.large {
+  width: 58px;
+  height: 58px;
+  border-radius: 17px;
+  font-size: 13px;
+}
+
+.student-page-avatar.sage {
+  color: #236345;
+  background: #e4f0e7;
+}
+
+.student-page-avatar.sand {
+  color: #856839;
+  background: #f3ebdb;
+}
+
+.student-page-avatar.lavender {
+  color: #6f557c;
+  background: #eee8f2;
+}
+
+.student-page-avatar.blue {
+  color: #4e6381;
+  background: #e9eef5;
+}
+
+.student-page-avatar.rose {
+  color: #955c58;
+  background: #f5e8e6;
+}
+
+.student-identity > span:last-child {
+  min-width: 0;
+}
+
+.student-identity strong,
+.student-identity small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.student-identity strong {
+  color: var(--students-ink);
+  font-size: 10px;
+}
+
+.student-identity small {
+  max-width: 245px;
+  margin-top: 4px;
+  color: var(--students-muted);
+  font-size: 8px;
+}
+
+.student-class-cell strong,
+.student-class-cell small {
+  display: block;
+}
+
+.student-class-cell strong {
+  font-size: 10px;
+}
+
+.student-class-cell small {
+  margin-top: 4px;
+  color: var(--students-soft);
+  font-size: 8px;
+}
+
+.student-performance-cell strong,
+.student-attendance-cell strong {
+  display: block;
+  font-size: 10px;
+}
+
+.student-performance-cell > div,
+.student-attendance-cell > div {
+  width: 57px;
+  height: 4px;
+  margin-top: 6px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: #e9ede9;
+}
+
+.student-performance-cell > div span,
+.student-attendance-cell > div span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--students-green);
+  transition: width 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.student-attendance-cell > div span {
+  background: #6b8977;
+}
+
+.student-status {
+  width: fit-content;
+  padding: 5px 8px;
+  border-radius: 99px;
+  font-size: 7px;
+  font-weight: 800;
+}
+
+.student-status.excellent {
+  color: #246b46;
+  background: #e5f1e8;
+}
+
+.student-status.good {
+  color: #416d58;
+  background: #edf3ef;
+}
+
+.student-status.attention {
+  color: #916f35;
+  background: #f5efdf;
+}
+
+.student-status.risk {
+  color: #a34f47;
+  background: #f7e9e7;
+}
+
+.student-row-arrow {
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  color: #a2aaa4;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.student-row-arrow:hover {
+  color: var(--students-green);
+  background: var(--students-green-soft);
+}
+
+.students-empty {
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: var(--students-muted);
+  text-align: center;
+}
+
+.students-empty > div {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 11px;
+  border-radius: 13px;
+  color: var(--students-green);
+  background: var(--students-green-soft);
+}
+
+.students-empty strong {
+  font-size: 12px;
+  color: var(--students-ink);
+}
+
+.students-empty p {
+  margin: 5px 0 0;
+  font-size: 9px;
+}
+
+.students-directory-footer {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 0 25px;
+  border-top: 1px solid var(--students-line);
+  color: var(--students-soft);
+  font-size: 9px;
+}
+
+.students-directory-footer strong {
+  color: var(--students-ink);
+}
+
+.directory-pagination {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.directory-pagination button,
+.directory-pagination span {
+  height: 28px;
+  min-width: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--students-line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--students-muted);
+  font-size: 8px;
+}
+
+.directory-pagination button {
+  padding: 0 8px;
+  cursor: pointer;
+}
+
+.directory-pagination button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.directory-pagination span {
+  border-color: #c7d7cc;
+  color: var(--students-green);
+  background: var(--students-green-soft);
+  font-weight: 800;
+}
+
+.students-insight {
+  min-height: 93px;
+  display: grid;
+  grid-template-columns: 45px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+  padding: 18px 21px;
+  border: 1px solid #dfe7e0;
+  border-radius: 19px;
+  background: #eaf2ec;
+  animation: studentsEnter 0.7s ease 0.25s both;
+}
+
+.students-insight-icon {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  color: #fff;
+  background: var(--students-green);
+}
+
+.students-insight > div:nth-child(2) > span {
+  color: #60816e;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.students-insight h3 {
+  margin: 4px 0 3px;
+  font-size: 14px;
+  letter-spacing: -0.02em;
+}
+
+.students-insight p {
+  margin: 0;
+  color: #718078;
+  font-size: 9px;
+}
+
+.students-insight > button {
+  height: 37px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 13px;
+  border: 1px solid #d2dfd5;
+  border-radius: 10px;
+  color: var(--students-green);
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.student-drawer-backdrop,
+.student-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(16, 25, 19, 0.32);
+  backdrop-filter: blur(11px);
+  animation: overlayIn 0.2s ease both;
+}
+
+.student-drawer-backdrop {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.student-drawer {
+  width: min(460px, 100%);
+  height: 100%;
+  overflow-y: auto;
+  padding: 27px;
+  background: #fff;
+  box-shadow: -25px 0 70px rgba(16, 34, 24, 0.13);
+  animation: drawerIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.student-drawer-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.student-drawer-top > span {
+  color: #8b948e;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.student-drawer-top button,
+.add-modal-header > button {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--students-line);
+  border-radius: 9px;
+  color: var(--students-muted);
+  background: #fff;
+  cursor: pointer;
+}
+
+.student-profile-header {
+  display: grid;
+  grid-template-columns: 58px 1fr auto;
+  align-items: center;
+  gap: 13px;
+  margin-top: 32px;
+}
+
+.student-profile-header h2 {
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: -0.045em;
+}
+
+.student-profile-header p {
+  margin: 5px 0 0;
+  color: var(--students-muted);
+  font-size: 9px;
+}
+
+.student-status {
+  width: fit-content;
+}
+
+.student-profile-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-top: 28px;
+}
+
+.student-profile-stats > div {
+  padding: 16px;
+  border: 1px solid var(--students-line);
+  border-radius: 14px;
+  background: #fafbfa;
+}
+
+.student-profile-stats span,
+.student-profile-stats strong,
+.student-profile-stats small {
+  display: block;
+}
+
+.student-profile-stats span {
+  color: var(--students-muted);
+  font-size: 8px;
+}
+
+.student-profile-stats strong {
+  margin-top: 7px;
+  font-size: 22px;
+  letter-spacing: -0.05em;
+}
+
+.student-profile-stats small {
+  margin-top: 3px;
+  color: var(--students-soft);
+  font-size: 8px;
+}
+
+.drawer-section {
+  margin-top: 28px;
+}
+
+.drawer-label {
+  color: #8b948e;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.drawer-info {
+  margin-top: 11px;
+  border: 1px solid var(--students-line);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.drawer-info > div {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--students-line);
+}
+
+.drawer-info > div:last-child {
+  border-bottom: 0;
+}
+
+.drawer-info span,
+.drawer-info strong {
+  display: block;
+}
+
+.drawer-info span {
+  color: var(--students-soft);
+  font-size: 8px;
+}
+
+.drawer-info strong {
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.student-signal {
+  display: flex;
+  gap: 11px;
+  margin-top: 11px;
+  padding: 14px;
+  border-radius: 14px;
+  color: #547061;
+  background: #eaf2ec;
+}
+
+.signal-icon {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  color: #fff;
+  background: var(--students-green);
+}
+
+.student-signal strong {
+  display: block;
+  color: var(--students-ink);
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.student-signal p {
+  margin: 5px 0 0;
+  color: #718078;
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.drawer-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.drawer-primary,
+.drawer-secondary {
+  height: 39px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 13px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.drawer-primary {
+  flex: 1;
+  border: 0;
+  color: #fff;
+  background: var(--students-green);
+}
+
+.drawer-secondary {
+  border: 1px solid var(--students-line);
+  color: var(--students-ink);
+  background: #fff;
+}
+
+.student-modal-backdrop {
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.add-student-modal {
+  width: min(560px, 100%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 23px;
+  background: #fff;
+  box-shadow: 0 35px 90px rgba(15, 35, 24, 0.2);
+  animation: modalIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  overflow: hidden;
+}
+
+.add-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 25px 25px 20px;
+  border-bottom: 1px solid var(--students-line);
+}
+
+.add-modal-header > div > span {
+  color: #8b948e;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.add-modal-header h2 {
+  margin: 7px 0 5px;
+  font-size: 21px;
+  letter-spacing: -0.04em;
+}
+
+.add-modal-header p {
+  margin: 0;
+  color: var(--students-muted);
+  font-size: 9px;
+}
+
+.add-student-modal form {
+  padding: 21px 25px 23px;
+}
+
+.student-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px;
+}
+
+.student-form-grid label {
+  display: block;
+}
+
+.student-form-grid label.full {
+  grid-column: 1 / -1;
+}
+
+.student-form-grid label > span {
+  display: block;
+  margin-bottom: 6px;
+  color: #727d75;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.student-form-grid input,
+.select-field {
+  width: 100%;
+  height: 40px;
+  box-sizing: border-box;
+  border: 1px solid var(--students-line);
+  border-radius: 10px;
+  outline: 0;
+  background: #fbfcfb;
+  color: var(--students-ink);
+  font-size: 10px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.student-form-grid input {
+  padding: 0 11px;
+}
+
+.student-form-grid input:focus,
+.select-field:focus-within {
+  border-color: #afc4b5;
+  box-shadow: 0 0 0 3px rgba(23, 75, 50, 0.045);
+}
+
+.student-form-grid input::placeholder {
+  color: #a8afaa;
+}
+
+.select-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.select-field select {
+  width: 100%;
+  height: 100%;
+  appearance: none;
+  border: 0;
+  outline: 0;
+  padding: 0 31px 0 11px;
+  color: var(--students-ink);
+  background: transparent;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.select-field svg {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+  color: var(--students-muted);
+}
+
+.add-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--students-line);
+}
+
+.cancel-student,
+.save-student {
+  height: 39px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.cancel-student {
+  border: 1px solid var(--students-line);
+  color: var(--students-muted);
+  background: #fff;
+}
+
+.save-student {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  color: #fff;
+  background: var(--students-green);
+}
+
+@keyframes studentsEnter {
+  from {
+    opacity: 0;
+    transform: translateY(13px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rowEnter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes overlayIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes drawerIn {
+  from {
+    opacity: 0;
+    transform: translateX(35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes filterOpen {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1180px) {
+  .students-summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .student-table-header,
+  .student-table-row {
+    grid-template-columns:
+      30px
+      minmax(210px, 1.4fr)
+      0.65fr
+      0.8fr
+      0.8fr
+      0.65fr
+      20px;
+  }
+}
+
+@media (max-width: 950px) {
+  .students-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .students-search-box {
+    width: 100%;
+  }
+
+  .students-toolbar-actions {
+    width: 100%;
+  }
+
+  .student-select-wrap,
+  .student-sort-wrap {
+    flex: 1;
+  }
+
+  .student-select-wrap select,
+  .student-sort-wrap select {
+    width: 100%;
+  }
+
+  .student-table {
+    overflow-x: auto;
+  }
+
+  .student-table-header,
+  .student-table-row {
+    min-width: 820px;
+  }
+}
+
+@media (max-width: 720px) {
+  .students-page {
+    padding: 25px 18px 42px;
+  }
+
+  .students-page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .students-add-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .students-summary-grid {
+    gap: 8px;
+  }
+
+  .students-summary-card {
+    min-height: 125px;
+    padding: 15px;
+  }
+
+  .students-summary-card > strong {
+    font-size: 25px;
+  }
+
+  .students-directory-header {
+    padding: 19px;
+  }
+
+  .students-toolbar {
+    padding: 0 19px 17px;
+  }
+
+  .students-toolbar-actions {
+    flex-wrap: wrap;
+  }
+
+  .student-select-wrap,
+  .student-sort-wrap {
+    flex: 1 1 calc(50% - 5px);
+  }
+
+  .filter-button {
+    flex: 1;
+  }
+
+  .more-directory {
+    flex: 0 0 38px;
+  }
+
+  .advanced-filters {
+    padding: 14px 19px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .students-insight {
+    grid-template-columns: 43px 1fr;
+  }
+
+  .students-insight > button {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 500px) {
+  .students-page {
+    padding: 20px 13px 35px;
+  }
+
+  .students-page-header h1 {
+    font-size: 34px;
+  }
+
+  .students-summary-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .students-summary-card {
+    border-radius: 15px;
+  }
+
+  .students-summary-top > span {
+    max-width: 70px;
+    line-height: 1.35;
+  }
+
+  .students-directory-card {
+    border-radius: 17px;
+  }
+
+  .students-directory-header {
+    align-items: flex-start;
+    gap: 12px;
+    flex-direction: column;
+  }
+
+  .students-directory-meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .students-directory-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 14px 19px;
+  }
+
+  .student-profile-header {
+    grid-template-columns: 58px 1fr;
+  }
+
+  .student-profile-header .student-status {
+    grid-column: 2;
+  }
+
+  .student-drawer {
+    padding: 21px;
+  }
+
+  .student-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .student-form-grid label.full {
+    grid-column: auto;
+  }
+}
