@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useId } from "react";
 import {
   Activity,
   ArrowRight,
@@ -12,7 +12,6 @@ import {
   CalendarDays,
   Check,
   ChevronDown,
-  ChevronRight,
   ClipboardCheck,
   Clock3,
   FileText,
@@ -22,7 +21,7 @@ import {
   LayoutDashboard,
   LineChart,
   Menu,
-  MessageSquare,
+  MessageCircle,
   MoreHorizontal,
   Plus,
   RefreshCcw,
@@ -31,6 +30,7 @@ import {
   Settings,
   Sparkles,
   Target,
+  TrendingDown,
   TrendingUp,
   UserCheck,
   Users,
@@ -39,322 +39,348 @@ import {
 } from "lucide-react";
 
 const students = [
-  { name: "Areeba Khan", className: "9-B", average: 91, attendance: 98, status: "Excellent" },
-  { name: "Ayaan Khan", className: "9-A", average: 87, attendance: 96, status: "Excellent" },
-  { name: "Maham Ali", className: "9-A", average: 82, attendance: 91, status: "Good" },
-  { name: "Hassan Raza", className: "9-C", average: 76, attendance: 88, status: "Good" },
-  { name: "Rayyan Malik", className: "9-C", average: 64, attendance: 79, status: "Attention" },
-  { name: "Zayan Ahmed", className: "9-B", average: 51, attendance: 73, status: "At Risk" }
+  { name: "Ayaan Khan", initials: "AK", className: "9-A", avg: 87, attendance: 96, status: "Excellent" },
+  { name: "Zayan Ahmed", initials: "ZA", className: "9-B", avg: 51, attendance: 73, status: "At Risk" },
+  { name: "Maham Ali", initials: "MA", className: "9-A", avg: 82, attendance: 91, status: "Good" },
+  { name: "Hassan Raza", initials: "HR", className: "9-C", avg: 76, attendance: 88, status: "Good" },
+  { name: "Areeba Khan", initials: "AK", className: "9-B", avg: 91, attendance: 98, status: "Excellent" },
+  { name: "Rayyan Malik", initials: "RM", className: "9-C", avg: 64, attendance: 79, status: "Attention" }
+];
+
+const navItems = [
+  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { id: "students", label: "Students", icon: Users },
+  { id: "academics", label: "Academics", icon: BookOpen },
+  { id: "exams", label: "Examinations", icon: ClipboardCheck },
+  { id: "marks", label: "Marks", icon: FileText },
+  { id: "results", label: "Results", icon: Award },
+  { id: "attendance", label: "Attendance", icon: UserCheck },
+  { id: "performance", label: "Performance", icon: LineChart },
+  { id: "ai", label: "AI Assistant", icon: BrainCircuit }
 ];
 
 const modules = [
-  [Users, "Student Management", "Manage profiles, enrollment, classes and complete academic records."],
-  [BookOpen, "Academic Management", "Organize subjects, teachers, classes and academic structures."],
-  [ClipboardCheck, "Examinations", "Plan schedules, assessments and examination workflows."],
-  [Award, "Marks & Results", "Capture marks, calculate results and track academic progress."],
-  [UserCheck, "Attendance", "Monitor daily presence and identify attendance patterns."],
-  [LineChart, "Performance Analytics", "Transform academic records into meaningful visual insights."]
+  {
+    number: "01",
+    title: "Student Management",
+    description: "Keep every student record organized, searchable and instantly accessible.",
+    icon: Users
+  },
+  {
+    number: "02",
+    title: "Academic Management",
+    description: "Manage classes, subjects, teachers and academic structures from one place.",
+    icon: BookOpenCheck
+  },
+  {
+    number: "03",
+    title: "Examinations",
+    description: "Plan examinations, schedules and assessments without spreadsheet chaos.",
+    icon: ClipboardCheck
+  },
+  {
+    number: "04",
+    title: "Marks & Results",
+    description: "Turn raw marks into clear, structured results and academic reports.",
+    icon: Award
+  },
+  {
+    number: "05",
+    title: "Attendance Intelligence",
+    description: "Spot attendance patterns before they become academic problems.",
+    icon: UserCheck
+  },
+  {
+    number: "06",
+    title: "Performance Analytics",
+    description: "Understand trends, strengths and areas that need attention.",
+    icon: BarChart3
+  }
 ];
 
-const navigation = [
-  ["overview", "Overview", LayoutDashboard],
-  ["students", "Students", Users],
-  ["academics", "Academics", BookOpen],
-  ["exams", "Examinations", ClipboardCheck],
-  ["marks", "Marks", FileText],
-  ["results", "Results", Award],
-  ["attendance", "Attendance", UserCheck],
-  ["performance", "Performance", TrendingUp],
-  ["ai", "AI Assistant", BrainCircuit]
+const activities = [
+  { title: "Areeba Khan's marks updated", meta: "Mathematics · 96 marks", time: "12 min ago" },
+  { title: "New examination scheduled", meta: "Computer Science · 18 Oct", time: "35 min ago" },
+  { title: "Attendance report generated", meta: "Class 9-B · September", time: "1 hr ago" },
+  { title: "Student profile added", meta: "Hamza Saeed · 9-A", time: "2 hrs ago" }
 ];
 
-const questions = [
-  "Who needs attention?",
-  "Show attendance",
-  "Top students",
-  "Weakest subject",
-  "Upcoming exams",
-  "Compare classes"
+const exams = [
+  { subject: "Mathematics", className: "Grade 9 · All sections", date: "18 Oct", icon: "M" },
+  { subject: "Computer Science", className: "Grade 9 · Section A", date: "21 Oct", icon: "C" },
+  { subject: "English", className: "Grade 9 · All sections", date: "24 Oct", icon: "E" },
+  { subject: "Physics", className: "Grade 9 · Section B", date: "28 Oct", icon: "P" }
 ];
 
-function useReveal() {
-  useEffect(() => {
-    const items = document.querySelectorAll(".reveal");
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) entry.target.classList.add("visible");
-        });
-      },
-      { threshold: 0.1 }
-    );
-    items.forEach(item => observer.observe(item));
-    return () => observer.disconnect();
-  }, []);
-}
+const subjects = [
+  { name: "Mathematics", teacher: "Sarah Ahmed", classes: "9-A · 9-B · 9-C", progress: 88 },
+  { name: "Computer Science", teacher: "Usman Tariq", classes: "9-A · 9-B", progress: 94 },
+  { name: "English", teacher: "Mariam Noor", classes: "9-A · 9-B · 9-C", progress: 81 },
+  { name: "Physics", teacher: "Hamza Rauf", classes: "9-B · 9-C", progress: 76 },
+  { name: "Chemistry", teacher: "Ayesha Khan", classes: "9-A · 9-C", progress: 84 },
+  { name: "Urdu", teacher: "Nadia Aslam", classes: "9-A · 9-B · 9-C", progress: 90 }
+];
 
-function Logo({ dark = false }) {
+const marks = [
+  { student: "Areeba Khan", subject: "Mathematics", score: 96, total: 100, grade: "A+" },
+  { student: "Ayaan Khan", subject: "Computer Science", score: 91, total: 100, grade: "A+" },
+  { student: "Maham Ali", subject: "English", score: 87, total: 100, grade: "A" },
+  { student: "Hassan Raza", subject: "Physics", score: 82, total: 100, grade: "A" },
+  { student: "Rayyan Malik", subject: "Chemistry", score: 68, total: 100, grade: "B" },
+  { student: "Zayan Ahmed", subject: "Mathematics", score: 51, total: 100, grade: "C" }
+];
+
+function Logo({ compact = false }) {
   return (
-    <div className={`brand ${dark ? "brand-dark" : ""}`}>
+    <div className={`brand ${compact ? "brand-compact" : ""}`}>
       <div className="brand-mark">
-        <img src="/logo/schoolmarks-logo.png" alt="SchoolMarks" />
+        <span>SM</span>
+        <img
+          src="/logo/schoolmarks-logo.png"
+          alt="SchoolMarks"
+          onError={(event) => {
+            event.currentTarget.style.display = "none";
+          }}
+        />
       </div>
-      <div className="brand-text">
-        <strong>SchoolMarks</strong>
-        <span>Academic Intelligence</span>
-      </div>
+      {!compact && (
+        <div className="brand-copy">
+          <strong>SchoolMarks</strong>
+          <span>Academic Intelligence</span>
+        </div>
+      )}
     </div>
   );
 }
 
-function MiniChart({ large = false }) {
+function MiniChart({ values = [42, 54, 47, 68, 62, 78, 72, 91] }) {
+  const id = useId().replace(/:/g, "");
+  const max = Math.max(...values);
+  const min = Math.min(...values);
+  const points = values
+    .map((value, index) => {
+      const x = (index / (values.length - 1)) * 100;
+      const y = 88 - ((value - min) / (max - min || 1)) * 66;
+      return `${x},${y}`;
+    })
+    .join(" ");
+
+  const areaPoints = `0,100 ${points} 100,100`;
+
   return (
-    <div className={`mini-chart ${large ? "mini-chart-large" : ""}`}>
-      <div className="chart-grid">
-        <span />
-        <span />
-        <span />
-        <span />
-      </div>
-      <svg viewBox="0 0 600 220" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="#3f8f5d" stopOpacity=".25" />
-            <stop offset="100%" stopColor="#3f8f5d" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <path
-          className="chart-area"
-          d="M0 180 C55 170 80 145 125 153 C175 162 205 117 255 126 C300 136 320 92 365 105 C410 118 438 78 478 86 C525 96 550 42 600 50 L600 220 L0 220 Z"
-        />
-        <path
-          className="chart-line"
-          d="M0 180 C55 170 80 145 125 153 C175 162 205 117 255 126 C300 136 320 92 365 105 C410 118 438 78 478 86 C525 96 550 42 600 50"
-        />
-        <circle className="chart-dot" cx="600" cy="50" r="5" />
-      </svg>
-      <div className="chart-labels">
-        <span>Jan</span>
-        <span>Feb</span>
-        <span>Mar</span>
-        <span>Apr</span>
-        <span>May</span>
-        <span>Jun</span>
-      </div>
-    </div>
+    <svg className="mini-chart" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id={`chart-${id}`} x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopOpacity="0.28" />
+          <stop offset="100%" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <polygon points={areaPoints} fill={`url(#chart-${id})`} />
+      <polyline points={points} fill="none" stroke="currentColor" strokeWidth="2.2" vectorEffect="non-scaling-stroke" />
+      {values.map((value, index) => {
+        const x = (index / (values.length - 1)) * 100;
+        const y = 88 - ((value - min) / (max - min || 1)) * 66;
+        return <circle key={index} cx={x} cy={y} r="1.6" fill="currentColor" />;
+      })}
+    </svg>
   );
 }
 
-function ProgressRing({ value = 94.6 }) {
+function ProgressRing({ value, size = 104 }) {
   return (
-    <div className="progress-ring" style={{ "--progress": `${value * 3.6}deg` }}>
+    <div
+      className="progress-ring"
+      style={{
+        width: size,
+        height: size,
+        "--progress": `${value * 3.6}deg`
+      }}
+    >
       <div className="ring-inner">
         <strong>{value}%</strong>
-        <span>Present</span>
+        <span>Average</span>
       </div>
     </div>
   );
 }
 
-function DashboardPreview() {
+function Reveal({ children, className = "" }) {
+  const [visible, setVisible] = useState(false);
+  const ref = React.useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.08 }
+    );
+
+    if (ref.current) observer.observe(ref.current);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="product-window floating-window">
-      <div className="browser-bar">
-        <div className="browser-dots"><i /><i /><i /></div>
-        <div className="browser-url">app.schoolmarks.local/dashboard</div>
-        <MoreHorizontal size={16} />
-      </div>
+    <div ref={ref} className={`reveal ${visible ? "visible" : ""} ${className}`}>
+      {children}
+    </div>
+  );
+}
 
-      <div className="product-body">
-        <aside className="product-sidebar">
-          <div className="preview-logo">
-            <div>SM</div>
-            <span>SchoolMarks</span>
+function LandingPreview() {
+  return (
+    <div className="hero-product">
+      <div className="product-glow" />
+      <div className="product-window">
+        <div className="browser-bar">
+          <div className="browser-dots">
+            <i />
+            <i />
+            <i />
           </div>
-          {[
-            [LayoutDashboard, "Dashboard"],
-            [Users, "Students"],
-            [BookOpen, "Academics"],
-            [BarChart3, "Analytics"],
-            [BrainCircuit, "Intelligence"]
-          ].map(([Icon, text], index) => (
-            <div className={`preview-nav ${index === 0 ? "active" : ""}`} key={text}>
-              <Icon size={13} />
-              {text}
-            </div>
-          ))}
-        </aside>
-
-        <main className="product-main">
-          <div className="preview-heading">
-            <div>
-              <small>SCHOOL OVERVIEW</small>
-              <h3>Good morning, Faizan</h3>
-            </div>
-            <div className="preview-avatar">FK</div>
+          <div className="browser-url">app.schoolmarks.local/dashboard</div>
+          <div className="browser-actions">
+            <span />
+            <span />
           </div>
+        </div>
 
-          <div className="product-stats">
-            {[
-              ["248", "Students"],
-              ["94.6%", "Attendance"],
-              ["82.7%", "Average"],
-              ["6", "At risk"]
-            ].map(([value, label]) => (
-              <div className="preview-stat" key={label}>
-                <strong>{value}</strong>
-                <span>{label}</span>
+        <div className="product-body">
+          <aside className="product-sidebar">
+            <div className="preview-logo">
+              <div>SM</div>
+              <span>SchoolMarks</span>
+            </div>
+            <div className="preview-nav active">
+              <LayoutDashboard size={13} />
+              Overview
+            </div>
+            <div className="preview-nav">
+              <Users size={13} />
+              Students
+            </div>
+            <div className="preview-nav">
+              <BookOpen size={13} />
+              Academics
+            </div>
+            <div className="preview-nav">
+              <Award size={13} />
+              Results
+            </div>
+            <div className="preview-nav">
+              <BrainCircuit size={13} />
+              AI Assistant
+            </div>
+          </aside>
+
+          <div className="product-main">
+            <div className="preview-heading">
+              <div>
+                <span>Monday, 12 October</span>
+                <h3>Good morning, Admin.</h3>
               </div>
-            ))}
-          </div>
-
-          <div className="product-grid">
-            <div className="dashboard-card chart-card">
-              <div className="card-head">
-                <div>
-                  <span>Performance trend</span>
-                  <strong>+12.8%</strong>
-                </div>
-                <small>Last 6 months</small>
-              </div>
-              <MiniChart />
+              <div className="preview-avatar">FK</div>
             </div>
 
-            <div className="dashboard-card attendance-card">
-              <div className="card-head">
+            <div className="preview-stats">
+              <div className="preview-stat">
+                <span>Students</span>
+                <strong>1,248</strong>
+                <small>+8.4% this month</small>
+              </div>
+              <div className="preview-stat">
                 <span>Attendance</span>
-                <MoreHorizontal size={14} />
+                <strong>94.2%</strong>
+                <small>+2.1% this month</small>
               </div>
-              <ProgressRing />
+              <div className="preview-stat">
+                <span>Avg. Result</span>
+                <strong>82.6%</strong>
+                <small>+4.7% this term</small>
+              </div>
             </div>
 
-            <div className="dashboard-card table-card">
-              <div className="card-head">
-                <span>Top students</span>
-                <small>View all</small>
-              </div>
-              {students.slice(0, 3).map(student => (
-                <div className="preview-student" key={student.name}>
-                  <div className="student-avatar">
-                    {student.name.split(" ").map(x => x[0]).join("")}
-                  </div>
+            <div className="product-grid">
+              <div className="dashboard-card chart-card">
+                <div className="card-head">
                   <div>
-                    <strong>{student.name}</strong>
-                    <span>{student.className}</span>
+                    <span>Academic performance</span>
+                    <strong>82.6%</strong>
                   </div>
-                  <b>{student.average}%</b>
+                  <span className="tiny-select">This term <ChevronDown size={11} /></span>
                 </div>
-              ))}
-            </div>
-
-            <div className="dashboard-card intelligence-card">
-              <div className="ai-heading">
-                <div className="ai-icon"><Sparkles size={14} /></div>
-                <div>
-                  <span>SchoolMarks AI</span>
-                  <small>Live intelligence</small>
+                <div className="chart-grid">
+                  <span>100</span>
+                  <span>75</span>
+                  <span>50</span>
+                  <span>25</span>
                 </div>
-              </div>
-              <p>6 students may need additional academic attention.</p>
-              <div className="ai-tags">
-                <span>Attendance</span>
-                <span>Performance</span>
-                <span>Risk</span>
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    </div>
-  );
-}
-
-function IntelligenceDemo({ onOpenAI }) {
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("Ask a question about your school data.");
-  const [loading, setLoading] = useState(false);
-
-  const analyze = value => {
-    if (!value.trim()) return;
-    setQuestion(value);
-    setLoading(true);
-    setTimeout(() => {
-      const q = value.toLowerCase();
-      if (q.includes("attendance")) {
-        setAnswer("Overall attendance is 94.6%. Two students are currently below the 80% attendance threshold.");
-      } else if (q.includes("top") || q.includes("best")) {
-        setAnswer("Areeba Khan currently has the highest average at 91%, followed by Ayaan Khan at 87%.");
-      } else if (q.includes("risk") || q.includes("attention")) {
-        setAnswer("6 students are flagged for attention. Zayan Ahmed has the lowest average at 51%.");
-      } else if (q.includes("subject") || q.includes("weak")) {
-        setAnswer("Mathematics is currently showing the weakest trend in the available assessment data.");
-      } else {
-        setAnswer("I can analyze attendance, performance, students, marks, results and examinations.");
-      }
-      setLoading(false);
-    }, 700);
-  };
-
-  return (
-    <div className="intelligence-demo">
-      <div className="assistant-top">
-        <div className="assistant-status"><span /> SchoolMarks Intelligence</div>
-        <small>Local analysis</small>
-      </div>
-
-      <div className="assistant-content">
-        <div className="assistant-copy">
-          <span className="eyebrow">ASK YOUR SCHOOL DATA</span>
-          <h3>Answers without digging through spreadsheets.</h3>
-          <p>Ask natural questions and turn your school data into understandable insights.</p>
-          <button className="text-link" onClick={onOpenAI}>
-            Open full AI Assistant <ArrowUpRight size={15} />
-          </button>
-        </div>
-
-        <div className="assistant-panel">
-          <div className="assistant-messages">
-            <div className="assistant-message">
-              <div className="message-avatar"><BrainCircuit size={15} /></div>
-              <div>
-                <span>SchoolMarks AI</span>
-                <p>What would you like to understand?</p>
-              </div>
-            </div>
-
-            {question && (
-              <div className="assistant-message user-message">
-                <div className="message-avatar user-avatar">FK</div>
-                <div>
-                  <span>You</span>
-                  <p>{question}</p>
+                <div className="chart-area">
+                  <MiniChart values={[48, 56, 51, 65, 62, 74, 70, 82, 79, 89]} />
+                </div>
+                <div className="chart-labels">
+                  <span>Aug</span>
+                  <span>Sep</span>
+                  <span>Oct</span>
                 </div>
               </div>
-            )}
 
-            <div className="assistant-message result-message">
-              <div className="message-avatar"><Sparkles size={15} /></div>
-              <div>
-                <span>Insight</span>
-                <p>{loading ? "Analyzing your school data..." : answer}</p>
+              <div className="dashboard-card attendance-card">
+                <div className="card-head">
+                  <div>
+                    <span>Attendance health</span>
+                    <strong>94.2%</strong>
+                  </div>
+                  <Activity size={14} />
+                </div>
+                <div className="attendance-center">
+                  <ProgressRing value={94} size={88} />
+                  <div className="attendance-breakdown">
+                    <div><i className="dot present" /> Present <b>1,176</b></div>
+                    <div><i className="dot absent" /> Absent <b>72</b></div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="dashboard-card table-card">
+                <div className="card-head">
+                  <div>
+                    <span>Students requiring attention</span>
+                    <strong>6 students</strong>
+                  </div>
+                  <ArrowUpRight size={14} />
+                </div>
+                {students.slice(0, 3).map((student) => (
+                  <div className="preview-student" key={student.name}>
+                    <div className="student-avatar">{student.initials}</div>
+                    <div>
+                      <b>{student.name}</b>
+                      <span>{student.className}</span>
+                    </div>
+                    <strong>{student.avg}%</strong>
+                  </div>
+                ))}
+              </div>
+
+              <div className="dashboard-card intelligence-card">
+                <div className="ai-heading">
+                  <div className="ai-icon"><Sparkles size={14} /></div>
+                  <div>
+                    <span>AI Insight</span>
+                    <strong>3 performance signals</strong>
+                  </div>
+                </div>
+                <p>Grade 9-B attendance dropped 4.2% this week.</p>
+                <div className="ai-tags">
+                  <span>Attendance</span>
+                  <span>Grade 9-B</span>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className="suggestion-row">
-            {["Who needs attention?", "Show attendance", "Top students"].map(item => (
-              <button key={item} onClick={() => analyze(item)}>{item}</button>
-            ))}
-          </div>
-
-          <div className="assistant-input">
-            <input
-              value={question}
-              onChange={e => setQuestion(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && analyze(question)}
-              placeholder="Ask about your school..."
-            />
-            <button onClick={() => analyze(question)}><ArrowRight size={17} /></button>
           </div>
         </div>
       </div>
@@ -362,364 +388,497 @@ function IntelligenceDemo({ onOpenAI }) {
   );
 }
 
-function Home({ onDashboard, onAI }) {
-  useReveal();
-
-  const [faq, setFaq] = useState(null);
-
+function HomePage({ onNavigate, onAccess }) {
   return (
-    <div className="site">
+    <div className="public-site">
       <nav className="public-nav">
         <div className="container nav-inner">
           <Logo />
-
           <div className="nav-links">
             <a href="#platform">Platform</a>
-            <a href="#workflow">Workflow</a>
+            <a href="#modules">Modules</a>
             <a href="#intelligence">Intelligence</a>
-            <a href="#analytics">Analytics</a>
-            <a href="#faq">FAQ</a>
+            <a href="#workflow">How it works</a>
           </div>
-
           <div className="nav-actions">
-            <button className="nav-ai" onClick={onAI}>
-              <BrainCircuit size={15} /> AI Lab
+            <button className="nav-ai" onClick={() => onNavigate("ai")}>
+              <BrainCircuit size={16} />
+              AI Assistant
             </button>
-            <button className="nav-button" onClick={onDashboard}>
-              Open platform <ArrowUpRight size={15} />
+            <button className="nav-button" onClick={onAccess}>
+              Open platform <ArrowRight size={15} />
             </button>
           </div>
         </div>
       </nav>
 
       <main>
-        <section className="hero">
+        <section className="hero" id="platform">
+          <div className="hero-grid-bg" />
           <div className="hero-orb orb-one" />
           <div className="hero-orb orb-two" />
-          <div className="hero-grid-lines" />
 
-          <div className="container hero-container">
-            <div className="hero-grid">
-              <div className="hero-copy reveal">
-                <div className="hero-eyebrow">
-                  <span><Sparkles size={14} /> SCHOOL MANAGEMENT, REIMAGINED</span>
-                </div>
-
-                <h1>
-                  Run your school with
-                  <em> clarity.</em>
-                </h1>
-
-                <p>
-                  SchoolMarks connects students, academics, attendance,
-                  examinations, results and intelligence in one modern workspace.
-                </p>
-
-                <div className="hero-actions">
-                  <button className="primary-button" onClick={onDashboard}>
-                    Explore SchoolMarks <ArrowRight size={17} />
-                  </button>
-                  <a href="#intelligence" className="secondary-button">
-                    See intelligence <Sparkles size={16} />
-                  </a>
-                </div>
-
-                <div className="hero-trust">
-                  <div><strong>248+</strong><span>Students</span></div>
-                  <div><strong>94.6%</strong><span>Attendance</span></div>
-                  <div><strong>82.7%</strong><span>Performance</span></div>
-                </div>
+          <div className="container hero-inner">
+            <Reveal className="hero-copy">
+              <div className="hero-eyebrow">
+                <span className="eyebrow-pulse" />
+                A smarter school operating layer
               </div>
 
-              <div className="hero-product reveal">
-                <DashboardPreview />
-                <div className="floating-stat floating-stat-one">
-                  <TrendingUp size={17} />
-                  <div><strong>+12.8%</strong><span>Performance trend</span></div>
-                </div>
-                <div className="floating-stat floating-stat-two">
-                  <BrainCircuit size={17} />
-                  <div><strong>AI Ready</strong><span>School intelligence</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+              <h1>
+                Run your school
+                <span> with clarity.</span>
+              </h1>
 
-        <section className="metrics-section">
-          <div className="container metrics-grid">
-            <div><strong>248</strong><span>Students managed</span></div>
-            <div><strong>94.6%</strong><span>Attendance visibility</span></div>
-            <div><strong>82.7%</strong><span>Academic average</span></div>
-            <div><strong>92+</strong><span>Assessment records</span></div>
-          </div>
-        </section>
-
-        <section className="problem-section reveal">
-          <div className="container split-section">
-            <div className="section-copy">
-              <span className="eyebrow">THE OLD WAY</span>
-              <h2>School data should not live in ten different places.</h2>
               <p>
-                Spreadsheets, attendance sheets, result records and reports
-                become difficult to connect when every process is isolated.
+                SchoolMarks brings students, academics, examinations,
+                attendance, results and performance intelligence into one
+                beautifully connected workspace.
               </p>
-              <div className="feature-list">
-                <div><X size={16} /> Scattered information</div>
-                <div><X size={16} /> Manual calculations</div>
-                <div><X size={16} /> Delayed insights</div>
-                <div><X size={16} /> Difficult reporting</div>
-              </div>
-            </div>
 
-            <div className="problem-visual">
-              <div className="scattered-card card-one"><FileText size={18} /><strong>Result Sheets</strong><span>Updated manually</span></div>
-              <div className="scattered-card card-two"><CalendarDays size={18} /><strong>Attendance</strong><span>Multiple records</span></div>
-              <div className="scattered-card card-three"><BarChart3 size={18} /><strong>Analytics</strong><span>Hard to connect</span></div>
-              <div className="convergence"><Sparkles size={25} /><strong>SchoolMarks</strong><span>One connected system</span></div>
-            </div>
+              <div className="hero-actions">
+                <button className="primary-button" onClick={() => onNavigate("dashboard")}>
+                  Explore dashboard
+                  <ArrowUpRight size={17} />
+                </button>
+                <a className="secondary-button" href="#modules">
+                  Explore platform
+                  <ArrowRight size={16} />
+                </a>
+              </div>
+
+              <div className="hero-trust">
+                <div className="trust-item">
+                  <Check size={14} />
+                  Centralized records
+                </div>
+                <div className="trust-item">
+                  <Check size={14} />
+                  Actionable insights
+                </div>
+                <div className="trust-item">
+                  <Check size={14} />
+                  Built for educators
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal className="hero-visual">
+              <LandingPreview />
+            </Reveal>
           </div>
         </section>
 
-        <section className="platform-section reveal" id="platform">
+        <section className="trust-strip">
+          <div className="container trust-strip-inner">
+            <span>ONE CONNECTED ACADEMIC WORKSPACE</span>
+            <div className="trust-line" />
+            <span>STUDENTS</span>
+            <span>ACADEMICS</span>
+            <span>ASSESSMENTS</span>
+            <span>INTELLIGENCE</span>
+          </div>
+        </section>
+
+        <section className="problem-section section-pad">
+          <div className="container problem-layout">
+            <Reveal className="problem-copy">
+              <span className="eyebrow">THE PROBLEM</span>
+              <h2>School data shouldn't feel like a puzzle.</h2>
+              <p>
+                When information lives across notebooks, spreadsheets and
+                disconnected systems, important signals disappear between
+                them.
+              </p>
+              <div className="problem-list">
+                <div><span>01</span><b>Scattered student records</b></div>
+                <div><span>02</span><b>Manual academic reporting</b></div>
+                <div><span>03</span><b>Hidden performance patterns</b></div>
+              </div>
+            </Reveal>
+
+            <Reveal className="problem-visual">
+              <div className="scattered-card card-a">
+                <FileText size={19} />
+                <span>Marks.xlsx</span>
+                <small>Last edited 2 days ago</small>
+              </div>
+              <div className="scattered-card card-b">
+                <CalendarDays size={19} />
+                <span>Attendance Sheet</span>
+                <small>43 records pending</small>
+              </div>
+              <div className="scattered-card card-c">
+                <Users size={19} />
+                <span>Student Register</span>
+                <small>1,248 entries</small>
+              </div>
+              <div className="scattered-card card-d">
+                <BarChart3 size={19} />
+                <span>Result Report</span>
+                <small>September 2026</small>
+              </div>
+              <div className="convergence">
+                <div className="convergence-ring ring-1" />
+                <div className="convergence-ring ring-2" />
+                <div className="convergence-core">
+                  <span>SM</span>
+                  <small>One system</small>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        <section className="solution-section section-pad" id="modules">
           <div className="container">
-            <div className="section-heading">
+            <Reveal className="section-heading centered">
               <span className="eyebrow">THE PLATFORM</span>
-              <h2>Everything important. Connected.</h2>
-              <p>Six core areas working together inside one intelligent workspace.</p>
-            </div>
+              <h2>Everything connected.<br />Nothing overlooked.</h2>
+              <p>
+                A complete academic workspace designed around the way schools
+                actually operate.
+              </p>
+            </Reveal>
 
             <div className="module-grid">
-              {modules.map(([Icon, title, text], index) => (
-                <div className="module-card" key={title}>
-                  <div className="module-number">0{index + 1}</div>
-                  <div className="module-icon"><Icon size={21} /></div>
-                  <h3>{title}</h3>
-                  <p>{text}</p>
-                  <ArrowUpRight className="module-arrow" size={17} />
-                </div>
-              ))}
+              {modules.map((module, index) => {
+                const Icon = module.icon;
+                return (
+                  <Reveal key={module.number} className="module-card-wrap">
+                    <article className="module-card" style={{ "--delay": `${index * 70}ms` }}>
+                      <div className="module-top">
+                        <span className="module-number">{module.number}</span>
+                        <div className="module-icon"><Icon size={19} /></div>
+                      </div>
+                      <h3>{module.title}</h3>
+                      <p>{module.description}</p>
+                      <div className="module-card-arrow">
+                        Explore module <ArrowUpRight size={14} />
+                      </div>
+                    </article>
+                  </Reveal>
+                );
+              })}
             </div>
           </div>
         </section>
 
-        <section className="workflow-section reveal" id="workflow">
+        <section className="workflow-section section-pad" id="workflow">
           <div className="container">
-            <div className="section-heading">
-              <span className="eyebrow">HOW IT WORKS</span>
-              <h2>One workflow. Every academic process.</h2>
-              <p>Move from setup to intelligence without switching between disconnected tools.</p>
-            </div>
+            <div className="workflow-stage">
+              <Reveal className="workflow-copy">
+                <span className="eyebrow">A SIMPLE FLOW</span>
+                <h2>From school setup to useful intelligence.</h2>
+                <p>
+                  SchoolMarks turns daily academic operations into a connected
+                  flow where every action contributes to a clearer picture.
+                </p>
+              </Reveal>
 
-            <div className="workflow-grid">
-              {[
-                ["01", "Set up", "Create your school and academic structure."],
-                ["02", "Add students", "Organize profiles and class information."],
-                ["03", "Track attendance", "Record daily presence and patterns."],
-                ["04", "Record marks", "Capture assessments and results."],
-                ["05", "Analyze", "Understand performance through visual data."],
-                ["06", "Ask AI", "Get answers from your school dataset."]
-              ].map(([number, title, text]) => (
-                <div className="workflow-card" key={number}>
-                  <span>{number}</span>
-                  <div className="workflow-line" />
-                  <h3>{title}</h3>
-                  <p>{text}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="intelligence-section reveal" id="intelligence">
-          <div className="container">
-            <div className="intelligence-header">
-              <div>
-                <span className="eyebrow">SCHOOLMARKS INTELLIGENCE</span>
-                <h2>Your data can answer questions.</h2>
+              <div className="workflow-steps">
+                {[
+                  ["01", "Configure", "Set up classes, subjects and academic structure."],
+                  ["02", "Manage", "Add students and keep records organized."],
+                  ["03", "Measure", "Track attendance, marks and examinations."],
+                  ["04", "Understand", "Use analytics and AI-powered insights."]
+                ].map(([number, title, description], index) => (
+                  <Reveal key={number}>
+                    <div className="workflow-step">
+                      <div className="workflow-step-number">{number}</div>
+                      <div>
+                        <strong>{title}</strong>
+                        <span>{description}</span>
+                      </div>
+                      {index < 3 && <ArrowRight size={16} />}
+                    </div>
+                  </Reveal>
+                ))}
               </div>
-              <button onClick={onAI}>Open AI Assistant <ArrowUpRight size={16} /></button>
             </div>
-            <IntelligenceDemo onOpenAI={onAI} />
           </div>
         </section>
 
-        <section className="analytics-section reveal" id="analytics">
-          <div className="container analytics-layout">
-            <div className="analytics-copy">
-              <span className="eyebrow">PERFORMANCE ANALYTICS</span>
-              <h2>See the signals hiding inside your data.</h2>
+        <section className="capabilities-section section-pad">
+          <div className="container">
+            <Reveal className="section-heading">
+              <span className="eyebrow">WHY IT FEELS DIFFERENT</span>
+              <h2>Built to turn information<br />into decisions.</h2>
+            </Reveal>
+
+            <div className="capability-grid">
+              <Reveal>
+                <div className="capability-card large">
+                  <div className="capability-icon"><Activity size={20} /></div>
+                  <span>01 · CONNECTED DATA</span>
+                  <h3>One academic picture.</h3>
+                  <p>
+                    Student information, marks, attendance and assessments
+                    work together instead of living in isolated places.
+                  </p>
+                  <div className="capability-lines">
+                    <span><Users size={14} /> Students</span>
+                    <span><Award size={14} /> Results</span>
+                    <span><UserCheck size={14} /> Attendance</span>
+                  </div>
+                </div>
+              </Reveal>
+
+              <Reveal>
+                <div className="capability-card">
+                  <div className="capability-icon"><Target size={20} /></div>
+                  <span>02 · SIGNALS</span>
+                  <h3>See what needs attention.</h3>
+                  <p>Identify changes before they become bigger academic issues.</p>
+                  <div className="signal-demo">
+                    <div><i /> Attendance <b>−4.2%</b></div>
+                    <div><i /> Mathematics <b>+8.7%</b></div>
+                    <div><i /> Grade 9-B <b>Watch</b></div>
+                  </div>
+                </div>
+              </Reveal>
+
+              <Reveal>
+                <div className="capability-card">
+                  <div className="capability-icon"><Zap size={20} /></div>
+                  <span>03 · SPEED</span>
+                  <h3>Less admin. More insight.</h3>
+                  <p>Replace repetitive reporting with a focused academic workflow.</p>
+                  <div className="speed-meter">
+                    <span>Daily operations</span>
+                    <div><i style={{ width: "86%" }} /></div>
+                    <b>86% organized</b>
+                  </div>
+                </div>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+
+        <section className="intelligence-section section-pad" id="intelligence">
+          <div className="container">
+            <Reveal className="intelligence-header">
+              <div>
+                <span className="eyebrow">ACADEMIC INTELLIGENCE</span>
+                <h2>Your data can tell you more.</h2>
+              </div>
               <p>
-                Turn raw academic records into trends, patterns and student-level
-                signals that are easier to understand.
+                Ask questions, discover patterns and turn raw school data into
+                useful context.
+              </p>
+            </Reveal>
+
+            <Reveal className="intelligence-demo">
+              <div className="assistant-top">
+                <div className="assistant-brand">
+                  <div className="assistant-logo"><Sparkles size={17} /></div>
+                  <div>
+                    <strong>SchoolMarks Intelligence</strong>
+                    <span>Academic analysis assistant</span>
+                  </div>
+                </div>
+                <div className="assistant-status"><i /> Online</div>
+              </div>
+
+              <div className="assistant-content">
+                <div className="assistant-copy">
+                  <span>ASK YOUR SCHOOL DATA</span>
+                  <h3>What changed this week?</h3>
+                  <p>
+                    AI can surface patterns across attendance, performance,
+                    classes and results.
+                  </p>
+                  <div className="suggestion-row">
+                    <span>Show students at risk</span>
+                    <span>Compare classes</span>
+                    <span>Analyze attendance</span>
+                  </div>
+                </div>
+
+                <div className="assistant-panel">
+                  <div className="assistant-messages">
+                    <div className="assistant-message user-message">
+                      <div className="message-avatar user-avatar">A</div>
+                      <p>Which class needs attention right now?</p>
+                    </div>
+                    <div className="assistant-message result-message">
+                      <div className="message-avatar"><Sparkles size={13} /></div>
+                      <div>
+                        <strong>Grade 9-B</strong>
+                        <p>
+                          Attendance decreased by 4.2% this week, while the
+                          average Mathematics score is 9 points below the
+                          school average.
+                        </p>
+                        <div className="answer-tags">
+                          <span>Attendance</span>
+                          <span>Mathematics</span>
+                          <span>9-B</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="assistant-input">
+                    <span>Ask anything about your academic data...</span>
+                    <Send size={14} />
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        <section className="analytics-section section-pad">
+          <div className="container analytics-layout">
+            <Reveal className="analytics-copy">
+              <span className="eyebrow">PERFORMANCE ANALYTICS</span>
+              <h2>Don't just store results.<br /><span>Understand them.</span></h2>
+              <p>
+                Follow academic movement over time and quickly identify the
+                students, classes and subjects that deserve attention.
               </p>
 
               <div className="signal-list">
-                <div><Check size={16} /> Class performance trends</div>
-                <div><Check size={16} /> Attendance risk signals</div>
-                <div><Check size={16} /> Student performance tracking</div>
-                <div><Check size={16} /> Assessment insights</div>
+                <div>
+                  <span className="signal-icon positive"><TrendingUp size={15} /></span>
+                  <div><strong>Performance trends</strong><small>Track progress across terms.</small></div>
+                </div>
+                <div>
+                  <span className="signal-icon"><Target size={15} /></span>
+                  <div><strong>Student signals</strong><small>Find unusual changes early.</small></div>
+                </div>
+                <div>
+                  <span className="signal-icon"><BarChart3 size={15} /></span>
+                  <div><strong>Class comparisons</strong><small>See where performance differs.</small></div>
+                </div>
               </div>
-            </div>
+            </Reveal>
 
-            <div className="analytics-visual">
+            <Reveal className="analytics-visual">
               <div className="analytics-main-card">
-                <div className="card-head">
-                  <div><span>Class performance</span><strong>82.7%</strong></div>
-                  <span className="trend-positive">+8.4%</span>
+                <div className="analytics-card-top">
+                  <div>
+                    <span>Average performance</span>
+                    <strong>82.6%</strong>
+                  </div>
+                  <div className="analytics-change"><TrendingUp size={13} /> 4.7%</div>
                 </div>
-                <MiniChart large />
+                <div className="large-chart">
+                  <div className="large-chart-grid">
+                    <span>100</span>
+                    <span>80</span>
+                    <span>60</span>
+                    <span>40</span>
+                  </div>
+                  <MiniChart values={[51, 58, 54, 61, 67, 63, 75, 72, 82, 79, 89]} />
+                  <div className="large-chart-labels">
+                    <span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span>
+                  </div>
+                </div>
               </div>
 
-              <div className="analytics-float analytics-float-top">
-                <TrendingUp size={17} />
-                <div><strong>+12.8%</strong><span>Trend</span></div>
+              <div className="analytics-float float-top">
+                <span>Top subject</span>
+                <strong>Computer Science</strong>
+                <b>94%</b>
               </div>
 
-              <div className="analytics-float analytics-float-bottom">
-                <UserCheck size={17} />
-                <div><strong>94.6%</strong><span>Attendance</span></div>
+              <div className="analytics-float float-bottom">
+                <span>Improvement</span>
+                <strong>+12.4%</strong>
+                <small>vs. previous term</small>
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
 
-        <section className="insights-section reveal">
+        <section className="compare-section section-pad">
           <div className="container">
-            <div className="section-heading">
-              <span className="eyebrow">INTELLIGENT SIGNALS</span>
-              <h2>Know what deserves attention.</h2>
-              <p>SchoolMarks turns numbers into signals you can act on.</p>
-            </div>
+            <Reveal className="section-heading centered">
+              <span className="eyebrow">THE SHIFT</span>
+              <h2>Move from managing data<br />to understanding it.</h2>
+            </Reveal>
 
-            <div className="insight-grid">
-              <div className="insight-card insight-large">
-                <div className="insight-card-top"><span>01</span><BrainCircuit size={20} /></div>
-                <span className="insight-label">RISK DETECTION</span>
-                <h3>Find students who may need support.</h3>
-                <p>Combine attendance and academic performance to surface students requiring closer attention.</p>
-                <div className="insight-meter"><span style={{ width: "72%" }} /></div>
+            <Reveal className="comparison">
+              <div className="comparison-column old-column">
+                <span>WITHOUT SCHOOLMARKS</span>
+                <div className="comparison-row"><X size={15} /> Separate spreadsheets</div>
+                <div className="comparison-row"><X size={15} /> Manual reports</div>
+                <div className="comparison-row"><X size={15} /> Delayed insights</div>
+                <div className="comparison-row"><X size={15} /> Scattered records</div>
               </div>
 
-              <div className="insight-card">
-                <div className="insight-card-top"><span>02</span><TrendingUp size={20} /></div>
-                <span className="insight-label">TREND ANALYSIS</span>
-                <h3>Understand performance movement.</h3>
-                <p>See whether academic performance is moving upward or downward over time.</p>
+              <div className="comparison-center">
+                <div>→</div>
               </div>
 
-              <div className="insight-card">
-                <div className="insight-card-top"><span>03</span><Target size={20} /></div>
-                <span className="insight-label">FOCUS AREAS</span>
-                <h3>Discover where improvement matters.</h3>
-                <p>Identify subjects, classes and patterns that deserve deeper analysis.</p>
+              <div className="comparison-column new-column">
+                <span>WITH SCHOOLMARKS</span>
+                <div className="comparison-row"><Check size={15} /> Connected workspace</div>
+                <div className="comparison-row"><Check size={15} /> Structured intelligence</div>
+                <div className="comparison-row"><Check size={15} /> Real-time visibility</div>
+                <div className="comparison-row"><Check size={15} /> One academic picture</div>
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
 
-        <section className="timeline-section reveal">
-          <div className="container timeline-layout">
-            <div className="timeline-intro">
-              <span className="eyebrow">FROM DATA TO DECISION</span>
-              <h2>A clearer path from information to action.</h2>
-              <p>Every layer of SchoolMarks builds on the previous one.</p>
-            </div>
+        <section className="roadmap-section section-pad">
+          <div className="container">
+            <Reveal className="section-heading">
+              <span className="eyebrow">THE EXPERIENCE</span>
+              <h2>Designed around the<br />school's daily rhythm.</h2>
+            </Reveal>
 
-            <div className="timeline">
+            <div className="roadmap-grid">
               {[
-                ["01", "Collect", "Bring students, marks and attendance together."],
-                ["02", "Connect", "Organize academic information in one structure."],
-                ["03", "Understand", "Visualize trends and performance signals."],
-                ["04", "Act", "Use insights to focus attention where it matters."]
-              ].map(([num, title, text]) => (
-                <div className="timeline-item" key={num}>
-                  <span>{num}</span>
-                  <div><h3>{title}</h3><p>{text}</p></div>
-                  <ChevronRight size={18} />
-                </div>
+                ["Morning", "Daily pulse", "Attendance, alerts and today's academic activity.", Clock3],
+                ["Midday", "Academic flow", "Classes, students, examinations and marks.", BookOpen],
+                ["Afternoon", "Performance", "Analyze movement and identify signals.", BarChart3],
+                ["Anytime", "Ask AI", "Get answers from your connected academic data.", BrainCircuit]
+              ].map(([time, title, description, Icon], index) => (
+                <Reveal key={time}>
+                  <div className="roadmap-card">
+                    <div className="roadmap-time">{time}</div>
+                    <div className="roadmap-icon"><Icon size={19} /></div>
+                    <h3>{title}</h3>
+                    <p>{description}</p>
+                    <span>0{index + 1}</span>
+                  </div>
+                </Reveal>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="compare-section reveal">
+        <section className="cta-section">
           <div className="container">
-            <div className="section-heading">
-              <span className="eyebrow">THE DIFFERENCE</span>
-              <h2>From scattered information to connected intelligence.</h2>
-            </div>
-
-            <div className="comparison">
-              <div className="comparison-column">
-                <span>TRADITIONAL WORKFLOW</span>
-                <div><X size={16} /> Separate spreadsheets</div>
-                <div><X size={16} /> Manual calculations</div>
-                <div><X size={16} /> Delayed insights</div>
-                <div><X size={16} /> Difficult reporting</div>
-              </div>
-
-              <div className="comparison-center"><Sparkles size={20} /></div>
-
-              <div className="comparison-column comparison-new">
-                <span>SCHOOLMARKS</span>
-                <div><Check size={16} /> Connected records</div>
-                <div><Check size={16} /> Automated analysis</div>
-                <div><Check size={16} /> Actionable signals</div>
-                <div><Check size={16} /> Clear reporting</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="faq-section reveal" id="faq">
-          <div className="container faq-layout">
-            <div>
-              <span className="eyebrow">FAQ</span>
-              <h2>Questions, answered.</h2>
-              <p>A quick look at the SchoolMarks experience.</p>
-            </div>
-
-            <div className="faq-list">
-              {[
-                ["What is SchoolMarks?", "SchoolMarks is a modern academic management interface designed to connect students, academics, attendance, examinations, results and intelligence."],
-                ["Does the AI use real data?", "This frontend demonstration uses a local dataset inside the browser to demonstrate the intelligence experience."],
-                ["Can I ask multiple questions?", "Yes. The AI workspace keeps multiple messages in the conversation so you can continue asking questions."],
-                ["Is an account required?", "No account is required for this frontend demonstration."]
-              ].map(([q, a], index) => (
-                <div className={`faq-item ${faq === index ? "open" : ""}`} key={q}>
-                  <button onClick={() => setFaq(faq === index ? null : index)}>
-                    <span>{q}</span>
-                    <Plus size={18} />
+            <Reveal>
+              <div className="cta-box">
+                <div className="cta-content">
+                  <span className="eyebrow">READY WHEN YOU ARE</span>
+                  <h2>Make school data<br /><span>work for you.</span></h2>
+                  <p>Explore the SchoolMarks workspace and see the complete experience.</p>
+                  <button className="primary-button" onClick={() => onNavigate("dashboard")}>
+                    Enter SchoolMarks <ArrowUpRight size={17} />
                   </button>
-                  <div className="faq-answer"><p>{a}</p></div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
-        <section className="cta-section reveal">
-          <div className="container">
-            <div className="cta-box">
-              <div className="cta-copy">
-                <span className="eyebrow">READY TO EXPLORE?</span>
-                <h2>Make your school data work harder.</h2>
-                <p>Explore the SchoolMarks workspace and intelligence layer.</p>
-                <button className="primary-button" onClick={onDashboard}>
-                  Open SchoolMarks <ArrowRight size={17} />
-                </button>
+                <div className="cta-product">
+                  <div className="cta-orb" />
+                  <div className="cta-mini-card">
+                    <div><Sparkles size={14} /><span>AI insight</span></div>
+                    <strong>3 signals detected</strong>
+                    <small>Updated just now</small>
+                  </div>
+                  <div className="cta-mini-card second">
+                    <div><TrendingUp size={14} /><span>Performance</span></div>
+                    <strong>82.6%</strong>
+                    <small>+4.7% this term</small>
+                  </div>
+                </div>
               </div>
-
-              <div className="cta-orbit">
-                <div className="orbit-ring orbit-ring-one" />
-                <div className="orbit-ring orbit-ring-two" />
-                <div className="cta-core"><Sparkles size={28} /></div>
-                <div className="orbit-node node-one"><Users size={17} /></div>
-                <div className="orbit-node node-two"><TrendingUp size={17} /></div>
-                <div className="orbit-node node-three"><BrainCircuit size={17} /></div>
-              </div>
-            </div>
+            </Reveal>
           </div>
         </section>
       </main>
@@ -729,397 +888,864 @@ function Home({ onDashboard, onAI }) {
           <Logo />
           <div className="footer-links">
             <a href="#platform">Platform</a>
+            <a href="#modules">Modules</a>
             <a href="#intelligence">Intelligence</a>
-            <a href="#analytics">Analytics</a>
-            <a href="#faq">FAQ</a>
+            <button onClick={() => onNavigate("dashboard")}>Dashboard</button>
           </div>
-          <span>SchoolMarks — Academic Intelligence Platform</span>
+          <span>SchoolMarks · Academic Intelligence</span>
         </div>
       </footer>
     </div>
   );
 }
 
-function AppShell({ active, navigate, onBack, children }) {
-  const [open, setOpen] = useState(false);
-
+function Sidebar({ page, onNavigate, mobileOpen, setMobileOpen }) {
   return (
-    <div className="app-shell">
-      <aside className={`app-sidebar ${open ? "sidebar-open" : ""}`}>
-        <div className="sidebar-brand"><Logo dark /></div>
+    <>
+      {mobileOpen && <div className="sidebar-overlay" onClick={() => setMobileOpen(false)} />}
+      <aside className={`app-sidebar ${mobileOpen ? "mobile-open" : ""}`}>
+        <div className="sidebar-brand">
+          <Logo />
+          <button className="sidebar-close" onClick={() => setMobileOpen(false)}>
+            <X size={17} />
+          </button>
+        </div>
 
         <div className="sidebar-school">
-          <div className="school-avatar">SM</div>
-          <div><strong>SchoolMarks Academy</strong><span>Administrator</span></div>
-          <ChevronDown size={14} />
+          <div className="school-avatar">FK</div>
+          <div>
+            <strong>Faizan Academy</strong>
+            <span>Academic workspace</span>
+          </div>
+          <ChevronDown size={15} />
         </div>
 
         <div className="sidebar-section">
-          <span>WORKSPACE</span>
-          <nav>
-            {navigation.map(([id, label, Icon]) => (
+          <span className="sidebar-label">WORKSPACE</span>
+          {navItems.slice(0, 8).map((item) => {
+            const Icon = item.icon;
+            return (
               <button
-                key={id}
-                className={active === id ? "sidebar-link active" : "sidebar-link"}
+                key={item.id}
+                className={`sidebar-link ${page === item.id ? "active" : ""}`}
                 onClick={() => {
-                  navigate(id);
-                  setOpen(false);
+                  onNavigate(item.id);
+                  setMobileOpen(false);
                 }}
               >
                 <Icon size={17} />
-                <span>{label}</span>
-                {id === "ai" && <i className="new-badge">AI</i>}
+                <span>{item.label}</span>
+                {item.id === "dashboard" && <i className="new-badge">Live</i>}
               </button>
-            ))}
-          </nav>
+            );
+          })}
+        </div>
+
+        <div className="sidebar-section">
+          <span className="sidebar-label">INTELLIGENCE</span>
+          <button
+            className={`sidebar-link ai-link ${page === "ai" ? "active" : ""}`}
+            onClick={() => {
+              onNavigate("ai");
+              setMobileOpen(false);
+            }}
+          >
+            <BrainCircuit size={17} />
+            <span>AI Assistant</span>
+            <Sparkles size={12} />
+          </button>
         </div>
 
         <div className="sidebar-bottom">
-          <span>SYSTEM</span>
-          <button className="sidebar-link"><Settings size={17} /><span>Settings</span></button>
-          <button className="sidebar-link" onClick={onBack}><Home size={17} /><span>Back to website</span></button>
+          <button className="sidebar-link">
+            <Settings size={17} />
+            <span>Settings</span>
+          </button>
+          <div className="sidebar-profile">
+            <div className="profile-avatar">FK</div>
+            <div>
+              <strong>Faizan Khan</strong>
+              <span>Administrator</span>
+            </div>
+            <MoreHorizontal size={16} />
+          </div>
         </div>
       </aside>
-
-      {open && <button className="sidebar-overlay" onClick={() => setOpen(false)} />}
-
-      <div className="app-main">
-        <header className="app-topbar">
-          <div className="topbar-left">
-            <button className="mobile-menu" onClick={() => setOpen(true)}><Menu size={20} /></button>
-            <div className="breadcrumb">
-              <span>SchoolMarks</span>
-              <ArrowRight size={13} />
-              <strong>{navigation.find(x => x[0] === active)?.[1]}</strong>
-            </div>
-          </div>
-
-          <div className="topbar-actions">
-            <button className="icon-button"><Search size={18} /></button>
-            <button className="icon-button notification"><Bell size={18} /><i /></button>
-            <div className="topbar-profile">
-              <div className="profile-avatar">FK</div>
-              <div><strong>Faizan Khan</strong><span>Admin</span></div>
-              <ChevronDown size={14} />
-            </div>
-          </div>
-        </header>
-
-        <div className="app-content">{children}</div>
-      </div>
-    </div>
+    </>
   );
 }
 
-function StatCard({ Icon, label, value, change, negative }) {
+function Topbar({ page, onMenu, onHome }) {
+  const current = navItems.find((item) => item.id === page);
+
+  return (
+    <header className="app-topbar">
+      <div className="topbar-left">
+        <button className="mobile-menu" onClick={onMenu}>
+          <Menu size={20} />
+        </button>
+        <div className="breadcrumb">
+          <button onClick={onHome}>SchoolMarks</button>
+          <span>/</span>
+          <strong>{current?.label || "Dashboard"}</strong>
+        </div>
+      </div>
+
+      <div className="topbar-actions">
+        <button className="topbar-search">
+          <Search size={16} />
+          <span>Search anything</span>
+          <kbd>⌘ K</kbd>
+        </button>
+        <button className="icon-button notification">
+          <Bell size={17} />
+          <i />
+        </button>
+        <div className="topbar-profile">
+          <div className="profile-avatar">FK</div>
+          <div>
+            <strong>Faizan Khan</strong>
+            <span>Admin</span>
+          </div>
+          <ChevronDown size={14} />
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function StatCard({ icon: Icon, label, value, change, trend = "up", note }) {
   return (
     <div className="stat-card">
       <div className="stat-top">
-        <div className="stat-icon"><Icon size={19} /></div>
-        <MoreHorizontal size={17} />
+        <div className="stat-icon"><Icon size={18} /></div>
+        <button><MoreHorizontal size={16} /></button>
       </div>
-      <span>{label}</span>
+      <span className="stat-label">{label}</span>
       <div className="stat-value-row">
         <strong>{value}</strong>
-        <small className={negative ? "negative" : ""}>{negative ? "−" : "+"}{change}</small>
+        {change && (
+          <span className={trend === "down" ? "negative" : ""}>
+            {trend === "down" ? <TrendingDown size={12} /> : <TrendingUp size={12} />}
+            {change}
+          </span>
+        )}
       </div>
+      {note && <small>{note}</small>}
     </div>
   );
 }
 
-function Dashboard({ navigate, onBack }) {
-  const [search, setSearch] = useState("");
-
-  const filtered = useMemo(
-    () => students.filter(s => `${s.name} ${s.className}`.toLowerCase().includes(search.toLowerCase())),
-    [search]
-  );
-
+function DashboardPage({ onNavigate }) {
   return (
-    <AppShell active="overview" navigate={navigate} onBack={onBack}>
+    <div className="route-page">
       <div className="workspace-header">
         <div>
-          <div className="workspace-eyebrow"><span /> SCHOOL OVERVIEW</div>
-          <h1>Good evening, Faizan.</h1>
-          <p>Here’s what’s happening across your school today.</p>
+          <span className="workspace-eyebrow">OVERVIEW · OCTOBER 2026</span>
+          <h1>Good morning, Faizan.</h1>
+          <p>Here's what is happening across your academic workspace today.</p>
         </div>
         <div className="workspace-actions">
-          <button className="workspace-secondary"><CalendarDays size={16} /> 17 Sep 2026</button>
-          <button className="workspace-primary" onClick={() => navigate("ai")}><Sparkles size={16} /> Ask AI</button>
+          <button className="workspace-secondary"><RefreshCcw size={15} /> Refresh</button>
+          <button className="workspace-primary"><Plus size={16} /> Add student</button>
         </div>
       </div>
 
       <div className="stat-grid">
-        <StatCard Icon={Users} label="Total students" value="248" change="8.2%" />
-        <StatCard Icon={UserCheck} label="Attendance" value="94.6%" change="2.1%" />
-        <StatCard Icon={TrendingUp} label="Average performance" value="82.7%" change="8.4%" />
-        <StatCard Icon={Target} label="Students at risk" value="6" change="1.4%" negative />
+        <StatCard icon={Users} label="Total students" value="1,248" change="+8.4%" note="vs. previous month" />
+        <StatCard icon={UserCheck} label="Attendance" value="94.2%" change="+2.1%" note="this month" />
+        <StatCard icon={Award} label="Average result" value="82.6%" change="+4.7%" note="this term" />
+        <StatCard icon={Activity} label="Active signals" value="12" change="3 new" note="need review" trend="up" />
       </div>
 
       <div className="dashboard-main-grid">
-        <div className="workspace-card performance-card">
+        <section className="workspace-card performance-card">
           <div className="workspace-card-head">
-            <div><span>Performance trend</span><strong>Academic average</strong></div>
-            <div className="chart-filter">Last 6 months <ChevronDown size={13} /></div>
+            <div>
+              <span>Academic performance</span>
+              <h2>82.6%</h2>
+            </div>
+            <button className="chart-filter">This term <ChevronDown size={13} /></button>
           </div>
-          <div className="performance-number"><strong>82.7%</strong><span><TrendingUp size={14} /> 8.4% vs previous period</span></div>
-          <MiniChart large />
-        </div>
-
-        <div className="workspace-card attendance-workspace-card">
-          <div className="workspace-card-head">
-            <div><span>Attendance overview</span><strong>Daily presence</strong></div>
-            <MoreHorizontal size={17} />
-          </div>
-          <div className="attendance-layout">
-            <ProgressRing />
-            <div className="attendance-breakdown">
-              <div><span><i className="legend-dot present" /> Present</span><strong>235</strong></div>
-              <div><span><i className="legend-dot late" /> Late</span><strong>7</strong></div>
-              <div><span><i className="legend-dot absent" /> Absent</span><strong>6</strong></div>
+          <div className="performance-chart">
+            <div className="y-axis">
+              <span>100%</span>
+              <span>75%</span>
+              <span>50%</span>
+              <span>25%</span>
+              <span>0%</span>
+            </div>
+            <div className="chart-wrapper">
+              <div className="chart-lines">
+                <i /><i /><i /><i /><i />
+              </div>
+              <MiniChart values={[54, 61, 58, 66, 64, 72, 69, 78, 76, 84, 82, 89]} />
+              <div className="chart-bottom">
+                <span>Jan</span><span>Mar</span><span>May</span><span>Jul</span><span>Sep</span><span>Oct</span>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </section>
 
-      <div className="dashboard-secondary-grid">
-        <div className="workspace-card students-card">
+        <section className="workspace-card attendance-workspace">
           <div className="workspace-card-head">
-            <div><span>Student performance</span><strong>Recent academic overview</strong></div>
-            <button className="outline-button"><Plus size={15} /> Add student</button>
+            <div>
+              <span>Attendance health</span>
+              <h2>Excellent</h2>
+            </div>
+            <Activity size={17} />
           </div>
-
-          <div className="table-toolbar">
-            <div className="table-search"><Search size={16} /><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search students..." /></div>
-            <button className="filter-button"><Filter size={15} /> Filter</button>
+          <div className="attendance-layout">
+            <ProgressRing value={94} size={118} />
+            <div className="attendance-meta">
+              <div><i className="legend-dot present" /><span>Present</span><strong>1,176</strong></div>
+              <div><i className="legend-dot absent" /><span>Absent</span><strong>72</strong></div>
+              <div><i className="legend-dot late" /><span>Late</span><strong>31</strong></div>
+            </div>
           </div>
-
-          <div className="students-table-wrap">
-            <table className="students-table">
-              <thead>
-                <tr><th>Student</th><th>Class</th><th>Average</th><th>Attendance</th><th>Status</th><th /></tr>
-              </thead>
-              <tbody>
-                {filtered.map(student => (
-                  <tr key={student.name}>
-                    <td><div className="table-student"><div className="table-avatar">{student.name.split(" ").map(x => x[0]).join("")}</div><strong>{student.name}</strong></div></td>
-                    <td>{student.className}</td>
-                    <td><div className="score-cell"><strong>{student.average}%</strong><div><i style={{ width: `${student.average}%` }} /></div></div></td>
-                    <td>{student.attendance}%</td>
-                    <td><span className={`status-pill ${student.status.toLowerCase().replace(" ", "-")}`}><i />{student.status}</span></td>
-                    <td><MoreHorizontal size={17} /></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="attendance-footer">
+            <span>Compared with September</span>
+            <b>+2.1%</b>
           </div>
-        </div>
+        </section>
 
-        <div className="workspace-card upcoming-card">
+        <section className="workspace-card students-card">
           <div className="workspace-card-head">
-            <div><span>Upcoming examinations</span><strong>Next assessments</strong></div>
-            <button className="text-button">View all <ArrowUpRight size={14} /></button>
+            <div>
+              <span>Students requiring attention</span>
+              <h2>6 students</h2>
+            </div>
+            <button className="text-button" onClick={() => onNavigate("students")}>View all <ArrowRight size={14} /></button>
+          </div>
+          <div className="student-list">
+            {students.slice(0, 4).map((student) => (
+              <div className="student-row" key={student.name}>
+                <div className="table-student">
+                  <div className="table-avatar">{student.initials}</div>
+                  <div>
+                    <strong>{student.name}</strong>
+                    <span>{student.className}</span>
+                  </div>
+                </div>
+                <div className="student-score">
+                  <strong>{student.avg}%</strong>
+                  <span>Average</span>
+                </div>
+                <div className={`status-pill ${student.status.toLowerCase().replace(" ", "-")}`}>
+                  {student.status}
+                </div>
+                <button className="row-more"><MoreHorizontal size={15} /></button>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="workspace-card upcoming-card">
+          <div className="workspace-card-head">
+            <div>
+              <span>Upcoming examinations</span>
+              <h2>Next 30 days</h2>
+            </div>
+            <button className="text-button" onClick={() => onNavigate("exams")}>Calendar <ArrowUpRight size={14} /></button>
           </div>
           <div className="exam-list">
-            {[
-              ["Mathematics", "21 Sep", "9-A", "Written"],
-              ["English", "24 Sep", "9-B", "Assessment"],
-              ["Computer", "27 Sep", "9-C", "Practical"],
-              ["Science", "30 Sep", "9-A", "Written"]
-            ].map(([subject, date, cls, type]) => (
-              <div className="exam-item" key={subject}>
-                <div className="exam-icon"><BookOpenCheck size={17} /></div>
-                <div className="exam-info"><strong>{subject}</strong><span>{cls} · {type}</span></div>
-                <div className="exam-date"><strong>{date}</strong><span>2026</span></div>
+            {exams.slice(0, 3).map((exam) => (
+              <div className="exam-item" key={exam.subject}>
+                <div className="exam-icon">{exam.icon}</div>
+                <div className="exam-info">
+                  <strong>{exam.subject}</strong>
+                  <span>{exam.className}</span>
+                </div>
+                <div className="exam-date">
+                  <small>OCT</small>
+                  <strong>{exam.date.split(" ")[0]}</strong>
+                </div>
               </div>
             ))}
           </div>
-        </div>
+        </section>
       </div>
 
-      <div className="dashboard-secondary-grid bottom-grid">
-        <div className="workspace-card ai-insight-workspace">
+      <div className="bottom-grid">
+        <section className="ai-insight-workspace">
           <div className="insight-glow" />
-          <div className="workspace-card-head">
-            <div><span>Intelligent insight</span><strong>Something worth noticing</strong></div>
-            <div className="insight-ai-icon"><BrainCircuit size={18} /></div>
-          </div>
+          <div className="insight-ai-icon"><Sparkles size={20} /></div>
           <div className="insight-content">
-            <div className="insight-title"><Sparkles size={17} /><strong>Attendance needs attention</strong></div>
-            <p>2 students currently have attendance below 80%. Zayan Ahmed has 73% attendance and a 51% academic average.</p>
-            <button onClick={() => navigate("ai")}>Investigate with AI <ArrowRight size={15} /></button>
+            <span>AI INSIGHT · UPDATED 4 MIN AGO</span>
+            <h3>Grade 9-B attendance needs attention.</h3>
+            <p>
+              Attendance dropped 4.2% this week. Mathematics performance is
+              also below the school average.
+            </p>
+            <button onClick={() => onNavigate("ai")}>Ask AI about this <ArrowRight size={14} /></button>
           </div>
-        </div>
+          <div className="insight-score">
+            <strong>4.2%</strong>
+            <span>drop this week</span>
+          </div>
+        </section>
 
-        <div className="workspace-card activity-card">
+        <section className="workspace-card activity-card">
           <div className="workspace-card-head">
-            <div><span>Recent activity</span><strong>Latest updates</strong></div>
-            <RefreshCcw size={16} />
+            <div>
+              <span>Recent activity</span>
+              <h2>Today</h2>
+            </div>
+            <MoreHorizontal size={17} />
           </div>
           <div className="activity-list">
-            {[
-              ["Areeba Khan", "received 91% in Mathematics", "8 min ago"],
-              ["Admin", "updated Class 9-B attendance", "24 min ago"],
-              ["Hassan Raza", "completed Computer assessment", "42 min ago"],
-              ["Admin", "published September exam schedule", "1 hr ago"]
-            ].map(([name, action, time], index) => (
-              <div className="activity-item" key={time}>
+            {activities.map((activity, index) => (
+              <div className="activity-item" key={activity.title}>
                 <div className={`activity-dot activity-${index}`} />
-                <div><p><strong>{name}</strong> {action}</p><span><Clock3 size={12} /> {time}</span></div>
+                <div>
+                  <strong>{activity.title}</strong>
+                  <span>{activity.meta}</span>
+                </div>
+                <small>{activity.time}</small>
               </div>
             ))}
           </div>
-        </div>
+        </section>
       </div>
-    </AppShell>
+    </div>
   );
 }
 
-function generateAnswer(question) {
+function StudentsPage() {
+  const [query, setQuery] = useState("");
+  const filtered = useMemo(
+    () => students.filter((student) => student.name.toLowerCase().includes(query.toLowerCase())),
+    [query]
+  );
+
+  return (
+    <div className="route-page">
+      <div className="workspace-header">
+        <div>
+          <span className="workspace-eyebrow">WORKSPACE · STUDENTS</span>
+          <h1>Student management.</h1>
+          <p>Manage profiles, academic standing and attendance from one place.</p>
+        </div>
+        <div className="workspace-actions">
+          <button className="workspace-secondary"><Filter size={15} /> Filters</button>
+          <button className="workspace-primary"><Plus size={16} /> Add student</button>
+        </div>
+      </div>
+
+      <div className="stat-grid">
+        <StatCard icon={Users} label="Total students" value="1,248" change="+8.4%" />
+        <StatCard icon={GraduationCap} label="Classes" value="36" note="Across all grades" />
+        <StatCard icon={UserCheck} label="Attendance" value="94.2%" change="+2.1%" />
+        <StatCard icon={Target} label="Need attention" value="12" change="3 new" />
+      </div>
+
+      <section className="workspace-card full-card">
+        <div className="workspace-card-head">
+          <div>
+            <span>All students</span>
+            <h2>{students.length} visible records</h2>
+          </div>
+          <div className="table-toolbar">
+            <div className="table-search">
+              <Search size={15} />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search students..."
+              />
+            </div>
+            <button className="outline-button"><Filter size={14} /> Filter</button>
+          </div>
+        </div>
+
+        <div className="students-table-wrap">
+          <table className="students-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Class</th>
+                <th>Average</th>
+                <th>Attendance</th>
+                <th>Status</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((student) => (
+                <tr key={student.name}>
+                  <td>
+                    <div className="table-student">
+                      <div className="table-avatar">{student.initials}</div>
+                      <div>
+                        <strong>{student.name}</strong>
+                        <span>Student ID · SM-{student.initials}24</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{student.className}</td>
+                  <td><strong className="score-cell">{student.avg}%</strong></td>
+                  <td>
+                    <div className="table-progress">
+                      <span>{student.attendance}%</span>
+                      <div><i style={{ width: `${student.attendance}%` }} /></div>
+                    </div>
+                  </td>
+                  <td>
+                    <div className={`status-pill ${student.status.toLowerCase().replace(" ", "-")}`}>{student.status}</div>
+                  </td>
+                  <td><button className="row-more"><MoreHorizontal size={16} /></button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function AcademicsPage() {
+  return (
+    <div className="route-page">
+      <div className="workspace-header">
+        <div>
+          <span className="workspace-eyebrow">WORKSPACE · ACADEMICS</span>
+          <h1>Academic structure.</h1>
+          <p>Keep subjects, teachers and classes aligned with the academic plan.</p>
+        </div>
+        <button className="workspace-primary"><Plus size={16} /> Add subject</button>
+      </div>
+
+      <div className="stat-grid">
+        <StatCard icon={BookOpen} label="Subjects" value="24" note="Active this term" />
+        <StatCard icon={Users} label="Classes" value="36" note="Across all grades" />
+        <StatCard icon={GraduationCap} label="Teachers" value="68" change="+4" />
+        <StatCard icon={Target} label="Curriculum" value="91%" change="+6.2%" />
+      </div>
+
+      <section className="subject-grid">
+        {subjects.map((subject) => (
+          <div className="workspace-card subject-card" key={subject.name}>
+            <div className="subject-card-top">
+              <div className="subject-icon">{subject.name.charAt(0)}</div>
+              <button className="row-more"><MoreHorizontal size={16} /></button>
+            </div>
+            <h3>{subject.name}</h3>
+            <p>{subject.teacher}</p>
+            <span>{subject.classes}</span>
+            <div className="subject-progress">
+              <div><span>Curriculum progress</span><b>{subject.progress}%</b></div>
+              <i><em style={{ width: `${subject.progress}%` }} /></i>
+            </div>
+          </div>
+        ))}
+      </section>
+    </div>
+  );
+}
+
+function ExamsPage() {
+  return (
+    <div className="route-page">
+      <div className="workspace-header">
+        <div>
+          <span className="workspace-eyebrow">WORKSPACE · EXAMINATIONS</span>
+          <h1>Examination center.</h1>
+          <p>Plan assessments, monitor schedules and keep every exam on track.</p>
+        </div>
+        <div className="workspace-actions">
+          <button className="workspace-secondary"><CalendarDays size={15} /> Calendar</button>
+          <button className="workspace-primary"><Plus size={16} /> New examination</button>
+        </div>
+      </div>
+
+      <div className="exam-timeline">
+        {exams.map((exam, index) => (
+          <div className="timeline-card" key={exam.subject}>
+            <div className="timeline-line"><span>{String(index + 1).padStart(2, "0")}</span></div>
+            <div className="workspace-card exam-detail-card">
+              <div className="exam-detail-icon">{exam.icon}</div>
+              <div className="exam-detail-content">
+                <span>UPCOMING EXAMINATION</span>
+                <h3>{exam.subject}</h3>
+                <p>{exam.className}</p>
+              </div>
+              <div className="exam-detail-date">
+                <small>OCTOBER</small>
+                <strong>{exam.date.split(" ")[0]}</strong>
+                <span>2026</span>
+              </div>
+              <div className="exam-state">Scheduled</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MarksPage() {
+  return (
+    <div className="route-page">
+      <div className="workspace-header">
+        <div>
+          <span className="workspace-eyebrow">WORKSPACE · MARKS</span>
+          <h1>Marks management.</h1>
+          <p>Enter, review and analyze academic scores without the spreadsheet mess.</p>
+        </div>
+        <button className="workspace-primary"><Plus size={16} /> Enter marks</button>
+      </div>
+
+      <div className="stat-grid">
+        <StatCard icon={FileText} label="Entries this term" value="8,492" change="+12.8%" />
+        <StatCard icon={Award} label="Average score" value="82.6%" change="+4.7%" />
+        <StatCard icon={TrendingUp} label="Highest grade" value="A+" note="18% of students" />
+        <StatCard icon={Target} label="Pending review" value="24" trend="down" />
+      </div>
+
+      <section className="workspace-card full-card">
+        <div className="workspace-card-head">
+          <div>
+            <span>Recent marks</span>
+            <h2>Latest academic entries</h2>
+          </div>
+          <button className="outline-button"><Filter size={14} /> Filter</button>
+        </div>
+        <div className="students-table-wrap">
+          <table className="students-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Subject</th>
+                <th>Score</th>
+                <th>Percentage</th>
+                <th>Grade</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {marks.map((mark) => (
+                <tr key={`${mark.student}-${mark.subject}`}>
+                  <td><div className="table-student"><div className="table-avatar">{mark.student.split(" ").map((x) => x[0]).join("")}</div><div><strong>{mark.student}</strong><span>Grade 9</span></div></div></td>
+                  <td>{mark.subject}</td>
+                  <td><strong>{mark.score} / {mark.total}</strong></td>
+                  <td><strong className="score-cell">{mark.score}%</strong></td>
+                  <td><div className="status-pill excellent">{mark.grade}</div></td>
+                  <td><button className="row-more"><MoreHorizontal size={16} /></button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function ResultsPage() {
+  const resultCards = [
+    ["Grade 9-A", "86.4%", "+6.8%", "124 students"],
+    ["Grade 9-B", "74.8%", "+1.9%", "118 students"],
+    ["Grade 9-C", "81.2%", "+4.2%", "121 students"]
+  ];
+
+  return (
+    <div className="route-page">
+      <div className="workspace-header">
+        <div>
+          <span className="workspace-eyebrow">WORKSPACE · RESULTS</span>
+          <h1>Results intelligence.</h1>
+          <p>Turn examination marks into clear academic performance snapshots.</p>
+        </div>
+        <div className="workspace-actions">
+          <button className="workspace-secondary"><FileText size={15} /> Reports</button>
+          <button className="workspace-primary"><ArrowUpRight size={15} /> Generate results</button>
+        </div>
+      </div>
+
+      <div className="result-overview">
+        <div className="workspace-card result-main">
+          <span>School average</span>
+          <strong>82.6%</strong>
+          <div className="result-trend"><TrendingUp size={14} /> +4.7% compared with previous term</div>
+          <div className="result-bars">
+            <div><span>Grade 9-A</span><i><em style={{ width: "86%" }} /></i><b>86%</b></div>
+            <div><span>Grade 9-B</span><i><em style={{ width: "75%" }} /></i><b>75%</b></div>
+            <div><span>Grade 9-C</span><i><em style={{ width: "81%" }} /></i><b>81%</b></div>
+          </div>
+        </div>
+
+        <div className="result-side">
+          <div className="workspace-card result-mini"><span>Students above 80%</span><strong>68%</strong><small>+8.3% this term</small></div>
+          <div className="workspace-card result-mini"><span>Students at risk</span><strong>7%</strong><small>−2.1% this term</small></div>
+        </div>
+      </div>
+
+      <div className="result-class-grid">
+        {resultCards.map(([name, score, change, count]) => (
+          <div className="workspace-card class-result" key={name}>
+            <span>{name}</span>
+            <strong>{score}</strong>
+            <div><TrendingUp size={13} /> {change}</div>
+            <small>{count}</small>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AttendancePage() {
+  return (
+    <div className="route-page">
+      <div className="workspace-header">
+        <div>
+          <span className="workspace-eyebrow">WORKSPACE · ATTENDANCE</span>
+          <h1>Attendance intelligence.</h1>
+          <p>Monitor attendance health and spot patterns across your school.</p>
+        </div>
+        <button className="workspace-primary"><ClipboardCheck size={16} /> Record attendance</button>
+      </div>
+
+      <div className="stat-grid">
+        <StatCard icon={UserCheck} label="Present today" value="1,176" change="+2.1%" />
+        <StatCard icon={Activity} label="Attendance rate" value="94.2%" change="+2.1%" />
+        <StatCard icon={Clock3} label="Late arrivals" value="31" trend="down" change="−8.4%" />
+        <StatCard icon={Target} label="At risk" value="18" trend="down" change="−3" />
+      </div>
+
+      <div className="attendance-page-grid">
+        <section className="workspace-card attendance-big">
+          <div className="workspace-card-head">
+            <div><span>Monthly attendance</span><h2>94.2%</h2></div>
+            <button className="chart-filter">October <ChevronDown size={13} /></button>
+          </div>
+          <div className="attendance-chart">
+            <div className="attendance-days">
+              {[91, 94, 96, 92, 95, 97, 94, 93, 96, 98, 95, 94, 96, 97, 94, 92, 95, 96].map((value, index) => (
+                <div key={index} className="attendance-day">
+                  <span>{value}%</span>
+                  <i><em style={{ height: `${value}%` }} /></i>
+                  <small>{index + 1}</small>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="workspace-card attendance-alerts">
+          <div className="workspace-card-head">
+            <div><span>Attendance alerts</span><h2>Needs attention</h2></div>
+            <Bell size={16} />
+          </div>
+          {students.filter((student) => student.attendance < 90).map((student) => (
+            <div className="attendance-alert" key={student.name}>
+              <div className="table-avatar">{student.initials}</div>
+              <div><strong>{student.name}</strong><span>{student.className} · {student.attendance}% attendance</span></div>
+              <ArrowUpRight size={14} />
+            </div>
+          ))}
+        </section>
+      </div>
+    </div>
+  );
+}
+
+function PerformancePage() {
+  const subjectsPerformance = [
+    ["Computer Science", 94],
+    ["Mathematics", 88],
+    ["English", 83],
+    ["Urdu", 81],
+    ["Chemistry", 78],
+    ["Physics", 76]
+  ];
+
+  return (
+    <div className="route-page">
+      <div className="workspace-header">
+        <div>
+          <span className="workspace-eyebrow">WORKSPACE · PERFORMANCE</span>
+          <h1>Performance analytics.</h1>
+          <p>See how academic performance is moving across classes and subjects.</p>
+        </div>
+        <button className="workspace-secondary"><RefreshCcw size={15} /> Refresh analytics</button>
+      </div>
+
+      <div className="stat-grid">
+        <StatCard icon={TrendingUp} label="Average performance" value="82.6%" change="+4.7%" />
+        <StatCard icon={Award} label="Top subject" value="94%" note="Computer Science" />
+        <StatCard icon={Target} label="Improvement" value="+12.4%" note="Highest student growth" />
+        <StatCard icon={Activity} label="Signals detected" value="12" change="3 new" />
+      </div>
+
+      <div className="performance-page-grid">
+        <section className="workspace-card large-performance">
+          <div className="workspace-card-head">
+            <div><span>Performance movement</span><h2>Academic average</h2></div>
+            <button className="chart-filter">6 months <ChevronDown size={13} /></button>
+          </div>
+          <div className="performance-chart tall">
+            <div className="y-axis"><span>100</span><span>80</span><span>60</span><span>40</span><span>20</span><span>0</span></div>
+            <div className="chart-wrapper">
+              <div className="chart-lines"><i /><i /><i /><i /><i /><i /></div>
+              <MiniChart values={[58, 62, 61, 69, 66, 74, 72, 79, 77, 84, 82, 89]} />
+              <div className="chart-bottom"><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section className="workspace-card subject-performance">
+          <div className="workspace-card-head"><div><span>Subject performance</span><h2>Current term</h2></div></div>
+          <div className="subject-bars">
+            {subjectsPerformance.map(([name, value]) => (
+              <div key={name}>
+                <div><span>{name}</span><strong>{value}%</strong></div>
+                <i><em style={{ width: `${value}%` }} /></i>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
+
+function generateAIAnswer(question) {
   const q = question.toLowerCase();
 
-  if (q.includes("attendance") || q.includes("present") || q.includes("absent")) {
+  if (q.includes("attendance")) {
     return {
       title: "Attendance overview",
-      text: "Overall attendance is currently 94.6%. There are 235 students present, 7 marked late and 6 absent. Two students are below the 80% threshold.",
-      tags: ["94.6% attendance", "235 present", "2 need attention"]
+      text: "School attendance is currently 94.2%. Grade 9-B is the main area requiring attention, with attendance down 4.2% this week.",
+      tags: ["94.2% overall", "Grade 9-B", "−4.2%"]
     };
   }
 
-  if (q.includes("attention") || q.includes("risk") || q.includes("struggling")) {
+  if (q.includes("risk") || q.includes("attention") || q.includes("weak")) {
     return {
-      title: "Students needing attention",
-      text: "The current dataset flags 6 students for additional attention. Zayan Ahmed has the lowest academic average at 51% with 73% attendance.",
-      tags: ["6 flagged", "Zayan · 51%", "73% attendance"]
+      title: "Students requiring attention",
+      text: "There are 6 students currently flagged for attention. Zayan Ahmed has the lowest average at 51% and attendance at 73%, making this profile the most urgent signal in the current dataset.",
+      tags: ["6 students", "Zayan Ahmed", "51% average"]
     };
   }
 
-  if (q.includes("top") || q.includes("best") || q.includes("ranking") || q.includes("highest")) {
+  if (q.includes("class") || q.includes("grade")) {
     return {
-      title: "Top academic performers",
-      text: "Areeba Khan currently has the highest recorded average at 91%, followed by Ayaan Khan at 87% and Maham Ali at 82%.",
-      tags: ["Areeba · 91%", "Ayaan · 87%", "Maham · 82%"]
+      title: "Class comparison",
+      text: "Grade 9-A currently has the strongest average at 86.4%. Grade 9-C is at 81.2%, while Grade 9-B is at 74.8% and has the most visible attendance signal.",
+      tags: ["9-A · 86.4%", "9-C · 81.2%", "9-B · 74.8%"]
     };
   }
 
-  if (q.includes("subject") || q.includes("weak") || q.includes("math")) {
+  if (q.includes("subject") || q.includes("math") || q.includes("computer")) {
     return {
       title: "Subject performance",
-      text: "Mathematics is currently showing the weakest overall trend in the available assessment dataset.",
-      tags: ["Mathematics", "Assessment trend", "Class breakdown"]
+      text: "Computer Science is currently the strongest subject at 94%. Mathematics follows at 88%, while Physics is at 76%.",
+      tags: ["Computer Science · 94%", "Mathematics · 88%", "Physics · 76%"]
     };
   }
 
-  if (q.includes("exam") || q.includes("test") || q.includes("assessment")) {
+  if (q.includes("result") || q.includes("performance") || q.includes("average")) {
     return {
-      title: "Upcoming examinations",
-      text: "The next assessment is Mathematics on 21 September for Class 9-A. English follows on 24 September, Computer on 27 September and Science on 30 September.",
-      tags: ["21 Sep · Mathematics", "24 Sep · English", "27 Sep · Computer"]
-    };
-  }
-
-  if (q.includes("class") || q.includes("compare")) {
-    return {
-      title: "Class performance",
-      text: "The current school-wide academic average is 82.7%. Class-level comparison can be expanded using marks, attendance and assessment history.",
-      tags: ["82.7% average", "Class comparison", "Performance"]
-    };
-  }
-
-  if (q.includes("mark") || q.includes("result") || q.includes("score")) {
-    return {
-      title: "Marks & results",
-      text: "The available dataset contains 92 assessment records with an overall result average of 78.4%. Performance analytics show an upward trend.",
-      tags: ["92 records", "78.4% result average", "Positive trend"]
+      title: "Academic performance",
+      text: "The current school average is 82.6%, representing a 4.7% improvement compared with the previous term. Grade 9-A currently leads the class averages.",
+      tags: ["82.6% average", "+4.7%", "9-A leading"]
     };
   }
 
   return {
-    title: "School data insight",
-    text: "I can help analyze attendance, students needing attention, top performers, subjects, examinations, marks, results and class performance.",
-    tags: ["Attendance", "Performance", "Results"]
+    title: "Academic overview",
+    text: "SchoolMarks currently shows an 82.6% academic average, 94.2% attendance and 12 active performance signals. You can ask me about students, classes, marks, attendance, results or subjects.",
+    tags: ["82.6% average", "94.2% attendance", "12 signals"]
   };
 }
 
-function AIPage({ navigate, onBack }) {
+function AIPage() {
   const [messages, setMessages] = useState([
     {
-      role: "assistant",
-      title: "Ready when you are",
-      text: "Ask me anything about your school data. You can send multiple questions and I’ll keep the conversation here.",
-      tags: ["Attendance", "Students", "Performance"]
+      type: "ai",
+      title: "Welcome to SchoolMarks Intelligence",
+      text: "Ask me anything about your students, attendance, results, marks, classes or academic performance.",
+      tags: ["Students", "Attendance", "Results"]
     }
   ]);
   const [input, setInput] = useState("");
-  const [thinking, setThinking] = useState(false);
+  const [typing, setTyping] = useState(false);
 
-  const ask = value => {
-    const clean = value.trim();
-    if (!clean || thinking) return;
+  const suggestions = [
+    "Which students need attention?",
+    "How is attendance this month?",
+    "Compare Grade 9 classes",
+    "Which subject is performing best?"
+  ];
 
-    setMessages(prev => [...prev, { role: "user", text: clean }]);
+  const sendQuestion = (question = input) => {
+    const clean = question.trim();
+    if (!clean || typing) return;
+
+    setMessages((current) => [...current, { type: "user", text: clean }]);
     setInput("");
-    setThinking(true);
+    setTyping(true);
 
     setTimeout(() => {
-      setMessages(prev => [...prev, { role: "assistant", ...generateAnswer(clean) }]);
-      setThinking(false);
-    }, 700);
-  };
-
-  const clear = () => {
-    setMessages([
-      {
-        role: "assistant",
-        title: "New conversation",
-        text: "Your conversation has been cleared. Ask me a new question about your school.",
-        tags: ["Ready", "School data"]
-      }
-    ]);
+      const answer = generateAIAnswer(clean);
+      setMessages((current) => [...current, { type: "ai", ...answer }]);
+      setTyping(false);
+    }, 650);
   };
 
   return (
-    <AppShell active="ai" navigate={navigate} onBack={onBack}>
+    <div className="route-page ai-page">
       <div className="ai-page-header">
         <div>
-          <div className="workspace-eyebrow"><span /> SCHOOLMARKS INTELLIGENCE</div>
-          <h1>Ask your school data.</h1>
-          <p>Explore performance, attendance, results and student signals through one intelligent workspace.</p>
+          <span className="workspace-eyebrow">SCHOOLMARKS INTELLIGENCE</span>
+          <h1>Ask your academic data.</h1>
+          <p>Explore patterns, performance and school signals through a conversational workspace.</p>
         </div>
-        <button className="workspace-secondary" onClick={clear}><RefreshCcw size={15} /> Clear chat</button>
+        <div className="ai-page-actions">
+          <button className="workspace-secondary" onClick={() => setMessages([{ type: "ai", title: "Fresh conversation", text: "What would you like to understand about your academic data?", tags: ["Students", "Results", "Attendance"] }])}>
+            <RefreshCcw size={15} /> New conversation
+          </button>
+        </div>
       </div>
 
       <div className="ai-workspace">
         <section className="ai-chat-card">
           <div className="ai-chat-header">
             <div className="ai-chat-brand">
-              <div className="ai-large-icon"><BrainCircuit size={21} /></div>
-              <div><strong>SchoolMarks AI</strong><span><i /> Local Intelligence</span></div>
+              <div className="ai-large-icon"><Sparkles size={19} /></div>
+              <div>
+                <strong>SchoolMarks AI</strong>
+                <span><i /> Connected to academic workspace</span>
+              </div>
             </div>
-            <MoreHorizontal size={18} />
+            <button className="icon-button"><MoreHorizontal size={17} /></button>
           </div>
 
           <div className="ai-chat-messages">
             {messages.map((message, index) => (
-              <div className={`ai-chat-message ${message.role}`} key={index}>
-                <div className={`ai-chat-avatar ${message.role === "user" ? "user-chat-avatar" : ""}`}>
-                  {message.role === "user" ? "FK" : <Sparkles size={16} />}
+              <div className={`ai-chat-message ${message.type}`} key={index}>
+                <div className={`ai-chat-avatar ${message.type === "user" ? "user-chat-avatar" : ""}`}>
+                  {message.type === "user" ? "FK" : <Sparkles size={14} />}
                 </div>
                 <div className="ai-chat-bubble">
-                  <span>{message.role === "user" ? "You" : "SchoolMarks AI"}</span>
-                  {message.role === "assistant" && <strong className="ai-answer-title">{message.title}</strong>}
+                  {message.title && <strong className="ai-answer-title">{message.title}</strong>}
                   <p>{message.text}</p>
-                  {message.tags && <div className="answer-tags">{message.tags.map(tag => <span key={tag}>{tag}</span>)}</div>}
+                  {message.tags && (
+                    <div className="answer-tags">
+                      {message.tags.map((tag) => <span key={tag}>{tag}</span>)}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
 
-            {thinking && (
-              <div className="ai-chat-message assistant">
-                <div className="ai-chat-avatar"><Sparkles size={16} /></div>
-                <div className="ai-chat-bubble typing-bubble">
-                  <span>SchoolMarks AI</span>
-                  <div className="typing-dots"><i /><i /><i /></div>
+            {typing && (
+              <div className="ai-chat-message ai">
+                <div className="ai-chat-avatar"><Sparkles size={14} /></div>
+                <div className="typing-bubble">
+                  <i /><i /><i />
                 </div>
               </div>
             )}
@@ -1127,79 +1753,113 @@ function AIPage({ navigate, onBack }) {
 
           <div className="ai-suggestions">
             <span>Try asking</span>
-            <div>{questions.map(q => <button key={q} onClick={() => ask(q)}>{q}</button>)}</div>
+            <div>
+              {suggestions.map((suggestion) => (
+                <button key={suggestion} onClick={() => sendQuestion(suggestion)}>{suggestion}</button>
+              ))}
+            </div>
           </div>
 
           <div className="ai-input-area">
             <textarea
               value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  ask(input);
+              onChange={(event) => setInput(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" && !event.shiftKey) {
+                  event.preventDefault();
+                  sendQuestion();
                 }
               }}
-              placeholder="Ask a question about your school..."
-              rows={2}
+              placeholder="Ask about students, results, attendance..."
+              rows="1"
             />
-            <div className="ai-input-footer">
-              <span>Enter to send · Shift + Enter for new line</span>
-              <button disabled={!input.trim() || thinking} onClick={() => ask(input)}><Send size={17} /></button>
-            </div>
+            <button onClick={() => sendQuestion()} disabled={!input.trim() || typing}>
+              <Send size={17} />
+            </button>
+          </div>
+          <div className="ai-input-footer">
+            <span>AI responses are based on the connected demo academic dataset.</span>
+            <kbd>Enter ↵</kbd>
           </div>
         </section>
 
         <aside className="ai-side-panel">
           <div className="ai-side-card ai-side-intro">
-            <div className="ai-side-icon"><Zap size={17} /></div>
-            <span>LOCAL INTELLIGENCE</span>
-            <h3>Understand your data faster.</h3>
-            <p>This demo analyzes the SchoolMarks dataset locally in the browser.</p>
+            <div className="ai-side-icon"><BrainCircuit size={18} /></div>
+            <span>INTELLIGENCE</span>
+            <h3>What can I analyze?</h3>
+            <p>Ask natural questions and explore the signals already visible in your workspace.</p>
           </div>
 
           <div className="ai-side-card">
-            <div className="side-card-heading"><span>School snapshot</span><Activity size={16} /></div>
-            {[
-              [Users, "Students", "248"],
-              [UserCheck, "Attendance", "94.6%"],
-              [TrendingUp, "Performance", "82.7%"],
-              [Target, "At risk", "6"]
-            ].map(([Icon, label, value]) => (
-              <div className="ai-metric" key={label}><div><Icon size={16} /><span>{label}</span></div><strong>{value}</strong></div>
-            ))}
+            <span className="side-card-label">LIVE SNAPSHOT</span>
+            <div className="ai-metric"><span>Students</span><strong>1,248</strong></div>
+            <div className="ai-metric"><span>Attendance</span><strong>94.2%</strong></div>
+            <div className="ai-metric"><span>Average</span><strong>82.6%</strong></div>
+            <div className="ai-metric"><span>Signals</span><strong>12</strong></div>
           </div>
 
           <div className="ai-side-card popular-questions">
-            <div className="side-card-heading"><span>Popular questions</span><MessageSquare size={16} /></div>
-            {questions.slice(0, 4).map((q, index) => (
-              <button key={q} onClick={() => ask(q)}><span>0{index + 1}</span>{q}<ArrowUpRight size={14} /></button>
-            ))}
+            <span className="side-card-label">POPULAR QUESTIONS</span>
+            <button onClick={() => sendQuestion("Which students need attention?")}>Students at risk <ArrowUpRight size={14} /></button>
+            <button onClick={() => sendQuestion("How is attendance this month?")}>Attendance trends <ArrowUpRight size={14} /></button>
+            <button onClick={() => sendQuestion("Compare Grade 9 classes")}>Class comparison <ArrowUpRight size={14} /></button>
+            <button onClick={() => sendQuestion("Which subject is performing best?")}>Subject performance <ArrowUpRight size={14} /></button>
           </div>
         </aside>
       </div>
-    </AppShell>
+    </div>
   );
 }
 
-function AccessModal({ close, continueApp }) {
+function AccessModal({ onClose, onOpen }) {
   return (
-    <div className="modal-backdrop" onClick={close}>
-      <div className="access-modal" onClick={e => e.stopPropagation()}>
-        <button className="modal-close" onClick={close}><X size={18} /></button>
-        <div className="modal-icon"><Sparkles size={22} /></div>
-        <span className="eyebrow">SCHOOLMARKS PLATFORM</span>
-        <h2>Welcome to the workspace.</h2>
-        <p>Explore the SchoolMarks dashboard, academic overview and intelligence layer.</p>
+    <div className="modal-backdrop" onMouseDown={onClose}>
+      <div className="access-modal" onMouseDown={(event) => event.stopPropagation()}>
+        <button className="modal-close" onClick={onClose}><X size={17} /></button>
+        <div className="modal-icon"><Sparkles size={21} /></div>
+        <span className="eyebrow">SCHOOLMARKS WORKSPACE</span>
+        <h2>Welcome back.</h2>
+        <p>Open the interactive academic workspace and explore the complete SchoolMarks experience.</p>
+        <button className="primary-button modal-button" onClick={onOpen}>
+          Open dashboard <ArrowRight size={16} />
+        </button>
+        <small>Frontend demonstration · No account required</small>
+      </div>
+    </div>
+  );
+}
 
-        <div className="access-preview">
-          <div><LayoutDashboard size={16} /><span>Dashboard</span><Check size={15} /></div>
-          <div><BrainCircuit size={16} /><span>AI Assistant</span><Check size={15} /></div>
-          <div><BarChart3 size={16} /><span>Analytics</span><Check size={15} /></div>
-        </div>
+function AppLayout({ page, onNavigate, onHome }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-        <button className="modal-button" onClick={continueApp}>Continue to platform <ArrowRight size={17} /></button>
-        <span className="modal-note">Frontend demonstration · No account required</span>
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page]);
+
+  let content;
+
+  if (page === "dashboard") content = <DashboardPage onNavigate={onNavigate} />;
+  if (page === "students") content = <StudentsPage />;
+  if (page === "academics") content = <AcademicsPage />;
+  if (page === "exams") content = <ExamsPage />;
+  if (page === "marks") content = <MarksPage />;
+  if (page === "results") content = <ResultsPage />;
+  if (page === "attendance") content = <AttendancePage />;
+  if (page === "performance") content = <PerformancePage />;
+  if (page === "ai") content = <AIPage />;
+
+  return (
+    <div className="app-shell">
+      <Sidebar
+        page={page}
+        onNavigate={onNavigate}
+        mobileOpen={mobileOpen}
+        setMobileOpen={setMobileOpen}
+      />
+      <div className="app-main">
+        <Topbar page={page} onMenu={() => setMobileOpen(true)} onHome={onHome} />
+        <main className="app-content">{content}</main>
       </div>
     </div>
   );
@@ -1207,32 +1867,33 @@ function AccessModal({ close, continueApp }) {
 
 export default function App() {
   const [page, setPage] = useState("home");
-  const [modal, setModal] = useState(false);
+  const [accessOpen, setAccessOpen] = useState(false);
+
+  const navigate = (nextPage) => {
+    setPage(nextPage);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
+    document.title = page === "home" ? "SchoolMarks — Academic Intelligence" : `SchoolMarks — ${page}`;
   }, [page]);
 
-  if (page === "dashboard") {
-    return <Dashboard navigate={setPage} onBack={() => setPage("home")} />;
+  if (page === "home") {
+    return (
+      <>
+        <HomePage onNavigate={navigate} onAccess={() => setAccessOpen(true)} />
+        {accessOpen && (
+          <AccessModal
+            onClose={() => setAccessOpen(false)}
+            onOpen={() => {
+              setAccessOpen(false);
+              navigate("dashboard");
+            }}
+          />
+        )}
+      </>
+    );
   }
 
-  if (page === "ai") {
-    return <AIPage navigate={setPage} onBack={() => setPage("home")} />;
-  }
-
-  return (
-    <>
-      <Home onDashboard={() => setModal(true)} onAI={() => setPage("ai")} />
-      {modal && (
-        <AccessModal
-          close={() => setModal(false)}
-          continueApp={() => {
-            setModal(false);
-            setPage("dashboard");
-          }}
-        />
-      )}
-    </>
-  );
+  return <AppLayout page={page} onNavigate={navigate} onHome={() => navigate("home")} />;
 }
