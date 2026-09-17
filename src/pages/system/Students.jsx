@@ -19,15 +19,114 @@ import {
 import "./Students.css"
 
 const initialStudents = [
-  { id: 1, name: "Ayaan Khan", roll: "901", className: "9-A", email: "ayaan@example.com", phone: "+92 300 1234567", attendance: 96, average: 87, status: "Excellent", joined: "01 Aug 2026" },
-  { id: 2, name: "Areeba Khan", roll: "905", className: "9-B", email: "areeba@example.com", phone: "+92 301 4567890", attendance: 98, average: 91, status: "Excellent", joined: "01 Aug 2026" },
-  { id: 3, name: "Maham Ali", roll: "903", className: "9-A", email: "maham@example.com", phone: "+92 302 2345678", attendance: 91, average: 82, status: "Good", joined: "03 Aug 2026" },
-  { id: 4, name: "Hassan Raza", roll: "904", className: "9-C", email: "hassan@example.com", phone: "+92 303 3456789", attendance: 88, average: 76, status: "Good", joined: "04 Aug 2026" },
-  { id: 5, name: "Rayyan Malik", roll: "906", className: "9-C", email: "rayyan@example.com", phone: "+92 304 4567890", attendance: 79, average: 64, status: "Attention", joined: "06 Aug 2026" },
-  { id: 6, name: "Zayan Ahmed", roll: "902", className: "9-B", email: "zayan@example.com", phone: "+92 305 5678901", attendance: 73, average: 51, status: "At Risk", joined: "07 Aug 2026" },
-  { id: 7, name: "Hiba Fatima", roll: "907", className: "9-A", email: "hiba@example.com", phone: "+92 306 6789012", attendance: 94, average: 89, status: "Excellent", joined: "08 Aug 2026" },
-  { id: 8, name: "Hamza Saeed", roll: "908", className: "9-B", email: "hamza@example.com", phone: "+92 307 7890123", attendance: 86, average: 73, status: "Good", joined: "10 Aug 2026" },
-  { id: 9, name: "Alina Noor", roll: "909", className: "9-C", email: "alina@example.com", phone: "+92 308 8901234", attendance: 97, average: 94, status: "Excellent", joined: "11 Aug 2026" }
+  {
+    id: 1,
+    name: "Ayaan Khan",
+    roll: "901",
+    className: "9-A",
+    email: "ayaan@example.com",
+    phone: "+92 300 1234567",
+    attendance: 96,
+    average: 87,
+    status: "Excellent",
+    joined: "01 Aug 2026"
+  },
+  {
+    id: 2,
+    name: "Areeba Khan",
+    roll: "905",
+    className: "9-B",
+    email: "areeba@example.com",
+    phone: "+92 301 4567890",
+    attendance: 98,
+    average: 91,
+    status: "Excellent",
+    joined: "01 Aug 2026"
+  },
+  {
+    id: 3,
+    name: "Maham Ali",
+    roll: "903",
+    className: "9-A",
+    email: "maham@example.com",
+    phone: "+92 302 2345678",
+    attendance: 91,
+    average: 82,
+    status: "Good",
+    joined: "03 Aug 2026"
+  },
+  {
+    id: 4,
+    name: "Hassan Raza",
+    roll: "904",
+    className: "9-C",
+    email: "hassan@example.com",
+    phone: "+92 303 3456789",
+    attendance: 88,
+    average: 76,
+    status: "Good",
+    joined: "04 Aug 2026"
+  },
+  {
+    id: 5,
+    name: "Rayyan Malik",
+    roll: "906",
+    className: "9-C",
+    email: "rayyan@example.com",
+    phone: "+92 304 4567890",
+    attendance: 79,
+    average: 64,
+    status: "Attention",
+    joined: "06 Aug 2026"
+  },
+  {
+    id: 6,
+    name: "Zayan Ahmed",
+    roll: "902",
+    className: "9-B",
+    email: "zayan@example.com",
+    phone: "+92 305 5678901",
+    attendance: 73,
+    average: 51,
+    status: "At Risk",
+    joined: "07 Aug 2026"
+  },
+  {
+    id: 7,
+    name: "Hiba Fatima",
+    roll: "907",
+    className: "9-A",
+    email: "hiba@example.com",
+    phone: "+92 306 6789012",
+    attendance: 94,
+    average: 89,
+    status: "Excellent",
+    joined: "08 Aug 2026"
+  },
+  {
+    id: 8,
+    name: "Hamza Saeed",
+    roll: "908",
+    className: "9-B",
+    email: "hamza@example.com",
+    phone: "+92 307 7890123",
+    attendance: 86,
+    average: 73,
+    status: "Good",
+    joined: "10 Aug 2026"
+  },
+  {
+    id: 9,
+    name: "Alina Noor",
+    roll: "909",
+    className: "9-C",
+    email: "alina@example.com",
+    phone: "+92 308 8901234",
+    attendance: 97,
+    average: 94,
+    status: "Excellent",
+    joined: "11 Aug 2026"
+  }
 ]
 
 const classes = ["All classes", "9-A", "9-B", "9-C", "10-A", "10-B"]
@@ -53,6 +152,13 @@ const getAvatarClass = id => {
   return styles[Math.abs(Number(id)) % styles.length]
 }
 
+const getStudentStatus = average => {
+  if (average >= 85) return "Excellent"
+  if (average >= 70) return "Good"
+  if (average >= 50) return "Attention"
+  return "At Risk"
+}
+
 function SummaryCard({ label, value, detail, icon: Icon, index }) {
   return (
     <article
@@ -61,6 +167,7 @@ function SummaryCard({ label, value, detail, icon: Icon, index }) {
     >
       <div className="students-summary-top">
         <span>{label}</span>
+
         <i>
           <Icon size={17} />
         </i>
@@ -104,6 +211,7 @@ function StudentDetails({ student, onClose }) {
 
           <div>
             <h2>{student.name}</h2>
+
             <p>
               Roll {student.roll} · Class {student.className}
             </p>
@@ -189,7 +297,7 @@ function StudentDetails({ student, onClose }) {
   )
 }
 
-function AddStudentModal({ onClose, onAdd, students }) {
+function AddStudentModal({ students, onClose, onAdd }) {
   const [form, setForm] = useState({
     name: "",
     roll: "",
@@ -209,11 +317,10 @@ function AddStudentModal({ onClose, onAdd, students }) {
     }))
   }
 
-  const submit = event => {
-    event.preventDefault()
-
+  const createStudent = () => {
     const name = form.name.trim()
     const roll = form.roll.trim()
+    const className = form.className
     const email = form.email.trim()
     const phone = form.phone.trim()
 
@@ -228,20 +335,19 @@ function AddStudentModal({ onClose, onAdd, students }) {
     }
 
     const duplicateRoll = students.some(
-      student =>
-        String(student.roll).trim().toLowerCase() === roll.toLowerCase()
+      student => String(student.roll).trim() === roll
     )
 
     if (duplicateRoll) {
-      setError(`Roll number ${roll} is already assigned to a student.`)
+      setError(`Roll number ${roll} is already assigned.`)
       return
     }
 
     const newStudent = {
-      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
       name,
       roll,
-      className: form.className,
+      className,
       email: email || "Not provided",
       phone: phone || "Not provided",
       attendance: 100,
@@ -255,7 +361,11 @@ function AddStudentModal({ onClose, onAdd, students }) {
     }
 
     onAdd(newStudent)
-    onClose()
+  }
+
+  const handleSubmit = event => {
+    event.preventDefault()
+    createStudent()
   }
 
   return (
@@ -276,11 +386,13 @@ function AddStudentModal({ onClose, onAdd, students }) {
           </button>
         </div>
 
-        <form onSubmit={submit}>
+        <form onSubmit={handleSubmit} noValidate>
           <div className="student-form-grid">
             <label>
               <span>Full name</span>
+
               <input
+                type="text"
                 value={form.name}
                 onChange={event => update("name", event.target.value)}
                 placeholder="e.g. Ahmed Khan"
@@ -290,7 +402,10 @@ function AddStudentModal({ onClose, onAdd, students }) {
 
             <label>
               <span>Roll number</span>
+
               <input
+                type="text"
+                inputMode="numeric"
                 value={form.roll}
                 onChange={event => update("roll", event.target.value)}
                 placeholder="e.g. 910"
@@ -320,17 +435,20 @@ function AddStudentModal({ onClose, onAdd, students }) {
 
             <label>
               <span>Email</span>
+
               <input
+                type="text"
                 value={form.email}
                 onChange={event => update("email", event.target.value)}
                 placeholder="student@example.com"
-                type="email"
               />
             </label>
 
             <label className="full">
               <span>Phone</span>
+
               <input
+                type="text"
                 value={form.phone}
                 onChange={event => update("phone", event.target.value)}
                 placeholder="+92 300 0000000"
@@ -339,8 +457,18 @@ function AddStudentModal({ onClose, onAdd, students }) {
           </div>
 
           {error && (
-            <div className="student-form-error">
-              <span />
+            <div
+              style={{
+                marginTop: "13px",
+                padding: "10px 12px",
+                borderRadius: "10px",
+                border: "1px solid #efd9d7",
+                background: "#fff8f7",
+                color: "#a34f47",
+                fontSize: "9px",
+                fontWeight: 700
+              }}
+            >
               {error}
             </div>
           )}
@@ -354,7 +482,11 @@ function AddStudentModal({ onClose, onAdd, students }) {
               Cancel
             </button>
 
-            <button type="submit" className="save-student">
+            <button
+              type="button"
+              className="save-student"
+              onClick={createStudent}
+            >
               <Check size={15} />
               Create student
             </button>
@@ -398,9 +530,17 @@ export default function Students() {
     })
 
     return [...result].sort((a, b) => {
-      if (sortBy === "performance") return b.average - a.average
-      if (sortBy === "attendance") return b.attendance - a.attendance
-      if (sortBy === "roll") return Number(a.roll) - Number(b.roll)
+      if (sortBy === "performance") {
+        return Number(b.average) - Number(a.average)
+      }
+
+      if (sortBy === "attendance") {
+        return Number(b.attendance) - Number(a.attendance)
+      }
+
+      if (sortBy === "roll") {
+        return Number(a.roll) - Number(b.roll)
+      }
 
       return a.name.localeCompare(b.name)
     })
@@ -408,8 +548,10 @@ export default function Students() {
 
   const stats = useMemo(() => {
     const average =
-      students.reduce((sum, student) => sum + Number(student.average || 0), 0) /
-      (students.length || 1)
+      students.reduce(
+        (sum, student) => sum + Number(student.average || 0),
+        0
+      ) / (students.length || 1)
 
     const attendance =
       students.reduce(
@@ -457,6 +599,12 @@ export default function Students() {
 
   const addStudent = student => {
     setStudents(current => [...current, student])
+    setSelectedClass("All classes")
+    setStatusFilter("All status")
+    setSearch("")
+    setSortBy("name")
+    setSelectedIds([])
+    setShowAdd(false)
   }
 
   const deleteSelected = () => {
@@ -706,6 +854,7 @@ export default function Students() {
 
                     <span>
                       <strong>{student.name}</strong>
+
                       <small>
                         Roll {student.roll} · {student.email}
                       </small>
