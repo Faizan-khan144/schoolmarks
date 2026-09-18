@@ -5022,3 +5022,2044 @@ a {
     transition-duration: .01ms !important;
   }
 }
+.dashboard-stat,
+.subject-card,
+.exam-overview > div,
+.performance-subject,
+.table-card,
+.side-card,
+.marks-card,
+.large-table-card,
+.timeline-card,
+.distribution-card,
+.top-students-card,
+.settings-card,
+.profile-form-card,
+.profile-preview-card {
+  animation: cardReveal .7s var(--ease) both;
+}
+
+.dashboard-stat:nth-child(1),
+.subject-card:nth-child(1),
+.exam-overview > div:nth-child(1),
+.performance-subject:nth-child(1) {
+  animation-delay: .05s;
+}
+
+.dashboard-stat:nth-child(2),
+.subject-card:nth-child(2),
+.exam-overview > div:nth-child(2),
+.performance-subject:nth-child(2) {
+  animation-delay: .1s;
+}
+
+.dashboard-stat:nth-child(3),
+.subject-card:nth-child(3),
+.exam-overview > div:nth-child(3),
+.performance-subject:nth-child(3) {
+  animation-delay: .15s;
+}
+
+.dashboard-stat:nth-child(4),
+.subject-card:nth-child(4),
+.exam-overview > div:nth-child(4),
+.performance-subject:nth-child(4) {
+  animation-delay: .2s;
+}
+
+.dashboard-stat:hover,
+.subject-card:hover,
+.performance-subject:hover,
+.exam-overview > div:hover {
+  transform: translateY(-7px) scale(1.012);
+}
+
+.app-sidebar {
+  animation: sidebarReveal .7s var(--ease);
+}
+
+.app-topbar {
+  animation: topbarReveal .65s var(--ease);
+}
+
+.page-heading {
+  animation: headingReveal .7s var(--ease);
+}
+
+.page-heading h1 {
+  animation: titleReveal .8s var(--ease);
+}
+
+.page-heading p {
+  animation: fadeSlideUp .9s .08s var(--ease) both;
+}
+
+.heading-actions {
+  animation: fadeSlideLeft .8s .12s var(--ease) both;
+}
+
+.dashboard-grid-main {
+  animation: sectionReveal .8s .12s var(--ease) both;
+}
+
+.dashboard-lower-grid {
+  animation: sectionReveal .8s .2s var(--ease) both;
+}
+
+.dashboard-chart-card {
+  position: relative;
+}
+
+.dashboard-chart-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    transparent 25%,
+    rgba(34,197,94,.045) 48%,
+    transparent 68%
+  );
+  transform: translateX(-120%);
+  animation: cardShimmer 4.5s 1s ease-in-out infinite;
+}
+
+.stat-icon,
+.subject-icon,
+.setting-icon,
+.chat-agent-icon {
+  animation: iconFloat 4s ease-in-out infinite;
+}
+
+.stat-icon svg,
+.subject-icon svg,
+.setting-icon svg,
+.chat-agent-icon svg {
+  transition: transform .3s var(--ease);
+}
+
+.dashboard-stat:hover .stat-icon svg,
+.subject-card:hover .subject-icon svg,
+.setting-row:hover .setting-icon svg {
+  transform: scale(1.12) rotate(-4deg);
+}
+
+.dashboard-ai-card {
+  animation: aiCardReveal .9s .15s var(--ease) both;
+}
+
+.dashboard-ai-card::after {
+  content: "";
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  left: -180px;
+  bottom: -170px;
+  border-radius: 50%;
+  background: rgba(92,225,132,.08);
+  filter: blur(8px);
+  animation: aiOrbMove 9s ease-in-out infinite;
+}
+
+.ai-card-label svg {
+  animation: sparklePulse 2.4s ease-in-out infinite;
+}
+
+.ai-signal {
+  animation: signalReveal .7s .5s var(--ease) both;
+}
+
+.ai-signal:nth-of-type(2) {
+  animation-delay: .7s;
+}
+
+.dashboard-ai-card > button svg,
+.exam-line > button svg,
+.text-button svg {
+  transition: transform .3s var(--ease);
+}
+
+.dashboard-ai-card > button:hover svg,
+.exam-line > button:hover svg,
+.text-button:hover svg {
+  transform: translateX(5px);
+}
+
+.exam-mini {
+  animation: rowReveal .6s var(--ease) both;
+}
+
+.exam-mini:nth-child(2) {
+  animation-delay: .08s;
+}
+
+.exam-mini:nth-child(3) {
+  animation-delay: .16s;
+}
+
+.exam-mini:nth-child(4) {
+  animation-delay: .24s;
+}
+
+.exam-mini > strong {
+  transition: transform .35s var(--ease), box-shadow .35s var(--ease);
+}
+
+.exam-mini:hover > strong {
+  transform: scale(1.08) rotate(-3deg);
+  box-shadow: 0 8px 20px rgba(34,197,94,.12);
+}
+
+.table-row,
+.students-row,
+.marks-row {
+  animation: rowReveal .5s var(--ease) both;
+}
+
+.table-row:hover,
+.students-row:hover,
+.marks-row:hover {
+  transform: translateX(3px);
+}
+
+.table-student i,
+.student-profile-cell i {
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+}
+
+.table-row:hover .table-student i,
+.students-row:hover .student-profile-cell i {
+  transform: scale(1.08);
+  box-shadow: 0 5px 15px rgba(34,197,94,.1);
+}
+
+.status-pill {
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.status-pill:hover {
+  transform: translateY(-2px);
+}
+
+.modal-backdrop {
+  animation: backdropIn .3s ease both;
+}
+
+.add-student-modal {
+  animation: modalSpring .55s var(--ease) both;
+}
+
+.modal-head h2 {
+  animation: fadeSlideUp .6s .08s var(--ease) both;
+}
+
+.student-form-grid {
+  animation: fadeSlideUp .65s .15s var(--ease) both;
+}
+
+.modal-foot {
+  animation: fadeSlideUp .65s .22s var(--ease) both;
+}
+
+.exam-timeline {
+  animation: fadeSlideUp .7s .1s var(--ease) both;
+}
+
+.exam-line {
+  animation: timelineReveal .7s var(--ease) both;
+}
+
+.exam-line:nth-child(2) {
+  animation-delay: .1s;
+}
+
+.exam-line:nth-child(3) {
+  animation-delay: .2s;
+}
+
+.exam-line:nth-child(4) {
+  animation-delay: .3s;
+}
+
+.exam-line:nth-child(5) {
+  animation-delay: .4s;
+}
+
+.exam-date {
+  transition: transform .35s var(--ease), box-shadow .35s var(--ease);
+}
+
+.exam-line:hover .exam-date {
+  transform: scale(1.08);
+  box-shadow: 0 8px 22px rgba(34,197,94,.12);
+}
+
+.exam-line-dot {
+  animation: dotPulse 2.2s ease-in-out infinite;
+}
+
+.academic-hero,
+.performance-hero,
+.attendance-overview {
+  animation: heroCardReveal .8s var(--ease) both;
+}
+
+.academic-hero::after,
+.performance-hero::after,
+.attendance-overview::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.academic-hero,
+.performance-hero,
+.attendance-overview {
+  position: relative;
+  overflow: hidden;
+}
+
+.academic-hero::before,
+.performance-hero::before,
+.attendance-overview::before {
+  content: "";
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  right: -180px;
+  top: -180px;
+  border-radius: 50%;
+  background: rgba(34,197,94,.045);
+  animation: heroOrb 8s ease-in-out infinite;
+}
+
+.academic-progress span,
+.subject-bar span,
+.performance-progress i,
+.attendance-track i,
+.distribution-row i {
+  transform-origin: left center;
+  animation: progressSpring 1.5s var(--ease) both;
+}
+
+.attendance-ring {
+  animation:
+    ringIn 1.2s var(--ease),
+    ringGlow 3s 1.2s ease-in-out infinite;
+}
+
+.performance-score strong,
+.academic-hero strong {
+  animation: numberPop .8s .25s var(--ease) both;
+}
+
+.performance-mini-chart {
+  animation: chartReveal .8s .2s var(--ease) both;
+}
+
+.distribution-row {
+  animation: distributionReveal .65s var(--ease) both;
+}
+
+.distribution-row:nth-child(2) {
+  animation-delay: .08s;
+}
+
+.distribution-row:nth-child(3) {
+  animation-delay: .16s;
+}
+
+.distribution-row:nth-child(4) {
+  animation-delay: .24s;
+}
+
+.distribution-row:nth-child(5) {
+  animation-delay: .32s;
+}
+
+.top-student {
+  animation: rowReveal .55s var(--ease) both;
+}
+
+.top-student:hover {
+  transform: translateX(4px);
+}
+
+.top-student > div {
+  transition: transform .3s var(--ease);
+}
+
+.top-student:hover > div {
+  transform: scale(1.1);
+}
+
+.ai-page {
+  animation: aiPageReveal .75s var(--ease);
+}
+
+.ai-workspace-head {
+  animation: headingReveal .7s var(--ease);
+}
+
+.ai-status {
+  animation: statusReveal .7s .15s var(--ease) both;
+}
+
+.ai-workspace {
+  animation: workspaceReveal .85s .1s var(--ease) both;
+}
+
+.chat-header {
+  animation: chatHeaderReveal .65s .2s var(--ease) both;
+}
+
+.chat-agent-icon {
+  animation: aiIconPulse 3s ease-in-out infinite;
+}
+
+.chat-modes button {
+  transition: transform .25s var(--ease), background .25s ease;
+}
+
+.chat-modes button:hover {
+  transform: translateY(-2px);
+}
+
+.chat-scroll {
+  scroll-behavior: smooth;
+}
+
+.chat-message {
+  animation: messageSpring .55s var(--ease) both;
+}
+
+.chat-message:nth-child(2) {
+  animation-delay: .08s;
+}
+
+.chat-message:nth-child(3) {
+  animation-delay: .16s;
+}
+
+.chat-message:nth-child(4) {
+  animation-delay: .24s;
+}
+
+.message-bubble {
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+}
+
+.message-bubble:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(15,55,28,.07);
+}
+
+.composer-input {
+  transition: border-color .3s ease, box-shadow .3s ease, transform .3s var(--ease);
+}
+
+.composer-input:focus-within {
+  border-color: rgba(22,163,74,.45);
+  box-shadow: 0 0 0 4px rgba(34,197,94,.07);
+  transform: translateY(-1px);
+}
+
+.composer-input button {
+  transition: transform .3s var(--ease), box-shadow .3s ease;
+}
+
+.composer-input button:hover {
+  transform: scale(1.08) rotate(-4deg);
+  box-shadow: 0 7px 18px rgba(34,197,94,.25);
+}
+
+.tool-item {
+  animation: toolReveal .5s var(--ease) both;
+}
+
+.tool-item:nth-child(2) {
+  animation-delay: .05s;
+}
+
+.tool-item:nth-child(3) {
+  animation-delay: .1s;
+}
+
+.tool-item:nth-child(4) {
+  animation-delay: .15s;
+}
+
+.tool-item:nth-child(5) {
+  animation-delay: .2s;
+}
+
+.tool-item:nth-child(6) {
+  animation-delay: .25s;
+}
+
+.tool-item:nth-child(7) {
+  animation-delay: .3s;
+}
+
+.live-signals {
+  animation: signalCardReveal .7s .35s var(--ease) both;
+}
+
+.live-signals strong {
+  animation: numberPop .8s .6s var(--ease) both;
+}
+
+.profile-preview-card {
+  animation: profileCardReveal .8s var(--ease) both;
+}
+
+.profile-form-card {
+  animation: profileFormReveal .8s .1s var(--ease) both;
+}
+
+.profile-avatar-large {
+  animation: avatarReveal .8s .25s var(--ease) both;
+}
+
+.profile-orb {
+  animation:
+    orbFloat 7s infinite,
+    profileGlow 4s ease-in-out infinite;
+}
+
+.profile-security {
+  animation: securityReveal .7s .3s var(--ease) both;
+}
+
+.setting-row {
+  animation: settingReveal .55s var(--ease) both;
+}
+
+.setting-row:nth-child(2) {
+  animation-delay: .08s;
+}
+
+.setting-row:nth-child(3) {
+  animation-delay: .16s;
+}
+
+.setting-row:nth-child(4) {
+  animation-delay: .24s;
+}
+
+.setting-row:nth-child(5) {
+  animation-delay: .32s;
+}
+
+.toggle {
+  cursor: pointer;
+}
+
+.toggle:hover {
+  transform: scale(1.04);
+}
+
+.toast {
+  animation: toastSpring .6s var(--ease) both;
+}
+
+.toast-icon {
+  animation: toastIcon .7s .15s var(--ease) both;
+}
+
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes sidebarReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes topbarReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes headingReveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes titleReveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+    letter-spacing: -1px;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: -1.7px;
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes sectionReveal {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardShimmer {
+  0%,
+  55% {
+    transform: translateX(-120%);
+  }
+  75%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes iconFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes aiCardReveal {
+  from {
+    opacity: 0;
+    transform: translateX(20px) scale(.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes aiOrbMove {
+  0%,
+  100% {
+    transform: translate(0,0) scale(1);
+  }
+  50% {
+    transform: translate(55px,-30px) scale(1.15);
+  }
+}
+
+@keyframes sparklePulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: .7;
+  }
+  50% {
+    transform: scale(1.18) rotate(8deg);
+    opacity: 1;
+  }
+}
+
+@keyframes signalReveal {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes rowReveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes backdropIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(7px);
+  }
+}
+
+@keyframes modalSpring {
+  0% {
+    opacity: 0;
+    transform: translateY(35px) scale(.94);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes timelineReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes dotPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px rgba(34,197,94,.12);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(34,197,94,.025);
+  }
+}
+
+@keyframes heroCardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes heroOrb {
+  0%,
+  100% {
+    transform: translate(0,0);
+  }
+  50% {
+    transform: translate(-35px,35px);
+  }
+}
+
+@keyframes progressSpring {
+  from {
+    width: 0;
+    transform: scaleX(.7);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes ringGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 rgba(34,197,94,0));
+  }
+  50% {
+    filter: drop-shadow(0 10px 25px rgba(34,197,94,.1));
+  }
+}
+
+@keyframes numberPop {
+  from {
+    opacity: 0;
+    transform: scale(.75);
+  }
+  70% {
+    transform: scale(1.06);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes chartReveal {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes distributionReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes aiPageReveal {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes statusReveal {
+  from {
+    opacity: 0;
+    transform: scale(.9) translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes workspaceReveal {
+  from {
+    opacity: 0;
+    transform: translateY(25px) scale(.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes chatHeaderReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes aiIconPulse {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+    box-shadow: 0 0 0 0 rgba(34,197,94,.08);
+  }
+  50% {
+    transform: translateY(-2px) rotate(-3deg);
+    box-shadow: 0 0 0 6px rgba(34,197,94,.025);
+  }
+}
+
+@keyframes messageSpring {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(.97);
+  }
+  70% {
+    transform: translateY(-2px) scale(1.005);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toolReveal {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes signalCardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes profileCardReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes profileFormReveal {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes avatarReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(15px) scale(.75) rotate(-5deg);
+  }
+  70% {
+    transform: translateY(-3px) scale(1.04) rotate(2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0);
+  }
+}
+
+@keyframes profileGlow {
+  0%,
+  100% {
+    opacity: .07;
+  }
+  50% {
+    opacity: .13;
+  }
+}
+
+@keyframes securityReveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes settingReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toastSpring {
+  0% {
+    opacity: 0;
+    transform: translateY(25px) translateX(20px) scale(.94);
+  }
+  70% {
+    transform: translateY(-3px) translateX(0) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) translateX(0) scale(1);
+  }
+}
+
+@keyframes toastIcon {
+  from {
+    opacity: 0;
+    transform: scale(.7) rotate(-10deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}.dashboard-stat,
+.subject-card,
+.exam-overview > div,
+.performance-subject,
+.table-card,
+.side-card,
+.marks-card,
+.large-table-card,
+.timeline-card,
+.distribution-card,
+.top-students-card,
+.settings-card,
+.profile-form-card,
+.profile-preview-card {
+  animation: cardReveal .7s var(--ease) both;
+}
+
+.dashboard-stat:nth-child(1),
+.subject-card:nth-child(1),
+.exam-overview > div:nth-child(1),
+.performance-subject:nth-child(1) {
+  animation-delay: .05s;
+}
+
+.dashboard-stat:nth-child(2),
+.subject-card:nth-child(2),
+.exam-overview > div:nth-child(2),
+.performance-subject:nth-child(2) {
+  animation-delay: .1s;
+}
+
+.dashboard-stat:nth-child(3),
+.subject-card:nth-child(3),
+.exam-overview > div:nth-child(3),
+.performance-subject:nth-child(3) {
+  animation-delay: .15s;
+}
+
+.dashboard-stat:nth-child(4),
+.subject-card:nth-child(4),
+.exam-overview > div:nth-child(4),
+.performance-subject:nth-child(4) {
+  animation-delay: .2s;
+}
+
+.dashboard-stat:hover,
+.subject-card:hover,
+.performance-subject:hover,
+.exam-overview > div:hover {
+  transform: translateY(-7px) scale(1.012);
+}
+
+.app-sidebar {
+  animation: sidebarReveal .7s var(--ease);
+}
+
+.app-topbar {
+  animation: topbarReveal .65s var(--ease);
+}
+
+.page-heading {
+  animation: headingReveal .7s var(--ease);
+}
+
+.page-heading h1 {
+  animation: titleReveal .8s var(--ease);
+}
+
+.page-heading p {
+  animation: fadeSlideUp .9s .08s var(--ease) both;
+}
+
+.heading-actions {
+  animation: fadeSlideLeft .8s .12s var(--ease) both;
+}
+
+.dashboard-grid-main {
+  animation: sectionReveal .8s .12s var(--ease) both;
+}
+
+.dashboard-lower-grid {
+  animation: sectionReveal .8s .2s var(--ease) both;
+}
+
+.dashboard-chart-card {
+  position: relative;
+}
+
+.dashboard-chart-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    transparent 25%,
+    rgba(34,197,94,.045) 48%,
+    transparent 68%
+  );
+  transform: translateX(-120%);
+  animation: cardShimmer 4.5s 1s ease-in-out infinite;
+}
+
+.stat-icon,
+.subject-icon,
+.setting-icon,
+.chat-agent-icon {
+  animation: iconFloat 4s ease-in-out infinite;
+}
+
+.stat-icon svg,
+.subject-icon svg,
+.setting-icon svg,
+.chat-agent-icon svg {
+  transition: transform .3s var(--ease);
+}
+
+.dashboard-stat:hover .stat-icon svg,
+.subject-card:hover .subject-icon svg,
+.setting-row:hover .setting-icon svg {
+  transform: scale(1.12) rotate(-4deg);
+}
+
+.dashboard-ai-card {
+  animation: aiCardReveal .9s .15s var(--ease) both;
+}
+
+.dashboard-ai-card::after {
+  content: "";
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  left: -180px;
+  bottom: -170px;
+  border-radius: 50%;
+  background: rgba(92,225,132,.08);
+  filter: blur(8px);
+  animation: aiOrbMove 9s ease-in-out infinite;
+}
+
+.ai-card-label svg {
+  animation: sparklePulse 2.4s ease-in-out infinite;
+}
+
+.ai-signal {
+  animation: signalReveal .7s .5s var(--ease) both;
+}
+
+.ai-signal:nth-of-type(2) {
+  animation-delay: .7s;
+}
+
+.dashboard-ai-card > button svg,
+.exam-line > button svg,
+.text-button svg {
+  transition: transform .3s var(--ease);
+}
+
+.dashboard-ai-card > button:hover svg,
+.exam-line > button:hover svg,
+.text-button:hover svg {
+  transform: translateX(5px);
+}
+
+.exam-mini {
+  animation: rowReveal .6s var(--ease) both;
+}
+
+.exam-mini:nth-child(2) {
+  animation-delay: .08s;
+}
+
+.exam-mini:nth-child(3) {
+  animation-delay: .16s;
+}
+
+.exam-mini:nth-child(4) {
+  animation-delay: .24s;
+}
+
+.exam-mini > strong {
+  transition: transform .35s var(--ease), box-shadow .35s var(--ease);
+}
+
+.exam-mini:hover > strong {
+  transform: scale(1.08) rotate(-3deg);
+  box-shadow: 0 8px 20px rgba(34,197,94,.12);
+}
+
+.table-row,
+.students-row,
+.marks-row {
+  animation: rowReveal .5s var(--ease) both;
+}
+
+.table-row:hover,
+.students-row:hover,
+.marks-row:hover {
+  transform: translateX(3px);
+}
+
+.table-student i,
+.student-profile-cell i {
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+}
+
+.table-row:hover .table-student i,
+.students-row:hover .student-profile-cell i {
+  transform: scale(1.08);
+  box-shadow: 0 5px 15px rgba(34,197,94,.1);
+}
+
+.status-pill {
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.status-pill:hover {
+  transform: translateY(-2px);
+}
+
+.modal-backdrop {
+  animation: backdropIn .3s ease both;
+}
+
+.add-student-modal {
+  animation: modalSpring .55s var(--ease) both;
+}
+
+.modal-head h2 {
+  animation: fadeSlideUp .6s .08s var(--ease) both;
+}
+
+.student-form-grid {
+  animation: fadeSlideUp .65s .15s var(--ease) both;
+}
+
+.modal-foot {
+  animation: fadeSlideUp .65s .22s var(--ease) both;
+}
+
+.exam-timeline {
+  animation: fadeSlideUp .7s .1s var(--ease) both;
+}
+
+.exam-line {
+  animation: timelineReveal .7s var(--ease) both;
+}
+
+.exam-line:nth-child(2) {
+  animation-delay: .1s;
+}
+
+.exam-line:nth-child(3) {
+  animation-delay: .2s;
+}
+
+.exam-line:nth-child(4) {
+  animation-delay: .3s;
+}
+
+.exam-line:nth-child(5) {
+  animation-delay: .4s;
+}
+
+.exam-date {
+  transition: transform .35s var(--ease), box-shadow .35s var(--ease);
+}
+
+.exam-line:hover .exam-date {
+  transform: scale(1.08);
+  box-shadow: 0 8px 22px rgba(34,197,94,.12);
+}
+
+.exam-line-dot {
+  animation: dotPulse 2.2s ease-in-out infinite;
+}
+
+.academic-hero,
+.performance-hero,
+.attendance-overview {
+  animation: heroCardReveal .8s var(--ease) both;
+}
+
+.academic-hero::after,
+.performance-hero::after,
+.attendance-overview::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.academic-hero,
+.performance-hero,
+.attendance-overview {
+  position: relative;
+  overflow: hidden;
+}
+
+.academic-hero::before,
+.performance-hero::before,
+.attendance-overview::before {
+  content: "";
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  right: -180px;
+  top: -180px;
+  border-radius: 50%;
+  background: rgba(34,197,94,.045);
+  animation: heroOrb 8s ease-in-out infinite;
+}
+
+.academic-progress span,
+.subject-bar span,
+.performance-progress i,
+.attendance-track i,
+.distribution-row i {
+  transform-origin: left center;
+  animation: progressSpring 1.5s var(--ease) both;
+}
+
+.attendance-ring {
+  animation:
+    ringIn 1.2s var(--ease),
+    ringGlow 3s 1.2s ease-in-out infinite;
+}
+
+.performance-score strong,
+.academic-hero strong {
+  animation: numberPop .8s .25s var(--ease) both;
+}
+
+.performance-mini-chart {
+  animation: chartReveal .8s .2s var(--ease) both;
+}
+
+.distribution-row {
+  animation: distributionReveal .65s var(--ease) both;
+}
+
+.distribution-row:nth-child(2) {
+  animation-delay: .08s;
+}
+
+.distribution-row:nth-child(3) {
+  animation-delay: .16s;
+}
+
+.distribution-row:nth-child(4) {
+  animation-delay: .24s;
+}
+
+.distribution-row:nth-child(5) {
+  animation-delay: .32s;
+}
+
+.top-student {
+  animation: rowReveal .55s var(--ease) both;
+}
+
+.top-student:hover {
+  transform: translateX(4px);
+}
+
+.top-student > div {
+  transition: transform .3s var(--ease);
+}
+
+.top-student:hover > div {
+  transform: scale(1.1);
+}
+
+.ai-page {
+  animation: aiPageReveal .75s var(--ease);
+}
+
+.ai-workspace-head {
+  animation: headingReveal .7s var(--ease);
+}
+
+.ai-status {
+  animation: statusReveal .7s .15s var(--ease) both;
+}
+
+.ai-workspace {
+  animation: workspaceReveal .85s .1s var(--ease) both;
+}
+
+.chat-header {
+  animation: chatHeaderReveal .65s .2s var(--ease) both;
+}
+
+.chat-agent-icon {
+  animation: aiIconPulse 3s ease-in-out infinite;
+}
+
+.chat-modes button {
+  transition: transform .25s var(--ease), background .25s ease;
+}
+
+.chat-modes button:hover {
+  transform: translateY(-2px);
+}
+
+.chat-scroll {
+  scroll-behavior: smooth;
+}
+
+.chat-message {
+  animation: messageSpring .55s var(--ease) both;
+}
+
+.chat-message:nth-child(2) {
+  animation-delay: .08s;
+}
+
+.chat-message:nth-child(3) {
+  animation-delay: .16s;
+}
+
+.chat-message:nth-child(4) {
+  animation-delay: .24s;
+}
+
+.message-bubble {
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+}
+
+.message-bubble:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(15,55,28,.07);
+}
+
+.composer-input {
+  transition: border-color .3s ease, box-shadow .3s ease, transform .3s var(--ease);
+}
+
+.composer-input:focus-within {
+  border-color: rgba(22,163,74,.45);
+  box-shadow: 0 0 0 4px rgba(34,197,94,.07);
+  transform: translateY(-1px);
+}
+
+.composer-input button {
+  transition: transform .3s var(--ease), box-shadow .3s ease;
+}
+
+.composer-input button:hover {
+  transform: scale(1.08) rotate(-4deg);
+  box-shadow: 0 7px 18px rgba(34,197,94,.25);
+}
+
+.tool-item {
+  animation: toolReveal .5s var(--ease) both;
+}
+
+.tool-item:nth-child(2) {
+  animation-delay: .05s;
+}
+
+.tool-item:nth-child(3) {
+  animation-delay: .1s;
+}
+
+.tool-item:nth-child(4) {
+  animation-delay: .15s;
+}
+
+.tool-item:nth-child(5) {
+  animation-delay: .2s;
+}
+
+.tool-item:nth-child(6) {
+  animation-delay: .25s;
+}
+
+.tool-item:nth-child(7) {
+  animation-delay: .3s;
+}
+
+.live-signals {
+  animation: signalCardReveal .7s .35s var(--ease) both;
+}
+
+.live-signals strong {
+  animation: numberPop .8s .6s var(--ease) both;
+}
+
+.profile-preview-card {
+  animation: profileCardReveal .8s var(--ease) both;
+}
+
+.profile-form-card {
+  animation: profileFormReveal .8s .1s var(--ease) both;
+}
+
+.profile-avatar-large {
+  animation: avatarReveal .8s .25s var(--ease) both;
+}
+
+.profile-orb {
+  animation:
+    orbFloat 7s infinite,
+    profileGlow 4s ease-in-out infinite;
+}
+
+.profile-security {
+  animation: securityReveal .7s .3s var(--ease) both;
+}
+
+.setting-row {
+  animation: settingReveal .55s var(--ease) both;
+}
+
+.setting-row:nth-child(2) {
+  animation-delay: .08s;
+}
+
+.setting-row:nth-child(3) {
+  animation-delay: .16s;
+}
+
+.setting-row:nth-child(4) {
+  animation-delay: .24s;
+}
+
+.setting-row:nth-child(5) {
+  animation-delay: .32s;
+}
+
+.toggle {
+  cursor: pointer;
+}
+
+.toggle:hover {
+  transform: scale(1.04);
+}
+
+.toast {
+  animation: toastSpring .6s var(--ease) both;
+}
+
+.toast-icon {
+  animation: toastIcon .7s .15s var(--ease) both;
+}
+
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes sidebarReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes topbarReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes headingReveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes titleReveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+    letter-spacing: -1px;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: -1.7px;
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes sectionReveal {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardShimmer {
+  0%,
+  55% {
+    transform: translateX(-120%);
+  }
+  75%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes iconFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes aiCardReveal {
+  from {
+    opacity: 0;
+    transform: translateX(20px) scale(.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes aiOrbMove {
+  0%,
+  100% {
+    transform: translate(0,0) scale(1);
+  }
+  50% {
+    transform: translate(55px,-30px) scale(1.15);
+  }
+}
+
+@keyframes sparklePulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: .7;
+  }
+  50% {
+    transform: scale(1.18) rotate(8deg);
+    opacity: 1;
+  }
+}
+
+@keyframes signalReveal {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes rowReveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes backdropIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(7px);
+  }
+}
+
+@keyframes modalSpring {
+  0% {
+    opacity: 0;
+    transform: translateY(35px) scale(.94);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes timelineReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes dotPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px rgba(34,197,94,.12);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(34,197,94,.025);
+  }
+}
+
+@keyframes heroCardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes heroOrb {
+  0%,
+  100% {
+    transform: translate(0,0);
+  }
+  50% {
+    transform: translate(-35px,35px);
+  }
+}
+
+@keyframes progressSpring {
+  from {
+    width: 0;
+    transform: scaleX(.7);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes ringGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 rgba(34,197,94,0));
+  }
+  50% {
+    filter: drop-shadow(0 10px 25px rgba(34,197,94,.1));
+  }
+}
+
+@keyframes numberPop {
+  from {
+    opacity: 0;
+    transform: scale(.75);
+  }
+  70% {
+    transform: scale(1.06);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes chartReveal {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes distributionReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes aiPageReveal {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes statusReveal {
+  from {
+    opacity: 0;
+    transform: scale(.9) translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes workspaceReveal {
+  from {
+    opacity: 0;
+    transform: translateY(25px) scale(.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes chatHeaderReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes aiIconPulse {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+    box-shadow: 0 0 0 0 rgba(34,197,94,.08);
+  }
+  50% {
+    transform: translateY(-2px) rotate(-3deg);
+    box-shadow: 0 0 0 6px rgba(34,197,94,.025);
+  }
+}
+
+@keyframes messageSpring {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(.97);
+  }
+  70% {
+    transform: translateY(-2px) scale(1.005);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toolReveal {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes signalCardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes profileCardReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes profileFormReveal {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes avatarReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(15px) scale(.75) rotate(-5deg);
+  }
+  70% {
+    transform: translateY(-3px) scale(1.04) rotate(2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0);
+  }
+}
+
+@keyframes profileGlow {
+  0%,
+  100% {
+    opacity: .07;
+  }
+  50% {
+    opacity: .13;
+  }
+}
+
+@keyframes securityReveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes settingReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toastSpring {
+  0% {
+    opacity: 0;
+    transform: translateY(25px) translateX(20px) scale(.94);
+  }
+  70% {
+    transform: translateY(-3px) translateX(0) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) translateX(0) scale(1);
+  }
+}
+
+@keyframes toastIcon {
+  from {
+    opacity: 0;
+    transform: scale(.7) rotate(-10deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
