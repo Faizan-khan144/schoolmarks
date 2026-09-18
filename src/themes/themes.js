@@ -2,73 +2,73 @@ export const themes = {
   schoolForest: {
     name: "School Forest",
     primary: "#174b32",
-    secondary: "#0d3524",
-    accent: "#8fb89f",
+    secondary: "#0b2f21",
+    accent: "#9fbea9",
     background: "#f4f3ed",
-    surface: "#ffffff",
-    text: "#101914",
-    muted: "#6f7a73",
-    border: "#d9ded8"
+    surface: "#fffefa",
+    text: "#111a15",
+    muted: "#6d7871",
+    border: "#dce1db"
   },
 
   deepForest: {
     name: "Deep Forest",
     primary: "#063b29",
-    secondary: "#04291d",
-    accent: "#b8d7c3",
-    background: "#f3f4ee",
+    secondary: "#032219",
+    accent: "#a9cdb6",
+    background: "#f2f3ed",
     surface: "#ffffff",
-    text: "#0b1510",
-    muted: "#69756d",
-    border: "#d5ddd7"
+    text: "#0a130f",
+    muted: "#68746d",
+    border: "#d8ded9"
   },
 
-  warmStone: {
-    name: "Warm Stone",
-    primary: "#31483b",
-    secondary: "#1e3027",
-    accent: "#a9b99e",
-    background: "#f5f3ed",
+  aplinodeGreen: {
+    name: "Aplinode Green",
+    primary: "#0f5132",
+    secondary: "#073522",
+    accent: "#86b99b",
+    background: "#f6f5ef",
     surface: "#fffefa",
-    text: "#171b17",
-    muted: "#73766f",
-    border: "#deded5"
+    text: "#101713",
+    muted: "#717a74",
+    border: "#e0e2dc"
   },
 
-  olive: {
-    name: "Olive",
-    primary: "#4d6039",
-    secondary: "#354528",
-    accent: "#a8b98b",
-    background: "#f6f5ee",
+  modernForest: {
+    name: "Modern Forest",
+    primary: "#205b3c",
+    secondary: "#123a27",
+    accent: "#aac9b4",
+    background: "#f5f4ee",
     surface: "#ffffff",
-    text: "#171b13",
-    muted: "#73786c",
-    border: "#dedfd5"
+    text: "#141a16",
+    muted: "#707871",
+    border: "#dde1dc"
   },
 
-  charcoalForest: {
-    name: "Charcoal Forest",
-    primary: "#17241e",
-    secondary: "#0c1511",
-    accent: "#7fa88f",
-    background: "#f2f3ef",
+  stoneForest: {
+    name: "Stone Forest",
+    primary: "#354b3d",
+    secondary: "#1d3025",
+    accent: "#aebca9",
+    background: "#f3f1eb",
+    surface: "#fffdf8",
+    text: "#171b18",
+    muted: "#73776f",
+    border: "#dfded7"
+  },
+
+  darkForest: {
+    name: "Dark Forest",
+    primary: "#152c21",
+    secondary: "#081810",
+    accent: "#82a991",
+    background: "#eef1ed",
     surface: "#ffffff",
-    text: "#111613",
-    muted: "#68716c",
-    border: "#d8ddd9"
-  },
-
-  paperGreen: {
-    name: "Paper Green",
-    primary: "#2d7050",
-    secondary: "#174b32",
-    accent: "#c2dbc9",
-    background: "#f7f6f0",
-    surface: "#fffefa",
-    text: "#172019",
-    muted: "#758078",
-    border: "#e0e3dc"
+    text: "#0d1511",
+    muted: "#68726c",
+    border: "#d7ddd8"
   }
 };
 
@@ -76,7 +76,7 @@ export const defaultTheme = {
   mode: "light",
   preset: "schoolForest",
   font: "Manrope",
-  radius: "12px",
+  radius: "10px",
   style: "editorial",
   custom: false
 };
