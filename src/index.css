@@ -1,4088 +1,1984 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap");
-
-:root {
-  font-family: "DM Sans", sans-serif;
-  color: #171a18;
-  background: #ffffff;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  --green: #159447;
-  --green-dark: #0c7135;
-  --green-soft: #eaf8ef;
-  --green-pale: #f3fbf5;
-  --black: #101311;
-  --text: #171a18;
-  --muted: #6d746f;
-  --line: #e6e9e6;
-  --surface: #ffffff;
-  --surface-soft: #f7f8f7;
-  --danger: #c54848;
-  --shadow: 0 20px 60px rgba(17, 28, 21, 0.08);
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  min-width: 320px;
-  background: #ffffff;
-  color: var(--text);
-}
-
-button,
-input,
-select,
-textarea {
-  font: inherit;
-}
-
-button {
-  border: 0;
-  cursor: pointer;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-::selection {
-  color: #ffffff;
-  background: var(--green);
-}
-
-::-webkit-scrollbar {
-  width: 9px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f5f6f5;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #cbd0cc;
-  border-radius: 20px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #aeb5b0;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  min-width: max-content;
-}
-
-.logo-mark {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  background: var(--green);
-  color: white;
-  font-family: "Manrope", sans-serif;
-  font-size: 15px;
-  font-weight: 800;
-  box-shadow: 0 8px 20px rgba(21, 148, 71, 0.2);
-}
-
-.logo strong {
-  display: block;
-  font-family: "Manrope", sans-serif;
-  font-size: 16px;
-  letter-spacing: -0.4px;
-}
-
-.logo span {
-  display: block;
-  margin-top: 1px;
-  color: #8a918c;
-  font-size: 9px;
-  letter-spacing: 0.04em;
-}
-
-.logo-dark {
-  color: white;
-}
-
-.logo-dark span {
-  color: #7e8580;
-}
-
-.public-site {
-  overflow: hidden;
-  background: white;
-}
-
-.public-nav {
-  width: min(1240px, calc(100% - 48px));
-  height: 82px;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  z-index: 20;
-}
-
-.public-nav-links {
-  display: flex;
-  align-items: center;
-  gap: 31px;
-  margin-left: 80px;
-}
-
-.public-nav-links a {
-  color: #626964;
-  font-size: 13px;
-  font-weight: 600;
-  transition: color 0.2s ease;
-}
-
-.public-nav-links a:hover {
-  color: var(--green);
-}
-
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
-
-.nav-ai,
-.nav-cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 40px;
-  border-radius: 10px;
-  padding: 0 15px;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.nav-ai {
-  color: #505751;
-  background: transparent;
-}
-
-.nav-ai:hover {
-  background: #f5f7f5;
-}
-
-.nav-cta {
-  color: white;
-  background: var(--black);
-  box-shadow: 0 8px 20px rgba(16, 19, 17, 0.12);
-}
-
-.nav-cta:hover {
-  background: var(--green);
-}
-
-.hero {
-  position: relative;
-  min-height: 900px;
-  padding: 112px 24px 0;
-  text-align: center;
-  background:
-    radial-gradient(circle at 50% 18%, rgba(21, 148, 71, 0.09), transparent 31%),
-    linear-gradient(#fff, #fbfcfb);
-}
-
-.hero-grid {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.4;
-  background-image:
-    linear-gradient(rgba(21, 148, 71, 0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(21, 148, 71, 0.055) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: linear-gradient(to bottom, black 0%, transparent 68%);
-}
-
-.hero-orb {
-  position: absolute;
-  width: 340px;
-  height: 340px;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.1;
-  pointer-events: none;
-}
-
-.orb-one {
-  left: -180px;
-  top: 250px;
-  background: #35a960;
-}
-
-.orb-two {
-  right: -180px;
-  top: 330px;
-  background: #75ce92;
-}
-
-.hero-copy {
-  width: min(820px, 100%);
-  margin: auto;
-  position: relative;
-  z-index: 2;
-}
-
-.hero-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 11px;
-  border: 1px solid #dfe8e1;
-  border-radius: 999px;
-  background: rgba(247, 252, 248, 0.8);
-  color: #497157;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-}
-
-.pulse-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 0 4px rgba(21, 148, 71, 0.1);
-}
-
-.hero h1 {
-  max-width: 850px;
-  margin: 25px auto 0;
-  font-family: "Manrope", sans-serif;
-  font-size: clamp(52px, 7vw, 90px);
-  line-height: 0.98;
-  letter-spacing: -0.075em;
-  font-weight: 800;
-  color: #101311;
-}
-
-.hero h1 em {
-  color: var(--green);
-  font-style: normal;
-}
-
-.hero-copy > p {
-  max-width: 650px;
-  margin: 27px auto 0;
-  color: #69706b;
-  font-size: 17px;
-  line-height: 1.7;
-}
-
-.hero-buttons {
-  margin-top: 34px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-}
-
-.primary-button,
-.secondary-button,
-.light-button,
-.dark-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  min-height: 48px;
-  border-radius: 11px;
-  padding: 0 19px;
-  font-size: 13px;
-  font-weight: 700;
-  transition: 0.25s ease;
-}
-
-.primary-button {
-  color: white;
-  background: var(--green);
-  box-shadow: 0 12px 25px rgba(21, 148, 71, 0.2);
-}
-
-.primary-button:hover {
-  background: var(--green-dark);
-  transform: translateY(-2px);
-}
-
-.primary-button.small {
-  min-height: 42px;
-  padding: 0 15px;
-}
-
-.secondary-button {
-  color: #252b27;
-  background: #ffffff;
-  border: 1px solid #dfe4e0;
-}
-
-.secondary-button:hover {
-  border-color: #bfc8c1;
-  transform: translateY(-2px);
-}
-
-.hero-proof {
-  margin: 30px auto 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 11px;
-}
-
-.proof-avatars {
-  display: flex;
-  padding-left: 7px;
-}
-
-.proof-avatars span {
-  width: 28px;
-  height: 28px;
-  margin-left: -7px;
-  border: 2px solid white;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: #dff3e5;
-  color: #277443;
-  font-size: 8px;
-  font-weight: 800;
-}
-
-.hero-proof div:last-child {
-  display: grid;
-  text-align: left;
-  gap: 1px;
-}
-
-.hero-proof strong {
-  color: #313832;
-  font-size: 10px;
-}
-
-.hero-proof div:last-child span {
-  color: #89908b;
-  font-size: 10px;
-}
-
-.hero-product {
-  width: min(1150px, 100%);
-  margin: 70px auto 0;
-  position: relative;
-  z-index: 4;
-}
-
-.product-stage {
-  position: relative;
-  padding: 0 25px 45px;
-}
-
-.stage-glow {
-  position: absolute;
-  left: 50%;
-  bottom: 40px;
-  width: 70%;
-  height: 130px;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background: rgba(21, 148, 71, 0.15);
-  filter: blur(70px);
-}
-
-.preview-window {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid #dce2dd;
-  border-radius: 18px;
-  background: white;
-  box-shadow:
-    0 35px 90px rgba(18, 31, 22, 0.12),
-    0 8px 25px rgba(18, 31, 22, 0.05);
-  text-align: left;
-}
-
-.preview-topbar {
-  height: 42px;
-  padding: 0 14px;
-  display: grid;
-  grid-template-columns: 70px 1fr 70px;
-  align-items: center;
-  border-bottom: 1px solid #edf0ed;
-  background: #fbfcfb;
-}
-
-.preview-dots {
-  display: flex;
-  gap: 5px;
-}
-
-.preview-dots i {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #d4d9d5;
-}
-
-.preview-address {
-  width: 300px;
-  max-width: 100%;
-  margin: auto;
-  padding: 6px 12px;
-  border: 1px solid #e5e9e6;
-  border-radius: 6px;
-  color: #a1a7a3;
-  background: white;
-  font-size: 8px;
-  text-align: center;
-}
-
-.preview-avatar {
-  justify-self: end;
-  width: 23px;
-  height: 23px;
-  display: grid;
-  place-items: center;
-  border-radius: 7px;
-  background: #e6f6eb;
-  color: #25753f;
-  font-size: 7px;
-  font-weight: 800;
-}
-
-.preview-layout {
-  display: grid;
-  grid-template-columns: 160px 1fr;
-  min-height: 520px;
-}
-
-.preview-sidebar {
-  padding: 20px 13px;
-  border-right: 1px solid #edf0ed;
-  background: #fcfdfc;
-}
-
-.preview-brand {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 0 5px 24px;
-}
-
-.preview-brand span {
-  width: 23px;
-  height: 23px;
-  display: grid;
-  place-items: center;
-  border-radius: 7px;
-  color: white;
-  background: var(--green);
-  font-size: 7px;
-  font-weight: 800;
-}
-
-.preview-brand strong {
-  font-size: 10px;
-}
-
-.preview-nav {
-  display: grid;
-  gap: 3px;
-}
-
-.preview-nav div,
-.preview-sidebar-bottom {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 9px;
-  border-radius: 7px;
-  color: #89908b;
-  font-size: 8px;
-  font-weight: 600;
-}
-
-.preview-nav .active {
-  color: #237440;
-  background: #eaf7ee;
-}
-
-.preview-sidebar-bottom {
-  margin-top: 140px;
-}
-
-.preview-content {
-  padding: 25px;
-  background: #f8faf8;
-}
-
-.preview-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.preview-heading span,
-.preview-card-head span {
-  display: block;
-  color: #9ba29d;
-  font-size: 7px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
-.preview-heading h3 {
-  margin-top: 4px;
-  font-family: "Manrope", sans-serif;
-  font-size: 17px;
-  letter-spacing: -0.04em;
-}
-
-.preview-heading button {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 7px 10px;
-  border-radius: 7px;
-  color: white;
-  background: var(--green);
-  font-size: 8px;
-  font-weight: 700;
-}
-
-.preview-kpis {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 9px;
-  margin-top: 18px;
-}
-
-.preview-kpis > div {
-  padding: 13px;
-  border: 1px solid #e5eae5;
-  border-radius: 9px;
-  background: white;
-}
-
-.preview-kpis span,
-.preview-kpis small {
-  display: block;
-  color: #9aa19c;
-  font-size: 7px;
-}
-
-.preview-kpis strong {
-  display: block;
-  margin: 7px 0 2px;
-  font-family: "Manrope", sans-serif;
-  font-size: 18px;
-}
-
-.preview-kpis small {
-  color: #2c9851;
-}
-
-.preview-grid {
-  display: grid;
-  grid-template-columns: 1.65fr 0.85fr;
-  gap: 9px;
-  margin-top: 9px;
-}
-
-.preview-chart-card,
-.preview-ai-card,
-.preview-table {
-  border: 1px solid #e5eae5;
-  border-radius: 9px;
-  background: white;
-}
-
-.preview-chart-card {
-  padding: 14px;
-}
-
-.preview-card-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.preview-card-head strong {
-  display: block;
-  margin-top: 4px;
-  font-size: 10px;
-}
-
-.preview-card-head button {
-  padding: 5px 7px;
-  border: 1px solid #e5e9e6;
-  border-radius: 5px;
-  color: #89908b;
-  background: white;
-  font-size: 7px;
-}
-
-.preview-chart {
-  height: 160px;
-  margin-top: 15px;
-  position: relative;
-}
-
-.chart-lines {
-  position: absolute;
-  inset: 0 0 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.chart-lines i {
-  height: 1px;
-  background: #eef1ee;
-}
-
-.preview-chart svg {
-  position: absolute;
-  inset: 10px 0 25px;
-  width: 100%;
-  height: calc(100% - 35px);
-  color: var(--green);
-}
-
-.preview-chart-months {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  color: #a4aaa6;
-  font-size: 6px;
-}
-
-.preview-ai-card {
-  padding: 16px;
-  background: linear-gradient(145deg, #f3fbf5, #e9f7ed);
-}
-
-.preview-ai-icon {
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  margin-bottom: 12px;
-  border-radius: 8px;
-  color: var(--green);
-  background: white;
-}
-
-.preview-ai-card > span {
-  display: block;
-  color: #6c9476;
-  font-size: 7px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-}
-
-.preview-ai-card strong {
-  display: block;
-  margin-top: 7px;
-  font-family: "Manrope", sans-serif;
-  font-size: 13px;
-  line-height: 1.25;
-}
-
-.preview-ai-card p {
-  margin-top: 9px;
-  color: #6d796f;
-  font-size: 8px;
-  line-height: 1.5;
-}
-
-.preview-ai-bottom {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-top: 25px;
-  color: var(--green);
-  font-size: 7px;
-  font-weight: 700;
-}
-
-.preview-table {
-  margin-top: 9px;
-  overflow: hidden;
-}
-
-.preview-table-head,
-.preview-table-row {
-  display: grid;
-  grid-template-columns: 1.8fr 0.7fr 0.7fr 0.8fr;
-  align-items: center;
-  padding: 8px 12px;
-  border-bottom: 1px solid #f0f2f0;
-}
-
-.preview-table-head {
-  color: #9ca39e;
-  font-size: 6px;
-  font-weight: 700;
-}
-
-.preview-table-row {
-  font-size: 7px;
-  color: #777f79;
-}
-
-.preview-table-row:last-child {
-  border-bottom: 0;
-}
-
-.preview-table-row > div {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.preview-table-row strong {
-  color: #333a35;
-}
-
-.mini-avatar {
-  width: 19px;
-  height: 19px;
-  display: grid;
-  place-items: center;
-  border-radius: 6px;
-  color: #247542;
-  background: #e7f5eb;
-  font-size: 6px;
-  font-weight: 800;
-}
-
-.floating-stat {
-  position: absolute;
-  z-index: 5;
-  min-width: 150px;
-  padding: 10px 12px;
-  display: grid;
-  grid-template-columns: 29px 1fr;
-  align-items: center;
-  column-gap: 8px;
-  border: 1px solid #e1e7e2;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 18px 40px rgba(17, 31, 21, 0.1);
-}
-
-.floating-stat > div {
-  grid-row: span 2;
-  width: 29px;
-  height: 29px;
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  color: var(--green);
-  background: #e8f7ed;
-}
-
-.floating-stat span {
-  color: #929a94;
-  font-size: 7px;
-}
-
-.floating-stat strong {
-  margin-top: 2px;
-  font-size: 11px;
-}
-
-.floating-stat-one {
-  left: -2px;
-  bottom: 110px;
-}
-
-.floating-stat-two {
-  right: -2px;
-  top: 150px;
-}
-
-.hero-bottom-stats {
-  width: min(1000px, 100%);
-  margin: 50px auto 0;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  border-top: 1px solid #e8ece8;
-  border-bottom: 1px solid #e8ece8;
-  position: relative;
-  z-index: 3;
-}
-
-.hero-bottom-stats div {
-  padding: 20px;
-  border-right: 1px solid #e8ece8;
-}
-
-.hero-bottom-stats div:last-child {
-  border-right: 0;
-}
-
-.hero-bottom-stats strong {
-  display: block;
-  font-family: "Manrope", sans-serif;
-  font-size: 22px;
-  letter-spacing: -0.04em;
-}
-
-.hero-bottom-stats span {
-  display: block;
-  margin-top: 4px;
-  color: #8a918c;
-  font-size: 10px;
-}
-
-.marquee-wrap {
-  overflow: hidden;
-  border-top: 1px solid #edf0ed;
-  border-bottom: 1px solid #edf0ed;
-  background: #fafbfa;
-}
-
-.marquee {
-  width: max-content;
-  min-width: 100%;
-  padding: 19px 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  gap: 34px;
-  color: #8e9690;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-}
-
-.marquee i {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--green);
-}
-
-.section {
-  width: min(1180px, calc(100% - 48px));
-  margin: auto;
-  padding: 125px 0;
-}
-
-.problem-layout {
-  display: grid;
-  grid-template-columns: 0.7fr 1.2fr 0.9fr;
-  gap: 55px;
-  align-items: center;
-}
-
-.big-number span {
-  display: block;
-  color: var(--green);
-  font-family: "Manrope", sans-serif;
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.big-number strong {
-  display: block;
-  margin-top: 10px;
-  font-family: "Manrope", sans-serif;
-  font-size: clamp(32px, 4vw, 48px);
-  line-height: 0.95;
-  letter-spacing: -0.065em;
-}
-
-.problem-copy h2,
-.section-heading h2,
-.intelligence-copy h2,
-.analytics-header h2,
-.cta-content h2 {
-  margin-top: 13px;
-  font-family: "Manrope", sans-serif;
-  font-size: clamp(34px, 4vw, 53px);
-  line-height: 1.04;
-  letter-spacing: -0.065em;
-}
-
-.problem-copy h2 span,
-.section-heading h2 span,
-.intelligence-copy h2 span,
-.analytics-header h2 span,
-.cta-content h2 span {
-  color: var(--green);
-}
-
-.section-eyebrow {
-  color: var(--green);
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-}
-
-.problem-copy > p,
-.section-heading > p,
-.intelligence-copy > p,
-.cta-content > p {
-  max-width: 580px;
-  margin-top: 20px;
-  color: #727a74;
-  font-size: 14px;
-  line-height: 1.8;
-}
-
-.problem-points {
-  margin-top: 24px;
-  display: grid;
-  gap: 10px;
-}
-
-.problem-points div,
-.ai-capabilities div {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  color: #424943;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.problem-points svg,
-.ai-capabilities svg {
-  color: var(--green);
-}
-
-.signal-board {
-  padding: 18px;
-  border: 1px solid #e2e8e3;
-  border-radius: 15px;
-  background: #fbfdfb;
-}
-
-.signal-main {
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  border-radius: 11px;
-  background: white;
-}
-
-.signal-circle {
-  width: 92px;
-  height: 92px;
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  border: 7px solid #dff2e4;
-  border-top-color: var(--green);
-}
-
-.signal-circle span {
-  font-family: "Manrope", sans-serif;
-  font-size: 17px;
-  font-weight: 800;
-}
-
-.signal-circle small {
-  color: #919991;
-  font-size: 7px;
-}
-
-.signal-details span {
-  color: var(--green);
-  font-size: 7px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-}
-
-.signal-details strong {
-  display: block;
-  margin-top: 7px;
-  font-family: "Manrope", sans-serif;
-  font-size: 14px;
-}
-
-.signal-details p {
-  margin-top: 4px;
-  color: #858d87;
-  font-size: 9px;
-}
-
-.signal-warning {
-  margin-top: 9px;
-  padding: 10px;
-  display: grid;
-  grid-template-columns: 27px 1fr auto;
-  align-items: center;
-  gap: 9px;
-  border: 1px solid #edf0ed;
-  border-radius: 9px;
-  background: white;
-}
-
-.signal-warning > span {
-  width: 27px;
-  height: 27px;
-  display: grid;
-  place-items: center;
-  border-radius: 7px;
-  color: #a17b2e;
-  background: #fbf3dc;
-}
-
-.signal-warning strong {
-  display: block;
-  font-size: 9px;
-}
-
-.signal-warning small {
-  display: block;
-  margin-top: 2px;
-  color: #969e98;
-  font-size: 7px;
-}
-
-.signal-warning > svg {
-  color: #9ca39d;
-}
-
-.section-heading {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 60px;
-}
-
-.section-heading > p {
-  width: 340px;
-  margin: 0;
-}
-
-.workflow-section {
-  padding-top: 30px;
-}
-
-.workflow-line {
-  margin-top: 60px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-}
-
-.workflow-step {
-  min-height: 250px;
-  padding: 0 25px;
-  border-left: 1px solid #e4e8e4;
-  position: relative;
-}
-
-.workflow-step:last-child {
-  border-right: 1px solid #e4e8e4;
-}
-
-.workflow-number {
-  color: #a1a8a2;
-  font-size: 9px;
-  font-weight: 800;
-}
-
-.workflow-icon {
-  width: 44px;
-  height: 44px;
-  margin-top: 25px;
-  display: grid;
-  place-items: center;
-  border: 1px solid #dfe8e1;
-  border-radius: 11px;
-  color: var(--green);
-  background: #f2faf4;
-}
-
-.workflow-step h3 {
-  margin-top: 22px;
-  font-family: "Manrope", sans-serif;
-  font-size: 16px;
-}
-
-.workflow-step p {
-  max-width: 210px;
-  margin-top: 9px;
-  color: #7c847e;
-  font-size: 11px;
-  line-height: 1.7;
-}
-
-.workflow-arrow {
-  position: absolute;
-  top: 76px;
-  right: -9px;
-  padding: 1px;
-  border-radius: 50%;
-  color: #a1aaa4;
-  background: white;
-}
-
-.modules-section {
-  padding-top: 60px;
-}
-
-.module-grid {
-  margin-top: 55px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid #e3e8e4;
-  border-left: 1px solid #e3e8e4;
-}
-
-.module-card {
-  min-height: 290px;
-  padding: 25px;
-  border-right: 1px solid #e3e8e4;
-  border-bottom: 1px solid #e3e8e4;
-  transition: 0.25s ease;
-}
-
-.module-card:hover {
-  background: #f8fbf9;
-  transform: translateY(-3px);
-}
-
-.module-top {
-  display: flex;
-  justify-content: space-between;
-  color: #9ca39e;
-  font-size: 9px;
-  font-weight: 800;
-}
-
-.module-top svg {
-  color: #9aa29c;
-}
-
-.module-icon {
-  width: 43px;
-  height: 43px;
-  margin-top: 47px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  color: var(--green);
-  background: #eaf7ee;
-}
-
-.module-card h3 {
-  margin-top: 20px;
-  font-family: "Manrope", sans-serif;
-  font-size: 17px;
-}
-
-.module-card p {
-  max-width: 285px;
-  margin-top: 8px;
-  color: #7b837d;
-  font-size: 11px;
-  line-height: 1.7;
-}
-
-.intelligence-section {
-  padding-bottom: 90px;
-}
-
-.intelligence-layout {
-  padding: 75px;
-  display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  align-items: center;
-  gap: 80px;
-  border-radius: 25px;
-  background: #f4faf5;
-}
-
-.ai-capabilities {
-  margin-top: 28px;
-  display: grid;
-  gap: 12px;
-}
-
-.home-ai-box {
-  overflow: hidden;
-  border: 1px solid #dce8de;
-  border-radius: 16px;
-  background: white;
-  box-shadow: 0 25px 60px rgba(22, 53, 31, 0.08);
-}
-
-.home-ai-header {
-  padding: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #edf1ed;
-}
-
-.ai-title-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.ai-icon {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 9px;
-  color: var(--green);
-  background: #e8f6ec;
-}
-
-.ai-title-row span,
-.ai-title-row strong {
-  display: block;
-}
-
-.ai-title-row span {
-  color: #929a94;
-  font-size: 8px;
-}
-
-.ai-title-row strong {
-  margin-top: 2px;
-  font-size: 12px;
-}
-
-.home-ai-bot {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: #758078;
-  font-size: 8px;
-}
-
-.home-ai-bot i {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--green);
-}
-
-.ai-mode-row {
-  padding: 10px 14px;
-  display: flex;
-  gap: 6px;
-  border-bottom: 1px solid #f0f2f0;
-}
-
-.ai-mode-row button {
-  padding: 6px 9px;
-  border-radius: 6px;
-  color: #929993;
-  background: transparent;
-  font-size: 8px;
-  font-weight: 600;
-}
-
-.ai-mode-row button.active {
-  color: #257543;
-  background: #eaf7ee;
-}
-
-.home-ai-input {
-  margin: 20px;
-  min-height: 56px;
-  padding: 7px 7px 7px 15px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: 1px solid #dfe6e0;
-  border-radius: 10px;
-  color: #a0a7a2;
-  font-size: 10px;
-}
-
-.home-ai-input button {
-  width: 38px;
-  height: 38px;
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  color: white;
-  background: var(--green);
-}
-
-.home-ai-suggestions {
-  padding: 0 20px 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-}
-
-.home-ai-suggestions span {
-  padding: 6px 8px;
-  border: 1px solid #e5eae5;
-  border-radius: 6px;
-  color: #7f8881;
-  background: #fbfcfb;
-  font-size: 7px;
-}
-
-.analytics-section {
-  padding-top: 40px;
-}
-
-.analytics-layout {
-  display: grid;
-  grid-template-columns: 1.5fr 0.5fr;
-  gap: 30px;
-  align-items: stretch;
-}
-
-.analytics-main {
-  padding: 34px;
-  border: 1px solid #e4e9e4;
-  border-radius: 18px;
-  background: white;
-}
-
-.analytics-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.analytics-header h2 {
-  font-size: 36px;
-}
-
-.growth-badge {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 7px 9px;
-  border-radius: 7px;
-  color: var(--green);
-  background: #eaf7ee;
-  font-size: 9px;
-  font-weight: 800;
-}
-
-.large-chart {
-  height: 330px;
-  margin-top: 40px;
-  display: grid;
-  grid-template-columns: 32px 1fr;
-}
-
-.chart-y {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 0 0 24px;
-  color: #a0a7a2;
-  font-size: 8px;
-}
-
-.large-chart-area {
-  position: relative;
-}
-
-.large-grid-lines {
-  position: absolute;
-  inset: 0 0 25px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.large-grid-lines i {
-  height: 1px;
-  background: #edf0ed;
-}
-
-.large-chart-area svg {
-  position: absolute;
-  inset: 0 0 25px;
-  width: 100%;
-  height: calc(100% - 25px);
-  color: var(--green);
-}
-
-.chart-months {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  color: #9da59f;
-  font-size: 8px;
-}
-
-.analytics-side {
-  display: grid;
-  gap: 10px;
-}
-
-.metric-card {
-  padding: 20px;
-  border: 1px solid #e4e9e4;
-  border-radius: 14px;
-  background: white;
-}
-
-.metric-icon {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 9px;
-  color: var(--green);
-  background: #eaf7ee;
-}
-
-.metric-card > span {
-  display: block;
-  margin-top: 18px;
-  color: #8b938d;
-  font-size: 9px;
-}
-
-.metric-card > strong {
-  display: block;
-  margin-top: 4px;
-  font-family: "Manrope", sans-serif;
-  font-size: 23px;
-}
-
-.metric-bar {
-  height: 4px;
-  margin-top: 14px;
-  overflow: hidden;
-  border-radius: 10px;
-  background: #edf0ed;
-}
-
-.metric-bar i {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--green);
-}
-
-.centered {
-  align-items: center;
-  text-align: center;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.centered > p {
-  width: min(520px, 100%);
-}
-
-.compare-table {
-  margin-top: 55px;
-  overflow: hidden;
-  border: 1px solid #e3e8e3;
-  border-radius: 16px;
-}
-
-.compare-head,
-.compare-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-
-.compare-head {
-  background: #f7f9f7;
-}
-
-.compare-head span {
-  padding: 17px 22px;
-  color: #8c948e;
-  font-size: 9px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.compare-head span:last-child {
-  color: var(--green);
-}
-
-.compare-row {
-  border-top: 1px solid #e7ebe7;
-}
-
-.compare-row > div {
-  padding: 18px 22px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #777f79;
-  font-size: 11px;
-}
-
-.compare-row > div:first-child svg {
-  color: #bdc4be;
-}
-
-.schoolmarks-col {
-  border-left: 1px solid #e7ebe7;
-  color: #2f573b !important;
-  background: #fbfdfb;
-}
-
-.schoolmarks-col svg {
-  color: var(--green);
-}
-
-.cta-section {
-  min-height: 560px;
-  padding: 130px 24px;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  position: relative;
-  background: #111512;
-  color: white;
-  text-align: center;
-}
-
-.cta-glow {
-  position: absolute;
-  width: 650px;
-  height: 350px;
-  border-radius: 50%;
-  background: rgba(21, 148, 71, 0.2);
-  filter: blur(100px);
-}
-
-.cta-content {
-  position: relative;
-  z-index: 2;
-}
-
-.cta-content .section-eyebrow {
-  color: #6dcc8d;
-}
-
-.cta-content h2 {
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-  color: white;
-  font-size: clamp(43px, 6vw, 72px);
-}
-
-.cta-content h2 span {
-  color: #61c67f;
-}
-
-.cta-content > p {
-  margin-left: auto;
-  margin-right: auto;
-  color: #919992;
-}
-
-.light-button {
-  margin-top: 30px;
-  color: #111512;
-  background: white;
-}
-
-.light-button:hover {
-  color: white;
-  background: var(--green);
-}
-
-.public-footer {
-  padding: 70px max(24px, calc((100% - 1180px) / 2)) 25px;
-  color: white;
-  background: #101311;
-}
-
-.footer-main {
-  max-width: 330px;
-}
-
-.footer-main p {
-  margin-top: 18px;
-  color: #7f8781;
-  font-size: 11px;
-  line-height: 1.7;
-}
-
-.footer-links {
-  margin-top: -55px;
-  display: grid;
-  grid-template-columns: repeat(3, 150px);
-  justify-content: end;
-  gap: 55px;
-}
-
-.footer-links div {
-  display: grid;
-  gap: 11px;
-}
-
-.footer-links strong {
-  margin-bottom: 4px;
-  color: #dfe4df;
-  font-size: 9px;
-}
-
-.footer-links a {
-  color: #7f8781;
-  font-size: 9px;
-}
-
-.footer-links a:hover {
-  color: #65c985;
-}
-
-.footer-bottom {
-  margin-top: 70px;
-  padding-top: 18px;
-  display: flex;
-  justify-content: space-between;
-  border-top: 1px solid #272d29;
-  color: #606862;
-  font-size: 8px;
-}
-
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition:
-    opacity 0.7s ease,
-    transform 0.7s ease;
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.app-shell {
-  min-height: 100vh;
-  display: flex;
-  background: #f5f7f5;
-}
-
-.app-sidebar {
-  width: 240px;
-  height: 100vh;
-  position: fixed;
-  z-index: 30;
-  top: 0;
-  left: 0;
-  padding: 20px 13px;
-  display: flex;
-  flex-direction: column;
-  border-right: 1px solid #e2e7e3;
-  background: #ffffff;
-}
-
-.sidebar-head {
-  padding: 0 7px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.mobile-close {
-  display: none;
-  background: transparent;
-  color: #777f79;
-}
-
-.school-switcher {
-  margin: 0 4px 25px;
-  padding: 10px;
-  display: grid;
-  grid-template-columns: 33px 1fr 15px;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid #e5e9e5;
-  border-radius: 10px;
-  background: #fafbfa;
-}
-
-.school-avatar {
-  width: 33px;
-  height: 33px;
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  color: white;
-  background: var(--green);
-  font-size: 8px;
-  font-weight: 800;
-}
-
-.school-switcher strong,
-.school-switcher span {
-  display: block;
-}
-
-.school-switcher strong {
-  font-size: 10px;
-}
-
-.school-switcher span {
-  margin-top: 2px;
-  color: #949b96;
-  font-size: 7px;
-}
-
-.school-switcher svg {
-  color: #a1a8a3;
-}
-
-.sidebar-label {
-  padding: 0 11px 8px;
-  color: #a1a8a2;
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 0.13em;
-}
-
-.sidebar-nav {
-  display: grid;
-  gap: 2px;
-}
-
-.sidebar-nav button,
-.sidebar-setting {
-  width: 100%;
-  min-height: 38px;
-  padding: 0 11px;
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  border-radius: 8px;
-  color: #7d857f;
-  background: transparent;
-  text-align: left;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.sidebar-nav button:hover,
-.sidebar-setting:hover {
-  color: #303732;
-  background: #f6f8f6;
-}
-
-.sidebar-nav button.active {
-  color: #24743f;
-  background: #eaf7ee;
-}
-
-.sidebar-nav button i {
-  margin-left: auto;
-  padding: 2px 5px;
-  border-radius: 4px;
-  color: var(--green);
-  background: #d9f0df;
-  font-size: 6px;
-  font-style: normal;
-  font-weight: 800;
-}
-
-.sidebar-bottom {
-  margin-top: auto;
-}
-
-.sidebar-setting {
-  margin-bottom: 13px;
-}
-
-.profile-mini {
-  padding: 11px 8px;
-  display: grid;
-  grid-template-columns: 30px 1fr 16px;
-  align-items: center;
-  gap: 8px;
-  border-top: 1px solid #edf0ed;
-}
-
-.profile-mini > div {
-  width: 30px;
-  height: 30px;
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  color: #24743f;
-  background: #e5f4e9;
-  font-size: 8px;
-  font-weight: 800;
-}
-
-.profile-mini strong,
-.profile-mini small {
-  display: block;
-}
-
-.profile-mini strong {
-  font-size: 9px;
-}
-
-.profile-mini small {
-  margin-top: 2px;
-  color: #929993;
-  font-size: 7px;
-}
-
-.profile-mini > svg {
-  color: #9ca39d;
-}
-
-.app-main {
-  width: calc(100% - 240px);
-  margin-left: 240px;
-}
-
-.app-topbar {
-  height: 66px;
-  padding: 0 28px;
-  position: sticky;
-  z-index: 20;
-  top: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #e4e8e4;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(14px);
-}
-
-.topbar-left,
-.topbar-actions {
-  display: flex;
-  align-items: center;
-}
-
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: #a0a7a1;
-  font-size: 10px;
-}
-
-.breadcrumb strong {
-  color: #4b534d;
-}
-
-.mobile-menu {
-  display: none;
-  margin-right: 12px;
-  color: #606862;
-  background: transparent;
-}
-
-.topbar-actions {
-  gap: 8px;
-}
-
-.search-button,
-.icon-button,
-.top-ai {
-  min-height: 36px;
-  border-radius: 8px;
-}
-
-.search-button {
-  min-width: 190px;
-  padding: 0 10px;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  border: 1px solid #e5e9e5;
-  color: #9ca39d;
-  background: #fafbfa;
-  font-size: 9px;
-  text-align: left;
-}
-
-.search-button kbd {
-  margin-left: auto;
-  padding: 2px 5px;
-  border: 1px solid #dfe4df;
-  border-radius: 4px;
-  color: #9ba29c;
-  background: white;
-  font-size: 7px;
-}
-
-.icon-button {
-  width: 36px;
-  display: grid;
-  place-items: center;
-  color: #7f8781;
-  background: transparent;
-}
-
-.icon-button:hover {
-  background: #f5f7f5;
-}
-
-.top-ai {
-  padding: 0 12px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: white;
-  background: var(--green);
-  font-size: 9px;
-  font-weight: 700;
-}
-
-.app-content {
-  padding: 34px;
-}
-
-.page-stack {
-  width: min(1350px, 100%);
-  margin: auto;
-}
-
-.page-heading {
-  margin-bottom: 28px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.page-eyebrow {
-  color: var(--green);
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-}
-
-.page-heading h1 {
-  margin-top: 6px;
-  font-family: "Manrope", sans-serif;
-  font-size: 31px;
-  letter-spacing: -0.055em;
-}
-
-.page-heading p {
-  margin-top: 5px;
-  color: #858d87;
-  font-size: 11px;
-}
-
-.heading-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.outline-button {
-  min-height: 39px;
-  padding: 0 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  border: 1px solid #dfe4df;
-  border-radius: 8px;
-  color: #626a64;
-  background: white;
-  font-size: 9px;
-  font-weight: 700;
-}
-
-.outline-button:hover {
-  border-color: #c7cec8;
-  background: #fafbfa;
-}
-
-.dashboard-stat-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-}
-
-.dashboard-stat {
-  min-height: 150px;
-  padding: 18px;
-  border: 1px solid #e2e7e3;
-  border-radius: 12px;
-  background: white;
-}
-
-.stat-icon {
-  width: 33px;
-  height: 33px;
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  color: var(--green);
-  background: #eaf7ee;
-}
-
-.dashboard-stat > span {
-  display: block;
-  margin-top: 15px;
-  color: #858d87;
-  font-size: 9px;
-}
-
-.dashboard-stat > strong {
-  display: block;
-  margin-top: 4px;
-  font-family: "Manrope", sans-serif;
-  font-size: 24px;
-  letter-spacing: -0.05em;
-}
-
-.dashboard-stat > small {
-  margin-top: 4px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--green);
-  font-size: 7px;
-  font-weight: 700;
-}
-
-.dashboard-stat > small.danger-text {
-  color: var(--danger);
-}
-
-.dashboard-grid-main {
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: 1.65fr 0.75fr;
-  gap: 10px;
-}
-
-.dashboard-chart-card,
-.dashboard-ai-card,
-.table-card,
-.side-card,
-.large-table-card,
-.marks-card,
-.timeline-card,
-.distribution-card,
-.top-students-card {
-  border: 1px solid #e2e7e3;
-  border-radius: 12px;
-  background: white;
-}
-
-.dashboard-chart-card {
-  padding: 20px;
-}
-
-.card-heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 15px;
-}
-
-.card-heading > div > span {
-  color: #9aa19b;
-  font-size: 7px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-}
-
-.card-heading h2 {
-  margin-top: 4px;
-  font-family: "Manrope", sans-serif;
-  font-size: 15px;
-  letter-spacing: -0.035em;
-}
-
-.card-heading.compact h2 {
-  font-size: 14px;
-}
-
-.select-field {
-  min-height: 32px;
-  padding: 0 8px;
-  border: 1px solid #e2e7e3;
-  border-radius: 7px;
-  color: #737b75;
-  background: white;
-  font-size: 8px;
-  outline: none;
-}
-
-.dashboard-big-chart {
-  height: 310px;
-  margin-top: 25px;
-  display: grid;
-  grid-template-columns: 35px 1fr;
-}
-
-.big-chart-labels {
-  padding-bottom: 27px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  color: #a0a7a1;
-  font-size: 7px;
-}
-
-.big-chart-area {
-  position: relative;
-}
-
-.big-chart-grid {
-  position: absolute;
-  inset: 0 0 27px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.big-chart-grid i {
-  height: 1px;
-  background: #edf0ed;
-}
-
-.big-chart-area svg {
-  position: absolute;
-  inset: 0 0 27px;
-  width: 100%;
-  height: calc(100% - 27px);
-  color: var(--green);
-}
-
-.big-chart-months {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: space-between;
-  color: #9ca39d;
-  font-size: 7px;
-}
-
-.dashboard-ai-card {
-  padding: 20px;
-  background: linear-gradient(145deg, #eff9f2, #e6f5ea);
-}
-
-.ai-card-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--green);
-  font-size: 7px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-}
-
-.ai-signal {
-  margin-top: 55px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.signal-icon {
-  width: 38px;
-  height: 38px;
-  display: grid;
-  place-items: center;
-  border-radius: 9px;
-}
-
-.signal-icon.success {
-  color: var(--green);
-  background: white;
-}
-
-.signal-icon.warning {
-  color: #a27a2e;
-  background: #fff7df;
-}
-
-.ai-signal span {
-  display: block;
-  color: #74927c;
-  font-size: 7px;
-}
-
-.ai-signal strong {
-  display: block;
-  max-width: 180px;
-  margin-top: 3px;
-  font-family: "Manrope", sans-serif;
-  font-size: 12px;
-}
-
-.dashboard-ai-card > p {
-  margin-top: 16px;
-  color: #6f7e73;
-  font-size: 9px;
-  line-height: 1.7;
-}
-
-.dashboard-ai-card > button {
-  margin-top: 35px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--green);
-  background: transparent;
-  font-size: 9px;
-  font-weight: 800;
-}
-
-.dashboard-lower-grid {
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: 1.6fr 0.8fr;
-  gap: 10px;
-}
-
-.table-card,
-.side-card {
-  overflow: hidden;
-}
-
-.card-heading.compact {
-  padding: 18px;
-}
-
-.text-button {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--green);
-  background: transparent;
-  font-size: 8px;
-  font-weight: 800;
-}
-
-.data-table {
-  width: 100%;
-}
-
-.table-row {
-  min-height: 51px;
-  padding: 0 18px;
-  display: grid;
-  grid-template-columns: 1.5fr 0.7fr 0.7fr 0.8fr;
-  align-items: center;
-  border-top: 1px solid #edf0ed;
-  color: #747c76;
-  font-size: 9px;
-}
-
-.table-row.table-header {
-  min-height: 34px;
-  color: #a0a7a1;
-  background: #fafbfa;
-  font-size: 7px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.table-student {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.table-student > span {
-  width: 27px;
-  height: 27px;
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  color: #2a7745;
-  background: #e9f6ed;
-  font-size: 7px;
-  font-weight: 800;
-}
-
-.table-student strong {
-  color: #343a35;
-  font-size: 9px;
-}
-
-.status {
-  width: max-content;
-  padding: 4px 7px;
-  border-radius: 5px;
-  color: #34764a;
-  background: #eaf7ee;
-  font-size: 7px;
-  font-weight: 700;
-}
-
-.status.warning {
-  color: #9a742c;
-  background: #fff5dc;
-}
-
-.side-card {
-  padding-bottom: 15px;
-}
-
-.exam-mini {
-  margin: 0 15px;
-  padding: 11px 3px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid #edf0ed;
-}
-
-.exam-mini strong,
-.exam-mini span {
-  display: block;
-}
-
-.exam-mini strong {
-  font-size: 9px;
-}
-
-.exam-mini span {
-  margin-top: 3px;
-  color: #979f99;
-  font-size: 7px;
-}
-
-.exam-mini b {
-  width: 30px;
-  height: 30px;
-  display: grid;
-  place-items: center;
-  border-radius: 7px;
-  color: var(--green);
-  background: #edf8f0;
-  font-size: 9px;
-}
-
-.pulse-grid {
-  margin: 10px 15px 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.pulse-card {
-  padding: 12px;
-  border-radius: 8px;
-  background: #f6f8f6;
-}
-
-.pulse-card span,
-.pulse-card strong {
-  display: block;
-}
-
-.pulse-card span {
-  color: #929a94;
-  font-size: 7px;
-}
-
-.pulse-card strong {
-  margin-top: 5px;
-  font-size: 15px;
-}
-
-.large-table-card {
-  overflow: hidden;
-}
-
-.marks-toolbar {
-  padding: 17px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  border-bottom: 1px solid #edf0ed;
-}
-
-.student-search {
-  width: 260px;
-  min-height: 38px;
-  padding: 0 10px;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  border: 1px solid #e0e5e1;
-  border-radius: 8px;
-  color: #9ba29d;
-  background: #fafbfa;
-}
-
-.student-search input {
-  width: 100%;
-  border: 0;
-  outline: 0;
-  color: #454c47;
-  background: transparent;
-  font-size: 9px;
-}
-
-.toolbar-actions,
-.table-summary-actions {
-  display: flex;
-  gap: 7px;
-}
-
-.empty-state {
-  min-height: 260px;
-  display: grid;
-  place-items: center;
-  align-content: center;
-  gap: 6px;
-  color: #9ca39d;
-}
-
-.empty-state strong {
-  color: #626a64;
-  font-size: 11px;
-}
-
-.empty-state span {
-  font-size: 8px;
-}
-
-.student-modal-backdrop {
-  position: fixed;
-  z-index: 100;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 20px;
-  background: rgba(14, 19, 16, 0.35);
-  backdrop-filter: blur(8px);
-}
-
-.add-student-modal {
-  width: min(470px, 100%);
-  padding: 22px;
-  border: 1px solid #dfe5e0;
-  border-radius: 15px;
-  background: white;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
-}
-
-.modal-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.modal-head span {
-  color: var(--green);
-  font-size: 7px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-}
-
-.modal-head h2 {
-  margin-top: 5px;
-  font-family: "Manrope", sans-serif;
-  font-size: 22px;
-}
-
-.modal-head button {
-  width: 32px;
-  height: 32px;
-  display: grid;
-  place-items: center;
-  border-radius: 7px;
-  color: #7d857f;
-  background: #f5f7f5;
-}
-
-.student-form-grid {
-  margin-top: 25px;
-  display: grid;
-  gap: 14px;
-}
-
-.student-form-grid label {
-  display: grid;
-  gap: 7px;
-  color: #646c66;
-  font-size: 9px;
-  font-weight: 700;
-}
-
-.student-form-grid input,
-.student-form-grid select {
-  min-height: 42px;
-  padding: 0 11px;
-  border: 1px solid #dfe5e0;
-  border-radius: 8px;
-  outline: none;
-  color: #3d443f;
-  background: white;
-  font-size: 10px;
-}
-
-.student-form-grid input:focus,
-.student-form-grid select:focus {
-  border-color: #9acbaa;
-  box-shadow: 0 0 0 3px rgba(21, 148, 71, 0.08);
-}
-
-.modal-foot {
-  margin-top: 22px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 7px;
-}
-
-.save-student {
-  min-height: 39px;
-  padding: 0 13px;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  border-radius: 8px;
-  color: white;
-  background: var(--green);
-  font-size: 9px;
-  font-weight: 700;
-}
-
-.academic-hero,
-.performance-hero {
-  padding: 28px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid #dfe7e1;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #f2faf4, #ffffff);
-}
-
-.academic-hero h1,
-.performance-hero h1 {
-  margin-top: 6px;
-  font-family: "Manrope", sans-serif;
-  font-size: 30px;
-  letter-spacing: -0.055em;
-}
-
-.academic-hero p,
-.performance-hero p {
-  margin-top: 5px;
-  color: #7f8781;
-  font-size: 10px;
-}
-
-.academic-progress {
-  min-width: 220px;
-}
-
-.academic-progress strong {
-  display: block;
-  font-family: "Manrope", sans-serif;
-  font-size: 31px;
-}
-
-.academic-progress span {
-  display: block;
-  margin-top: 2px;
-  color: #929a94;
-  font-size: 8px;
-}
-
-.academic-progress > div {
-  height: 5px;
-  margin-top: 12px;
-  overflow: hidden;
-  border-radius: 20px;
-  background: #dfe9e1;
-}
-
-.academic-progress i {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--green);
-}
-
-.subject-grid {
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.subject-card {
-  padding: 19px;
-  border: 1px solid #e1e6e2;
-  border-radius: 11px;
-  background: white;
-}
-
-.subject-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.subject-icon {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  color: var(--green);
-  background: #eaf7ee;
-}
-
-.subject-head > span {
-  color: var(--green);
-  font-family: "Manrope", sans-serif;
-  font-size: 16px;
-  font-weight: 800;
-}
-
-.subject-card h3 {
-  margin-top: 18px;
-  font-family: "Manrope", sans-serif;
-  font-size: 13px;
-}
-
-.subject-card p {
-  margin-top: 3px;
-  color: #969e98;
-  font-size: 8px;
-}
-
-.subject-bar {
-  height: 5px;
-  margin-top: 17px;
-  overflow: hidden;
-  border-radius: 10px;
-  background: #edf0ed;
-}
-
-.subject-bar i {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--green);
-}
-
-.subject-foot {
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
-  color: #969e98;
-  font-size: 7px;
-}
-
-.subject-foot strong {
-  color: #39754b;
-}
-
-.exam-overview {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-}
-
-.exam-overview > div {
-  padding: 18px;
-  border: 1px solid #e1e6e2;
-  border-radius: 11px;
-  background: white;
-}
-
-.exam-overview span,
-.exam-overview strong {
-  display: block;
-}
-
-.exam-overview span {
-  color: #8c948e;
-  font-size: 8px;
-}
-
-.exam-overview strong {
-  margin-top: 8px;
-  font-family: "Manrope", sans-serif;
-  font-size: 24px;
-}
-
-.timeline-card {
-  margin-top: 10px;
-  padding-bottom: 10px;
-}
-
-.exam-timeline {
-  padding: 0 25px;
-}
-
-.exam-line {
-  min-height: 90px;
-  display: grid;
-  grid-template-columns: 50px 16px 1fr auto;
-  align-items: center;
-  gap: 15px;
-  border-top: 1px solid #edf0ed;
-}
-
-.exam-date {
-  text-align: center;
-}
-
-.exam-date strong,
-.exam-date span {
-  display: block;
-}
-
-.exam-date strong {
-  font-family: "Manrope", sans-serif;
-  font-size: 20px;
-}
-
-.exam-date span {
-  color: var(--green);
-  font-size: 7px;
-  font-weight: 800;
-}
-
-.exam-line-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 0 5px #e5f5e9;
-}
-
-.exam-info strong,
-.exam-info span,
-.exam-info small {
-  display: block;
-}
-
-.exam-info strong {
-  font-size: 11px;
-}
-
-.exam-info span {
-  margin-top: 3px;
-  color: #909891;
-  font-size: 8px;
-}
-
-.exam-info small {
-  margin-top: 5px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #a0a7a1;
-  font-size: 7px;
-}
-
-.exam-time {
-  padding: 5px 8px;
-  border-radius: 5px;
-  color: #34784b;
-  background: #eaf7ee;
-  font-size: 7px;
-  font-weight: 700;
-}
-
-.exam-time.draft {
-  color: #8e713b;
-  background: #fff4d9;
-}
-
-.marks-card {
-  overflow: hidden;
-}
-
-.marks-toolbar > div:first-child strong,
-.marks-toolbar > div:first-child span {
-  display: block;
-}
-
-.marks-toolbar > div:first-child strong {
-  font-size: 11px;
-}
-
-.marks-toolbar > div:first-child span {
-  margin-top: 3px;
-  color: #969e98;
-  font-size: 7px;
-}
-
-.marks-table {
-  width: 100%;
-}
-
-.marks-row {
-  min-height: 58px;
-  padding: 0 20px;
-  display: grid;
-  grid-template-columns: 1.6fr 0.5fr 0.6fr 0.6fr;
-  align-items: center;
-  border-top: 1px solid #edf0ed;
-  color: #858d87;
-  font-size: 9px;
-}
-
-.marks-row input {
-  width: 60px;
-  height: 32px;
-  padding: 0 8px;
-  border: 1px solid #dfe5e0;
-  border-radius: 7px;
-  outline: none;
-  text-align: center;
-  font-size: 9px;
-}
-
-.marks-row input:focus {
-  border-color: #9acbaa;
-}
-
-.score-cell {
-  color: #343b36 !important;
-}
-
-.result-stat-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-}
-
-.results-grid {
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 10px;
-}
-
-.distribution-card,
-.top-students-card {
-  padding-bottom: 10px;
-}
-
-.distribution {
-  padding: 10px 20px 20px;
-}
-
-.distribution-label {
-  margin-top: 16px;
-  display: grid;
-  grid-template-columns: 60px 1fr 30px;
-  align-items: center;
-  gap: 10px;
-}
-
-.distribution-label span,
-.distribution-label strong {
-  color: #858d87;
-  font-size: 8px;
-}
-
-.distribution-label strong {
-  color: #343b36;
-  text-align: right;
-}
-
-.distribution-label > div {
-  height: 7px;
-  overflow: hidden;
-  border-radius: 10px;
-  background: #edf0ed;
-}
-
-.distribution-label i {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--green);
-}
-
-.top-student {
-  min-height: 53px;
-  padding: 0 18px;
-  display: grid;
-  grid-template-columns: 28px 30px 1fr auto;
-  align-items: center;
-  gap: 9px;
-  border-top: 1px solid #edf0ed;
-}
-
-.top-student .rank {
-  color: #9aa19b;
-  font-size: 8px;
-  font-weight: 800;
-}
-
-.top-student > div {
-  width: 30px;
-  height: 30px;
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  color: #287545;
-  background: #eaf7ee;
-  font-size: 7px;
-  font-weight: 800;
-}
-
-.top-student strong {
-  font-size: 9px;
-}
-
-.top-student b {
-  color: var(--green);
-  font-size: 10px;
-}
-
-.award-icon {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  color: #9b792f;
-  background: #fff5dc;
-  font-size: 13px;
-}
-
-.attendance-overview {
-  padding: 40px;
-  display: grid;
-  grid-template-columns: 190px 1fr;
-  align-items: center;
-  gap: 50px;
-  border: 1px solid #dfe7e1;
-  border-radius: 15px;
-  background: linear-gradient(135deg, #f1faf4, #ffffff);
-}
-
-.attendance-ring {
-  width: 175px;
-  height: 175px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  background: conic-gradient(var(--green) 0 94.8%, #dfe9e1 94.8% 100%);
-}
-
-.attendance-ring::before {
-  content: "";
-  position: absolute;
-  inset: 12px;
-  border-radius: 50%;
-  background: white;
-}
-
-.attendance-ring span,
-.attendance-ring small {
-  position: relative;
-  z-index: 1;
-}
-
-.attendance-ring span {
-  font-family: "Manrope", sans-serif;
-  font-size: 25px;
-  font-weight: 800;
-}
-
-.attendance-ring small {
-  margin-top: 2px;
-  color: #8d958f;
-  font-size: 8px;
-}
-
-.attendance-copy > span {
-  color: var(--green);
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-}
-
-.attendance-copy h2 {
-  margin-top: 7px;
-  font-family: "Manrope", sans-serif;
-  font-size: 25px;
-  letter-spacing: -0.045em;
-}
-
-.attendance-copy > p {
-  max-width: 560px;
-  margin-top: 8px;
-  color: #7e867f;
-  font-size: 10px;
-  line-height: 1.7;
-}
-
-.attendance-mini-stats {
-  margin-top: 22px;
-  display: flex;
-  gap: 35px;
-}
-
-.attendance-mini-stats strong,
-.attendance-mini-stats span {
-  display: block;
-}
-
-.attendance-mini-stats strong {
-  font-family: "Manrope", sans-serif;
-  font-size: 19px;
-}
-
-.attendance-mini-stats span {
-  margin-top: 3px;
-  color: #939b95;
-  font-size: 7px;
-}
-
-.attendance-bars {
-  margin-top: 10px;
-  padding: 22px;
-  border: 1px solid #e1e6e2;
-  border-radius: 12px;
-  background: white;
-}
-
-.attendance-bars > div {
-  display: grid;
-  grid-template-columns: 45px 1fr 40px;
-  align-items: center;
-  gap: 12px;
-  margin-top: 14px;
-}
-
-.attendance-bars > div:first-child {
-  margin-top: 0;
-}
-
-.attendance-bars span,
-.attendance-bars strong {
-  color: #747c76;
-  font-size: 8px;
-}
-
-.attendance-bars strong {
-  text-align: right;
-  color: #343b36;
-}
-
-.attendance-bars > div > div {
-  height: 7px;
-  overflow: hidden;
-  border-radius: 10px;
-  background: #edf0ed;
-}
-
-.attendance-bars i {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--green);
-}
-
-.performance-score {
-  text-align: right;
-}
-
-.performance-score span,
-.performance-score small {
-  display: block;
-  color: #909891;
-  font-size: 7px;
-}
-
-.performance-score strong {
-  font-family: "Manrope", sans-serif;
-  font-size: 43px;
-  letter-spacing: -0.06em;
-}
-
-.performance-copy {
-  margin-top: 10px;
-  padding: 25px;
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  align-items: center;
-  gap: 40px;
-  border: 1px solid #e1e6e2;
-  border-radius: 12px;
-  background: white;
-}
-
-.performance-copy > div:first-child > span {
-  color: var(--green);
-  font-size: 7px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-}
-
-.performance-copy h2 {
-  margin-top: 6px;
-  font-family: "Manrope", sans-serif;
-  font-size: 21px;
-}
-
-.performance-copy p {
-  max-width: 550px;
-  margin-top: 7px;
-  color: #858d87;
-  font-size: 9px;
-  line-height: 1.7;
-}
-
-.performance-mini-chart {
-  height: 110px;
-  color: var(--green);
-}
-
-.performance-mini-chart svg {
-  width: 100%;
-  height: 100%;
-}
-
-.performance-subjects {
-  margin-top: 10px;
-  overflow: hidden;
-  border: 1px solid #e1e6e2;
-  border-radius: 12px;
-  background: white;
-}
-
-.performance-subject {
-  min-height: 65px;
-  padding: 0 20px;
-  display: grid;
-  grid-template-columns: 35px 1fr 65px 55px 180px;
-  align-items: center;
-  gap: 12px;
-  border-top: 1px solid #edf0ed;
-}
-
-.performance-subject:first-child {
-  border-top: 0;
-}
-
-.subject-rank {
-  color: #9aa19b;
-  font-size: 8px;
-  font-weight: 800;
-}
-
-.performance-subject-name strong,
-.performance-subject-name span {
-  display: block;
-}
-
-.performance-subject-name strong {
-  font-size: 9px;
-}
-
-.performance-subject-name span {
-  margin-top: 3px;
-  color: #9aa19b;
-  font-size: 7px;
-}
-
-.performance-score-small {
-  font-size: 10px;
-}
-
-.change {
-  font-size: 8px;
-  font-weight: 700;
-}
-
-.change.up {
-  color: var(--green);
-}
-
-.change.down {
-  color: var(--danger);
-}
-
-.performance-progress {
-  height: 5px;
-  overflow: hidden;
-  border-radius: 10px;
-  background: #edf0ed;
-}
-
-.performance-progress i {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--green);
-}
-
-.ai-page {
-  width: min(1350px, 100%);
-  margin: auto;
-}
-
-.ai-workspace-head {
-  margin-bottom: 25px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-
-.ai-workspace-head h1 {
-  margin-top: 6px;
-  font-family: "Manrope", sans-serif;
-  font-size: 31px;
-  letter-spacing: -0.055em;
-}
-
-.ai-workspace-head p {
-  margin-top: 5px;
-  color: #858d87;
-  font-size: 10px;
-}
-
-.ai-live {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 10px;
-  border: 1px solid #dce9df;
-  border-radius: 7px;
-  color: #39764c;
-  background: #eff9f2;
-  font-size: 8px;
-  font-weight: 700;
-}
-
-.ai-live i {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--green);
-}
-
-.ai-workspace {
-  min-height: 650px;
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  overflow: hidden;
-  border: 1px solid #dfe5e0;
-  border-radius: 14px;
-  background: white;
-}
-
-.ai-chat {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.chat-header {
-  min-height: 70px;
-  padding: 14px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #edf0ed;
-}
-
-.chat-agent {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
-
-.chat-agent-icon {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 9px;
-  color: var(--green);
-  background: #eaf7ee;
-}
-
-.chat-agent strong,
-.chat-agent span {
-  display: block;
-}
-
-.chat-agent strong {
-  font-size: 10px;
-}
-
-.chat-agent span {
-  margin-top: 3px;
-  color: #959d97;
-  font-size: 7px;
-}
-
-.chat-modes {
-  display: flex;
-  gap: 4px;
-}
-
-.chat-modes button {
-  padding: 6px 8px;
-  border-radius: 5px;
-  color: #969e98;
-  background: transparent;
-  font-size: 7px;
-}
-
-.chat-modes button.active {
-  color: #2c7745;
-  background: #eaf7ee;
-}
-
-.chat-scroll {
-  flex: 1;
-  min-height: 430px;
-  max-height: 520px;
-  overflow: auto;
-  padding: 25px;
-  background: #fbfcfb;
-}
-
-.chat-message {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  max-width: 680px;
-  margin-bottom: 17px;
-}
-
-.chat-message.user {
-  margin-left: auto;
-  flex-direction: row-reverse;
-}
-
-.message-avatar {
-  width: 27px;
-  height: 27px;
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  border-radius: 7px;
-  color: #267643;
-  background: #e6f5eb;
-  font-size: 7px;
-  font-weight: 800;
-}
-
-.chat-message.user .message-avatar {
-  color: white;
-  background: var(--green);
-}
-
-.message-bubble {
-  max-width: 550px;
-  padding: 11px 13px;
-  border: 1px solid #e5eae5;
-  border-radius: 4px 11px 11px 11px;
-  color: #59615b;
-  background: white;
-  font-size: 9px;
-  line-height: 1.7;
-}
-
-.chat-message.user .message-bubble {
-  border: 0;
-  border-radius: 11px 4px 11px 11px;
-  color: white;
-  background: var(--green);
-}
-
-.chat-answer-list {
-  margin-top: 10px;
-  display: grid;
-  gap: 5px;
-}
-
-.chat-answer-list button {
-  padding: 7px 9px;
-  border: 1px solid #e2e8e3;
-  border-radius: 6px;
-  color: #4e5750;
-  background: #fbfcfb;
-  text-align: left;
-  font-size: 8px;
-}
-
-.chat-answer-list button:hover {
-  color: var(--green);
-  border-color: #b8d9c1;
-}
-
-.chat-composer {
-  padding: 15px;
-  border-top: 1px solid #edf0ed;
-  background: white;
-}
-
-.composer-input {
-  min-height: 48px;
-  padding: 5px 5px 5px 13px;
-  display: flex;
-  align-items: center;
-  border: 1px solid #dfe5e0;
-  border-radius: 9px;
-}
-
-.composer-input:focus-within {
-  border-color: #a2cfaf;
-  box-shadow: 0 0 0 3px rgba(21, 148, 71, 0.06);
-}
-
-.composer-input input {
-  width: 100%;
-  border: 0;
-  outline: 0;
-  color: #4d554f;
-  background: transparent;
-  font-size: 9px;
-}
-
-.composer-input button {
-  width: 37px;
-  height: 37px;
-  display: grid;
-  place-items: center;
-  border-radius: 7px;
-  color: white;
-  background: var(--green);
-}
-
-.ai-tools {
-  margin-top: 7px;
-  display: flex;
-  justify-content: space-between;
-  color: #a0a7a1;
-  font-size: 7px;
-}
-
-.ai-tools span:first-child {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #6f7972;
-}
-
-.ai-tools-panel {
-  padding: 20px;
-  border-left: 1px solid #edf0ed;
-  background: #fafcfa;
-}
-
-.ai-tools-head span,
-.live-signals > span {
-  display: block;
-  color: #9ca39d;
-  font-size: 7px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-}
-
-.ai-tools-head strong {
-  display: block;
-  margin-top: 5px;
-  font-family: "Manrope", sans-serif;
-  font-size: 14px;
-}
-
-.tool-list {
-  margin-top: 20px;
-  display: grid;
-  gap: 7px;
-}
-
-.tool-item {
-  padding: 10px;
-  display: grid;
-  grid-template-columns: 32px 1fr 14px;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid #e4e9e4;
-  border-radius: 8px;
-  background: white;
-  text-align: left;
-}
-
-.tool-item:hover {
-  border-color: #bdd8c3;
-}
-
-.tool-item > div {
-  width: 32px;
-  height: 32px;
-  display: grid;
-  place-items: center;
-  border-radius: 7px;
-  color: var(--green);
-  background: #eaf7ee;
-}
-
-.tool-item strong,
-.tool-item small {
-  display: block;
-}
-
-.tool-item strong {
-  color: #424a44;
-  font-size: 8px;
-}
-
-.tool-item small {
-  margin-top: 3px;
-  color: #9aa19b;
-  font-size: 6px;
-}
-
-.tool-item > svg {
-  color: #a3aaa5;
-}
-
-.live-signals {
-  margin-top: 30px;
-  padding-top: 18px;
-  border-top: 1px solid #e5eae5;
-}
-
-.live-signals > div {
-  margin-top: 11px;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: #777f79;
-  font-size: 7px;
-}
-
-.live-signals i {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-}
-
-.live-signals i.success {
-  background: var(--green);
-}
-
-.live-signals i.warning {
-  background: #c49a3c;
-}
-
-@media (max-width: 1050px) {
-  .public-nav-links {
-    margin-left: 20px;
-    gap: 18px;
-  }
-
-  .hero {
-    padding-top: 80px;
-  }
-
-  .problem-layout {
-    grid-template-columns: 0.7fr 1.3fr;
-  }
-
-  .signal-board {
-    grid-column: 1 / -1;
-  }
-
-  .workflow-line {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px 0;
-  }
-
-  .workflow-step:nth-child(2) {
-    border-right: 1px solid #e4e8e4;
-  }
-
-  .workflow-arrow {
-    display: none;
-  }
-
-  .analytics-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .analytics-side {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .app-content {
-    padding: 25px;
-  }
-
-  .dashboard-grid-main,
-  .dashboard-lower-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .dashboard-ai-card {
-    min-height: 220px;
-  }
-}
-
-@media (max-width: 800px) {
-  .public-nav {
-    width: calc(100% - 28px);
-  }
-
-  .public-nav-links {
-    display: none;
-  }
-
-  .nav-ai {
-    display: none;
-  }
-
-  .hero {
-    min-height: auto;
-    padding-top: 70px;
-  }
-
-  .hero h1 {
-    font-size: clamp(43px, 12vw, 68px);
-  }
-
-  .hero-copy > p {
-    font-size: 14px;
-  }
-
-  .hero-product {
-    margin-top: 50px;
-  }
-
-  .product-stage {
-    padding: 0;
-  }
-
-  .preview-window {
-    overflow-x: auto;
-  }
-
-  .preview-layout {
-    min-width: 850px;
-  }
-
-  .floating-stat {
-    display: none;
-  }
-
-  .hero-bottom-stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .hero-bottom-stats div:nth-child(2) {
-    border-right: 0;
-  }
-
-  .hero-bottom-stats div:nth-child(3),
-  .hero-bottom-stats div:nth-child(4) {
-    border-top: 1px solid #e8ece8;
-  }
-
-  .section {
-    width: min(100% - 30px, 1180px);
-    padding: 85px 0;
-  }
-
-  .problem-layout,
-  .intelligence-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .intelligence-layout {
-    padding: 30px 22px;
-    gap: 40px;
-  }
-
-  .section-heading {
-    display: block;
-  }
-
-  .section-heading > p {
-    width: 100%;
-    margin-top: 15px;
-  }
-
-  .module-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .footer-links {
-    margin-top: 50px;
-    justify-content: start;
-  }
-
-  .app-sidebar {
-    transform: translateX(-100%);
-    transition: transform 0.25s ease;
-    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.1);
-  }
-
-  .app-sidebar.open {
-    transform: translateX(0);
-  }
-
-  .mobile-close {
-    display: grid;
-    place-items: center;
-  }
-
-  .sidebar-backdrop {
-    position: fixed;
-    z-index: 25;
-    inset: 0;
-    display: none;
-    background: rgba(10, 14, 11, 0.3);
-  }
-
-  .sidebar-backdrop.show {
-    display: block;
-  }
-
-  .app-main {
-    width: 100%;
-    margin-left: 0;
-  }
-
-  .mobile-menu {
-    display: grid;
-    place-items: center;
-  }
-
-  .search-button {
-    min-width: auto;
-  }
-
-  .search-button span,
-  .search-button kbd {
-    display: none;
-  }
-
-  .dashboard-stat-grid,
-  .result-stat-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .subject-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .results-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .ai-workspace {
-    grid-template-columns: 1fr;
-  }
-
-  .ai-tools-panel {
-    border-left: 0;
-    border-top: 1px solid #edf0ed;
-  }
-}
-
-@media (max-width: 560px) {
-  .public-nav {
-    height: 70px;
-  }
-
-  .nav-cta {
-    min-height: 36px;
-    padding: 0 11px;
-    font-size: 10px;
-  }
-
-  .hero {
-    padding-top: 55px;
-  }
-
-  .hero-buttons {
-    flex-direction: column;
-  }
-
-  .primary-button,
-  .secondary-button {
-    width: 100%;
-  }
-
-  .hero-proof {
-    align-items: flex-start;
-  }
-
-  .hero-bottom-stats div {
-    padding: 15px 8px;
-  }
-
-  .hero-bottom-stats strong {
-    font-size: 18px;
-  }
-
-  .marquee {
-    gap: 20px;
-  }
-
-  .problem-layout {
-    gap: 30px;
-  }
-
-  .big-number strong {
-    font-size: 35px;
-  }
-
-  .signal-main {
-    padding: 15px;
-    gap: 12px;
-  }
-
-  .signal-circle {
-    width: 75px;
-    height: 75px;
-  }
-
-  .workflow-line,
-  .module-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .workflow-step {
-    border-right: 1px solid #e4e8e4;
-    min-height: 220px;
-  }
-
-  .module-card {
-    min-height: 250px;
-  }
-
-  .analytics-main {
-    padding: 20px;
-  }
-
-  .analytics-header {
-    display: block;
-  }
-
-  .growth-badge {
-    width: max-content;
-    margin-top: 15px;
-  }
-
-  .analytics-header h2 {
-    font-size: 30px;
-  }
-
-  .analytics-side {
-    grid-template-columns: 1fr;
-  }
-
-  .compare-head span,
-  .compare-row > div {
-    padding-left: 13px;
-    padding-right: 13px;
-  }
-
-  .footer-links {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
-  }
-
-  .footer-bottom {
-    gap: 10px;
-    flex-direction: column;
-  }
-
-  .app-topbar {
-    padding: 0 14px;
-  }
-
-  .breadcrumb {
-    display: none;
-  }
-
-  .top-ai {
-    padding: 0 9px;
-  }
-
-  .top-ai svg {
-    display: none;
-  }
-
-  .app-content {
-    padding: 18px 13px;
-  }
-
-  .page-heading {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .heading-actions {
-    width: 100%;
-  }
-
-  .heading-actions button,
-  .page-heading > button {
-    width: 100%;
-  }
-
-  .dashboard-stat-grid,
-  .result-stat-grid,
-  .subject-grid,
-  .exam-overview {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .dashboard-stat {
-    min-height: 130px;
-    padding: 13px;
-  }
-
-  .dashboard-stat > strong {
-    font-size: 20px;
-  }
-
-  .dashboard-chart-card {
-    padding: 13px;
-  }
-
-  .dashboard-big-chart {
-    height: 250px;
-  }
-
-  .table-card {
-    overflow-x: auto;
-  }
-
-  .data-table {
-    min-width: 620px;
-  }
-
-  .large-table-card {
-    overflow-x: auto;
-  }
-
-  .marks-toolbar {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .student-search {
-    width: 100%;
-  }
-
-  .toolbar-actions {
-    width: 100%;
-  }
-
-  .toolbar-actions button {
-    flex: 1;
-  }
-
-  .academic-hero,
-  .performance-hero {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 25px;
-  }
-
-  .academic-progress {
-    width: 100%;
-  }
-
-  .attendance-overview {
-    padding: 25px;
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-
-  .attendance-ring {
-    margin: auto;
-  }
-
-  .attendance-mini-stats {
-    justify-content: center;
-    gap: 20px;
-  }
-
-  .performance-copy {
-    grid-template-columns: 1fr;
-  }
-
-  .performance-subject {
-    grid-template-columns: 25px 1fr 50px;
-    gap: 7px;
-  }
-
-  .performance-subject .change,
-  .performance-progress {
-    grid-column: 2 / -1;
-  }
-
-  .ai-workspace-head {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .chat-header {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .chat-scroll {
-    padding: 15px;
-  }
-
-  .chat-modes {
-    width: 100%;
-  }
-
-  .chat-modes button {
-    flex: 1;
-  }
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Activity,
+  ArrowDown,
+  ArrowRight,
+  ArrowUpRight,
+  BarChart3,
+  BookOpen,
+  BrainCircuit,
+  CalendarDays,
+  Check,
+  ChevronRight,
+  CircleCheck,
+  ClipboardCheck,
+  Clock3,
+  GraduationCap,
+  LayoutDashboard,
+  Menu,
+  MessageSquareText,
+  Plus,
+  Search,
+  ShieldCheck,
+  Sparkles,
+  Target,
+  TrendingUp,
+  Users,
+  X,
+} from "lucide-react";
+
+const studentsSeed = [
+  { id: 1, name: "Ahmed Raza", className: "9-A", avg: 91, attendance: 96 },
+  { id: 2, name: "Areeba Khan", className: "9-A", avg: 88, attendance: 94 },
+  { id: 3, name: "Hamza Ali", className: "9-B", avg: 84, attendance: 91 },
+  { id: 4, name: "Maham Noor", className: "9-B", avg: 96, attendance: 98 },
+  { id: 5, name: "Usman Tariq", className: "9-C", avg: 79, attendance: 87 },
+  { id: 6, name: "Hiba Fatima", className: "9-C", avg: 93, attendance: 95 },
+];
+
+const navItems = [
+  { id: "dashboard", label: "Overview", icon: LayoutDashboard },
+  { id: "students", label: "Students", icon: Users },
+  { id: "academics", label: "Academics", icon: BookOpen },
+  { id: "exams", label: "Exams", icon: CalendarDays },
+  { id: "marks", label: "Marks", icon: ClipboardCheck },
+  { id: "attendance", label: "Attendance", icon: Clock3 },
+  { id: "performance", label: "Performance", icon: TrendingUp },
+  { id: "ai", label: "AI Assistant", icon: BrainCircuit },
+];
+
+const problems = [
+  {
+    title: "Paper registers",
+    text: "Marks and attendance disappear into notebooks, folders and disconnected files.",
+    icon: ClipboardCheck,
+  },
+  {
+    title: "WhatsApp messages",
+    text: "Important academic updates get buried inside everyday conversations.",
+    icon: MessageSquareText,
+  },
+  {
+    title: "Spreadsheets",
+    text: "Teachers spend hours managing rows instead of focusing on students.",
+    icon: BarChart3,
+  },
+  {
+    title: "Manual reports",
+    text: "Creating meaningful performance reports becomes repetitive every term.",
+    icon: Activity,
+  },
+];
+
+const workflow = [
+  {
+    title: "Register students",
+    text: "Create student profiles with class, subjects, attendance and academic records.",
+    icon: Users,
+  },
+  {
+    title: "Record marks",
+    text: "Enter assessments once and keep every result connected to the student.",
+    icon: ClipboardCheck,
+  },
+  {
+    title: "Track attendance",
+    text: "Monitor attendance patterns without maintaining separate registers.",
+    icon: Clock3,
+  },
+  {
+    title: "Analyze performance",
+    text: "Turn marks and attendance into useful academic insights.",
+    icon: BarChart3,
+  },
+  {
+    title: "AI insights",
+    text: "Ask questions about students and receive structured academic insights.",
+    icon: BrainCircuit,
+  },
+  {
+    title: "Permanent history",
+    text: "Keep a continuous academic record from first entry to future results.",
+    icon: ShieldCheck,
+  },
+];
+
+const modules = [
+  {
+    number: "01",
+    title: "Student Management",
+    text: "Keep every student profile organized in one place.",
+    icon: Users,
+  },
+  {
+    number: "02",
+    title: "Marks & Results",
+    text: "Record assessments and instantly understand class performance.",
+    icon: ClipboardCheck,
+  },
+  {
+    number: "03",
+    title: "Attendance",
+    text: "Track attendance trends and identify students who need attention.",
+    icon: Clock3,
+  },
+  {
+    number: "04",
+    title: "Academic Analytics",
+    text: "Turn school data into clear visual performance signals.",
+    icon: TrendingUp,
+  },
+  {
+    number: "05",
+    title: "AI Assistant",
+    text: "Ask natural-language questions about your academic data.",
+    icon: BrainCircuit,
+  },
+  {
+    number: "06",
+    title: "Permanent Records",
+    text: "Build a reliable academic history for every student.",
+    icon: ShieldCheck,
+  },
+];
+
+function getInitials(name) {
+  return name
+    .split(" ")
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
+function Reveal({ children, className = "", delay = 0 }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.12 }
+    );
+
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={`reveal ${visible ? "is-visible" : ""} ${className}`}
+      style={{ "--delay": `${delay}ms` }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function Logo({ dark = false }) {
+  return (
+    <div className={`logo ${dark ? "logo-dark" : ""}`}>
+      <div className="logo-image">
+        <img src="/logo.png" alt="SchoolMarks" />
+        <span>SM</span>
+      </div>
+      <div className="logo-copy">
+        <strong>SchoolMarks</strong>
+        <small>Academic intelligence</small>
+      </div>
+    </div>
+  );
+}
+
+function ProductDashboard() {
+  return (
+    <div className="product-stage">
+      <div className="stage-glow stage-glow-one" />
+      <div className="stage-glow stage-glow-two" />
+
+      <div className="preview-window">
+        <div className="preview-topbar">
+          <div className="preview-dots">
+            <i />
+            <i />
+            <i />
+          </div>
+
+          <div className="preview-address">
+            schoolmarks.app/dashboard
+          </div>
+
+          <div className="preview-avatar">FK</div>
+        </div>
+
+        <div className="preview-layout">
+          <aside className="preview-sidebar">
+            <div className="preview-brand">
+              <div>SM</div>
+              <span>SchoolMarks</span>
+            </div>
+
+            {["Overview", "Students", "Academics", "Marks", "Attendance"].map(
+              (item, index) => (
+                <div
+                  className={`preview-nav ${index === 0 ? "active" : ""}`}
+                  key={item}
+                >
+                  <span />
+                  {item}
+                </div>
+              )
+            )}
+          </aside>
+
+          <div className="preview-content">
+            <div className="preview-heading">
+              <div>
+                <small>ACADEMIC OVERVIEW</small>
+                <h3>Good morning, Faizan</h3>
+              </div>
+              <div className="preview-live">
+                <span />
+                Live
+              </div>
+            </div>
+
+            <div className="preview-kpis">
+              <div>
+                <small>Total Students</small>
+                <strong>842</strong>
+                <em>+24 this month</em>
+              </div>
+              <div>
+                <small>Average Score</small>
+                <strong>87.4%</strong>
+                <em>+3.2% vs term start</em>
+              </div>
+              <div>
+                <small>Attendance</small>
+                <strong>94.8%</strong>
+                <em>+1.8% this month</em>
+              </div>
+              <div>
+                <small>At Risk</small>
+                <strong>18</strong>
+                <em className="negative">Needs attention</em>
+              </div>
+            </div>
+
+            <div className="preview-grid">
+              <div className="preview-chart-card">
+                <div className="preview-card-head">
+                  <div>
+                    <small>CLASS PERFORMANCE</small>
+                    <strong>Academic progress</strong>
+                  </div>
+                  <span>Last 6 months</span>
+                </div>
+
+                <div className="preview-chart">
+                  <div className="chart-lines">
+                    <i />
+                    <i />
+                    <i />
+                    <i />
+                  </div>
+
+                  <svg viewBox="0 0 500 180" preserveAspectRatio="none">
+                    <path
+                      d="M0 145 C40 130 55 138 90 116 S140 104 170 111 S220 86 255 92 S310 62 340 72 S390 40 425 52 S465 25 500 35"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                    />
+                  </svg>
+
+                  <div className="chart-labels">
+                    <span>Jan</span>
+                    <span>Feb</span>
+                    <span>Mar</span>
+                    <span>Apr</span>
+                    <span>May</span>
+                    <span>Jun</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="preview-ai-card">
+                <div className="preview-ai-icon">
+                  <Sparkles size={15} />
+                </div>
+                <small>AI INSIGHT</small>
+                <strong>Performance signal detected</strong>
+                <p>
+                  18 students show a drop in Mathematics performance over the
+                  last two assessments.
+                </p>
+                <button>Review students <ArrowUpRight size={14} /></button>
+              </div>
+            </div>
+
+            <div className="preview-table">
+              <div className="preview-table-head">
+                <span>Student</span>
+                <span>Class</span>
+                <span>Average</span>
+                <span>Attendance</span>
+                <span>Status</span>
+              </div>
+
+              {[
+                ["Areeba Khan", "9-A", "94%", "97%", "Excellent"],
+                ["Maham Noor", "9-B", "91%", "95%", "On track"],
+                ["Ahmed Raza", "9-A", "87%", "93%", "On track"],
+              ].map((row) => (
+                <div className="preview-table-row" key={row[0]}>
+                  <span>{row[0]}</span>
+                  <span>{row[1]}</span>
+                  <span>{row[2]}</span>
+                  <span>{row[3]}</span>
+                  <span>{row[4]}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="floating-stat floating-stat-one">
+        <TrendingUp size={16} />
+        <div>
+          <strong>+12.8%</strong>
+          <span>Class progress</span>
+        </div>
+      </div>
+
+      <div className="floating-stat floating-stat-two">
+        <CircleCheck size={16} />
+        <div>
+          <strong>94.8%</strong>
+          <span>Attendance</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function HomeAI() {
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
+
+  const ask = () => {
+    const q = question.toLowerCase();
+
+    if (!question.trim()) {
+      setAnswer("Ask me something about your students, marks or attendance.");
+      return;
+    }
+
+    if (q.includes("attendance")) {
+      setAnswer(
+        "Class 9-A currently has the strongest attendance at 95.8%. Three students are below the 85% attention threshold."
+      );
+      return;
+    }
+
+    if (q.includes("top") || q.includes("best")) {
+      setAnswer(
+        "Maham Noor is currently the highest-performing student with a 96% average and 98% attendance."
+      );
+      return;
+    }
+
+    if (q.includes("math")) {
+      setAnswer(
+        "Mathematics is the main improvement area this term. The class average is 82%, with performance improving across the latest assessment."
+      );
+      return;
+    }
+
+    setAnswer(
+      "Based on the current academic records, overall class performance is trending positively with an average score of 87.4%."
+    );
+  };
+
+  return (
+    <div className="home-ai-box">
+      <div className="home-ai-header">
+        <div className="ai-title-row">
+          <div className="ai-icon">
+            <BrainCircuit size={18} />
+          </div>
+          <div>
+            <small>SchoolMarks Intelligence</small>
+            <strong>Ask your academic data</strong>
+          </div>
+        </div>
+        <div className="home-ai-bot">
+          <span />
+          Online
+        </div>
+      </div>
+
+      <div className="ai-mode-row">
+        <span>Ask anything about your school</span>
+        <Sparkles size={14} />
+      </div>
+
+      <div className="home-ai-input">
+        <input
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") ask();
+          }}
+          placeholder="e.g. Which students need attention?"
+        />
+        <button onClick={ask}>
+          <ArrowRight size={17} />
+        </button>
+      </div>
+
+      <div className="home-ai-suggestions">
+        {["Who has the best attendance?", "Show top students", "How is Maths doing?"].map(
+          (item) => (
+            <button
+              key={item}
+              onClick={() => {
+                setQuestion(item);
+                setTimeout(ask, 0);
+              }}
+            >
+              {item}
+            </button>
+          )
+        )}
+      </div>
+
+      {answer && (
+        <div className="home-ai-answer">
+          <div className="answer-head">
+            <Sparkles size={15} />
+            <span>AI response</span>
+          </div>
+          <p>{answer}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function HomePage({ onOpenApp }) {
+  return (
+    <div className="public-site">
+      <nav className="public-nav">
+        <Logo />
+
+        <div className="public-nav-links">
+          <a href="#problem">Why SchoolMarks</a>
+          <a href="#workflow">Workflow</a>
+          <a href="#modules">Platform</a>
+          <a href="#ai">AI</a>
+        </div>
+
+        <div className="nav-actions">
+          <button className="nav-ai" onClick={onOpenApp}>
+            Open platform
+            <ArrowUpRight size={15} />
+          </button>
+          <button className="nav-cta" onClick={onOpenApp}>
+            Get started
+            <ArrowRight size={15} />
+          </button>
+        </div>
+      </nav>
+
+      <main>
+        <section className="hero">
+          <div className="hero-grid" />
+          <div className="hero-orb orb-one" />
+          <div className="hero-orb orb-two" />
+
+          <div className="hero-copy">
+            <Reveal>
+              <div className="hero-label">
+                <span className="pulse-dot" />
+                Modern academic management
+              </div>
+            </Reveal>
+
+            <Reveal delay={70}>
+              <h1>
+                Every student.
+                <br />
+                <span>One academic history.</span>
+              </h1>
+            </Reveal>
+
+            <Reveal delay={130}>
+              <p>
+                SchoolMarks brings students, marks, attendance, exams,
+                performance and AI-powered insights into one intelligent
+                academic platform.
+              </p>
+            </Reveal>
+
+            <Reveal delay={190}>
+              <div className="hero-buttons">
+                <button className="primary-button" onClick={onOpenApp}>
+                  Explore SchoolMarks
+                  <ArrowRight size={17} />
+                </button>
+                <a className="secondary-button" href="#workflow">
+                  See how it works
+                  <ArrowDown size={16} />
+                </a>
+              </div>
+            </Reveal>
+
+            <Reveal delay={250}>
+              <div className="hero-proof">
+                <div className="proof-avatars">
+                  <span>AK</span>
+                  <span>AN</span>
+                  <span>MR</span>
+                  <span>HN</span>
+                </div>
+                <div>
+                  <strong>Built for modern schools</strong>
+                  <small>Students · Teachers · Administrators</small>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+
+          <Reveal delay={120} className="hero-product">
+            <ProductDashboard />
+          </Reveal>
+
+          <div className="hero-bottom-stats">
+            <div>
+              <strong>842+</strong>
+              <span>Students managed</span>
+            </div>
+            <div>
+              <strong>94.8%</strong>
+              <span>Average attendance</span>
+            </div>
+            <div>
+              <strong>87.4%</strong>
+              <span>Academic average</span>
+            </div>
+            <div>
+              <strong>24/7</strong>
+              <span>Academic visibility</span>
+            </div>
+          </div>
+        </section>
+
+        <div className="marquee-wrap">
+          <div className="marquee">
+            {[
+              "Schools",
+              "Teachers",
+              "Students",
+              "Administrators",
+              "Academic Teams",
+              "Coordinators",
+              "Modern Classrooms",
+              "Schools",
+              "Teachers",
+              "Students",
+              "Administrators",
+              "Academic Teams",
+            ].map((item, index) => (
+              <span key={`${item}-${index}`}>
+                <i />
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <section className="section problem-section" id="problem">
+          <Reveal>
+            <div className="section-eyebrow">THE PROBLEM</div>
+            <h2>
+              Academic data shouldn't
+              <br />
+              live in <span>four different places.</span>
+            </h2>
+            <p className="section-intro">
+              Schools still rely on disconnected tools for marks, attendance,
+              student records and reports. SchoolMarks brings those signals
+              together.
+            </p>
+          </Reveal>
+
+          <div className="problem-layout">
+            <div className="problem-points">
+              {problems.map((problem, index) => {
+                const Icon = problem.icon;
+
+                return (
+                  <Reveal delay={index * 70} key={problem.title}>
+                    <div className="problem-point">
+                      <div className="problem-icon">
+                        <Icon size={18} />
+                      </div>
+                      <div>
+                        <strong>{problem.title}</strong>
+                        <p>{problem.text}</p>
+                      </div>
+                      <ArrowUpRight size={17} />
+                    </div>
+                  </Reveal>
+                );
+              })}
+            </div>
+
+            <Reveal className="signal-board" delay={150}>
+              <div className="signal-main">
+                <div className="signal-circle">
+                  <span />
+                  <strong>1</strong>
+                </div>
+                <small>SchoolMarks</small>
+                <h3>One academic source of truth.</h3>
+                <p>
+                  Connect the information that teachers already collect and
+                  turn it into a continuous academic record.
+                </p>
+              </div>
+
+              <div className="signal-details">
+                <div>
+                  <span>Marks</span>
+                  <strong>Connected</strong>
+                </div>
+                <div>
+                  <span>Attendance</span>
+                  <strong>Connected</strong>
+                </div>
+                <div>
+                  <span>Results</span>
+                  <strong>Connected</strong>
+                </div>
+                <div>
+                  <span>Insights</span>
+                  <strong>Connected</strong>
+                </div>
+              </div>
+
+              <div className="signal-warning">
+                <Sparkles size={16} />
+                <span>Academic intelligence active</span>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        <section className="section workflow-section" id="workflow">
+          <Reveal>
+            <div className="section-eyebrow">THE WORKFLOW</div>
+            <h2>
+              From first entry to
+              <br />
+              <span>permanent academic history.</span>
+            </h2>
+            <p className="section-intro">
+              Every important academic event becomes part of the same
+              connected student record.
+            </p>
+          </Reveal>
+
+          <div className="workflow-line">
+            {workflow.map((step, index) => {
+              const Icon = step.icon;
+
+              return (
+                <Reveal
+                  delay={index * 80}
+                  className="workflow-step"
+                  key={step.title}
+                >
+                  <div className="workflow-number">0{index + 1}</div>
+                  <div className="workflow-icon">
+                    <Icon size={20} />
+                  </div>
+                  <div>
+                    <h3>{step.title}</h3>
+                    <p>{step.text}</p>
+                  </div>
+                  {index < workflow.length - 1 && (
+                    <div className="workflow-arrow">
+                      <ArrowRight size={15} />
+                    </div>
+                  )}
+                </Reveal>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="section intelligence-section" id="ai">
+          <div className="intelligence-layout">
+            <Reveal className="intelligence-copy">
+              <div className="light-eyebrow">
+                <Sparkles size={14} />
+                SCHOOLMARKS AI
+              </div>
+              <h2>
+                Your school data can
+                <br />
+                <span>answer questions.</span>
+              </h2>
+              <p>
+                Instead of searching through spreadsheets, ask SchoolMarks
+                what is happening across your students and classes.
+              </p>
+
+              <div className="ai-capabilities">
+                <div>
+                  <Check size={15} />
+                  Student performance analysis
+                </div>
+                <div>
+                  <Check size={15} />
+                  Attendance signals
+                </div>
+                <div>
+                  <Check size={15} />
+                  Class-level insights
+                </div>
+                <div>
+                  <Check size={15} />
+                  Natural-language questions
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={130}>
+              <HomeAI />
+            </Reveal>
+          </div>
+        </section>
+
+        <section className="section modules-section" id="modules">
+          <Reveal>
+            <div className="section-eyebrow">THE PLATFORM</div>
+            <h2>
+              Everything your school needs.
+              <br />
+              <span>Nothing scattered.</span>
+            </h2>
+          </Reveal>
+
+          <div className="module-grid">
+            {modules.map((module, index) => {
+              const Icon = module.icon;
+
+              return (
+                <Reveal delay={index * 60} key={module.title}>
+                  <div className="module-card">
+                    <div className="module-number">{module.number}</div>
+                    <div className="module-icon">
+                      <Icon size={19} />
+                    </div>
+                    <h3>{module.title}</h3>
+                    <p>{module.text}</p>
+                    <ArrowUpRight className="module-arrow" size={17} />
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="section analytics-section">
+          <Reveal>
+            <div className="section-eyebrow">ACADEMIC ANALYTICS</div>
+            <h2>
+              See performance
+              <br />
+              <span>as it changes.</span>
+            </h2>
+          </Reveal>
+
+          <div className="analytics-layout">
+            <Reveal className="analytics-main">
+              <div className="analytics-header">
+                <div>
+                  <small>CLASS PERFORMANCE</small>
+                  <strong>Average academic score</strong>
+                </div>
+                <div className="growth-badge">
+                  <TrendingUp size={14} />
+                  +8.4%
+                </div>
+              </div>
+
+              <div className="large-chart">
+                <div className="chart-y">
+                  <span>100%</span>
+                  <span>75%</span>
+                  <span>50%</span>
+                  <span>25%</span>
+                  <span>0%</span>
+                </div>
+
+                <div className="large-chart-area">
+                  <div className="large-grid-lines">
+                    <i />
+                    <i />
+                    <i />
+                    <i />
+                    <i />
+                  </div>
+
+                  <svg viewBox="0 0 800 300" preserveAspectRatio="none">
+                    <path
+                      d="M0 238 C50 220 70 228 120 202 S180 198 230 210 S285 174 330 185 S390 142 440 160 S495 122 545 132 S600 90 650 106 S720 58 800 68"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                  </svg>
+
+                  <div className="chart-months">
+                    <span>Jan</span>
+                    <span>Feb</span>
+                    <span>Mar</span>
+                    <span>Apr</span>
+                    <span>May</span>
+                    <span>Jun</span>
+                    <span>Jul</span>
+                    <span>Aug</span>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+
+            <div className="analytics-side">
+              {[
+                ["Students", "842", "+24"],
+                ["Attendance", "94.8%", "+1.8%"],
+                ["Avg. marks", "87.4%", "+3.2%"],
+              ].map((item, index) => (
+                <Reveal delay={index * 90} key={item[0]}>
+                  <div className="metric-card">
+                    <div className="metric-icon">
+                      {index === 0 ? (
+                        <Users size={17} />
+                      ) : index === 1 ? (
+                        <Clock3 size={17} />
+                      ) : (
+                        <Target size={17} />
+                      )}
+                    </div>
+                    <div>
+                      <small>{item[0]}</small>
+                      <strong>{item[1]}</strong>
+                    </div>
+                    <span>{item[2]}</span>
+                    <div className="metric-bar">
+                      <i style={{ width: `${72 + index * 8}%` }} />
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section compare-section">
+          <Reveal>
+            <div className="section-eyebrow">WHY SCHOOLMARKS</div>
+            <h2>
+              From fragmented records
+              <br />
+              <span>to one continuous system.</span>
+            </h2>
+          </Reveal>
+
+          <Reveal delay={100}>
+            <div className="compare-table">
+              <div className="compare-head">
+                <span>Traditional school management</span>
+                <span className="schoolmarks-col">SchoolMarks</span>
+              </div>
+
+              {[
+                ["Paper registers", "Digital student records"],
+                ["Separate spreadsheets", "Connected academic data"],
+                ["Manual calculations", "Automatic performance insights"],
+                ["Scattered attendance", "Central attendance history"],
+                ["Static reports", "Live analytics"],
+                ["Search everything manually", "Ask SchoolMarks AI"],
+              ].map((row) => (
+                <div className="compare-row" key={row[0]}>
+                  <span>
+                    <X size={15} />
+                    {row[0]}
+                  </span>
+                  <span className="schoolmarks-col">
+                    <Check size={15} />
+                    {row[1]}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </section>
+
+        <section className="cta-section">
+          <div className="cta-glow" />
+          <Reveal className="cta-content">
+            <div className="section-eyebrow">SCHOOLMARKS</div>
+            <h2>
+              Build a better academic
+              <br />
+              <span>record for every student.</span>
+            </h2>
+            <p>
+              Bring marks, attendance, performance and academic intelligence
+              together in one modern platform.
+            </p>
+
+            <div className="cta-buttons">
+              <button className="light-button" onClick={onOpenApp}>
+                Open SchoolMarks
+                <ArrowRight size={16} />
+              </button>
+              <a className="dark-button" href="#workflow">
+                Explore workflow
+                <ArrowDown size={15} />
+              </a>
+            </div>
+          </Reveal>
+        </section>
+      </main>
+
+      <footer className="public-footer">
+        <Logo dark />
+        <div className="footer-links">
+          <a href="#problem">Problem</a>
+          <a href="#workflow">Workflow</a>
+          <a href="#modules">Platform</a>
+          <a href="#ai">AI</a>
+        </div>
+        <span>© 2026 SchoolMarks</span>
+      </footer>
+    </div>
+  );
+}
+
+function Sidebar({ page, setPage, open, setOpen }) {
+  return (
+    <>
+      <div
+        className={`sidebar-backdrop ${open ? "show" : ""}`}
+        onClick={() => setOpen(false)}
+      />
+
+      <aside className={`app-sidebar ${open ? "open" : ""}`}>
+        <div className="sidebar-head">
+          <Logo />
+          <button className="mobile-close" onClick={() => setOpen(false)}>
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="school-switcher">
+          <div className="school-avatar">JS</div>
+          <div>
+            <strong>JEB School</strong>
+            <span>Secondary Campus</span>
+          </div>
+          <ChevronRight size={15} />
+        </div>
+
+        <div className="sidebar-label">Workspace</div>
+
+        <nav className="sidebar-nav">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+
+            return (
+              <button
+                key={item.id}
+                className={page === item.id ? "active" : ""}
+                onClick={() => {
+                  setPage(item.id);
+                  setOpen(false);
+                }}
+              >
+                <Icon size={18} />
+                <span>{item.label}</span>
+                {item.id === "ai" && <em>AI</em>}
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="sidebar-bottom">
+          <button className="sidebar-setting">
+            <ShieldCheck size={17} />
+            <span>Academic records protected</span>
+          </button>
+
+          <div className="profile-mini">
+            <div>FK</div>
+            <span>
+              <strong>Faizan Khan</strong>
+              <small>Administrator</small>
+            </span>
+          </div>
+        </div>
+      </aside>
+    </>
+  );
+}
+
+function Topbar({ setOpen, onHome }) {
+  return (
+    <header className="app-topbar">
+      <div className="topbar-left">
+        <button className="mobile-menu" onClick={() => setOpen(true)}>
+          <Menu size={20} />
+        </button>
+        <button className="breadcrumb-home" onClick={onHome}>
+          SchoolMarks
+        </button>
+        <ChevronRight size={14} />
+        <span>Academic workspace</span>
+      </div>
+
+      <div className="topbar-actions">
+        <button className="search-button">
+          <Search size={17} />
+          <span>Search</span>
+          <kbd>⌘ K</kbd>
+        </button>
+
+        <button className="icon-button">
+          <Activity size={18} />
+        </button>
+
+        <button className="top-ai">
+          <Sparkles size={16} />
+          AI
+        </button>
+
+        <div className="top-avatar">FK</div>
+      </div>
+    </header>
+  );
+}
+
+function StatCard({ icon: Icon, label, value, trend, danger }) {
+  return (
+    <div className="dashboard-stat">
+      <div className="stat-icon">
+        <Icon size={18} />
+      </div>
+      <span>{label}</span>
+      <strong>{value}</strong>
+      <small className={danger ? "danger-text" : ""}>{trend}</small>
+    </div>
+  );
+}
+
+function DashboardPage({ students }) {
+  return (
+    <div className="page-stack">
+      <div className="page-heading">
+        <div>
+          <div className="page-eyebrow">OVERVIEW</div>
+          <h1>Good morning, Faizan.</h1>
+          <p>Here is what is happening across your academic workspace.</p>
+        </div>
+
+        <div className="heading-actions">
+          <button className="outline-button">
+            <CalendarDays size={16} />
+            This term
+          </button>
+        </div>
+      </div>
+
+      <div className="dashboard-stat-grid">
+        <StatCard
+          icon={Users}
+          label="Total students"
+          value="842"
+          trend="+24 this month"
+        />
+        <StatCard
+          icon={TrendingUp}
+          label="Average score"
+          value="87.4%"
+          trend="+3.2% vs last term"
+        />
+        <StatCard
+          icon={Clock3}
+          label="Attendance"
+          value="94.8%"
+          trend="+1.8% this month"
+        />
+        <StatCard
+          icon={Target}
+          label="Needs attention"
+          value="18"
+          trend="Students below target"
+          danger
+        />
+      </div>
+
+      <div className="dashboard-grid-main">
+        <div className="dashboard-chart-card">
+          <div className="card-heading">
+            <div>
+              <small>ACADEMIC PERFORMANCE</small>
+              <h2>Class average trend</h2>
+            </div>
+            <select className="select-field">
+              <option>Last 6 months</option>
+              <option>This term</option>
+            </select>
+          </div>
+
+          <div className="dashboard-big-chart">
+            <div className="big-chart-labels">
+              <span>100</span>
+              <span>80</span>
+              <span>60</span>
+              <span>40</span>
+              <span>20</span>
+              <span>0</span>
+            </div>
+
+            <div className="big-chart-area">
+              <div className="big-chart-grid">
+                <i />
+                <i />
+                <i />
+                <i />
+                <i />
+              </div>
+              <svg viewBox="0 0 700 270" preserveAspectRatio="none">
+                <path
+                  d="M0 215 C55 195 80 202 125 181 S180 165 225 181 S275 142 325 151 S380 124 425 138 S485 88 530 104 S595 62 640 80 S680 48 700 55"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+              </svg>
+              <div className="big-chart-months">
+                <span>Mar</span>
+                <span>Apr</span>
+                <span>May</span>
+                <span>Jun</span>
+                <span>Jul</span>
+                <span>Aug</span>
+                <span>Sep</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="dashboard-ai-card">
+          <div className="ai-card-label">
+            <Sparkles size={14} />
+            SCHOOLMARKS AI
+          </div>
+          <div className="ai-signal">
+            <div className="signal-icon warning">
+              <TrendingUp size={18} />
+            </div>
+            <div>
+              <strong>Performance signal</strong>
+              <span>Needs review</span>
+            </div>
+          </div>
+          <h3>Mathematics performance has changed.</h3>
+          <p>
+            18 students show a lower average across the latest two
+            assessments.
+          </p>
+          <button>
+            Review insight
+            <ArrowUpRight size={15} />
+          </button>
+        </div>
+      </div>
+
+      <div className="dashboard-lower-grid">
+        <div className="table-card">
+          <div className="card-heading">
+            <div>
+              <small>RECENT STUDENTS</small>
+              <h2>Student performance</h2>
+            </div>
+            <button className="text-button">View all</button>
+          </div>
+
+          <div className="data-table">
+            <div className="table-row table-header">
+              <span>Student</span>
+              <span>Class</span>
+              <span>Average</span>
+              <span>Attendance</span>
+            </div>
+
+            {students.slice(0, 5).map((student) => (
+              <div className="table-row" key={student.id}>
+                <span className="table-student">
+                  <i>{getInitials(student.name)}</i>
+                  {student.name}
+                </span>
+                <span>{student.className}</span>
+                <strong>{student.avg}%</strong>
+                <span>{student.attendance}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="side-card">
+          <div className="card-heading">
+            <div>
+              <small>ACADEMIC PULSE</small>
+              <h2>This week</h2>
+            </div>
+          </div>
+
+          <div className="pulse-grid">
+            <div className="pulse-card">
+              <div className="pulse-card-icon">
+                <ClipboardCheck size={16} />
+              </div>
+              <strong>126</strong>
+              <span>Marks entered</span>
+            </div>
+
+            <div className="pulse-card">
+              <div className="pulse-card-icon">
+                <Clock3 size={16} />
+              </div>
+              <strong>842</strong>
+              <span>Attendance records</span>
+            </div>
+
+            <div className="pulse-card">
+              <div className="pulse-card-icon">
+                <BookOpen size={16} />
+              </div>
+              <strong>18</strong>
+              <span>Classes active</span>
+            </div>
+
+            <div className="pulse-card">
+              <div className="pulse-card-icon">
+                <BrainCircuit size={16} />
+              </div>
+              <strong>32</strong>
+              <span>AI questions</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StudentModal({ onClose, onSave }) {
+  const [name, setName] = useState("");
+  const [className, setClassName] = useState("9-A");
+
+  const submit = () => {
+    if (!name.trim()) return;
+
+    onSave({
+      id: Date.now(),
+      name: name.trim(),
+      className,
+      avg: 0,
+      attendance: 0,
+    });
+  };
+
+  return (
+    <div className="student-modal-backdrop">
+      <div className="add-student-modal">
+        <div className="modal-head">
+          <div>
+            <small>STUDENT MANAGEMENT</small>
+            <h2>Add student</h2>
+          </div>
+          <button onClick={onClose}>
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="student-form-grid">
+          <label>
+            Student name
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. Muhammad Ali"
+            />
+          </label>
+
+          <label>
+            Class
+            <select
+              value={className}
+              onChange={(e) => setClassName(e.target.value)}
+            >
+              <option>9-A</option>
+              <option>9-B</option>
+              <option>9-C</option>
+              <option>10-A</option>
+              <option>10-B</option>
+            </select>
+          </label>
+        </div>
+
+        <div className="modal-foot">
+          <button onClick={onClose}>Cancel</button>
+          <button className="save-student" onClick={submit}>
+            <Plus size={16} />
+            Add student
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StudentsPage({ students, setStudents }) {
+  const [query, setQuery] = useState("");
+  const [modal, setModal] = useState(false);
+
+  const filtered = useMemo(
+    () =>
+      students.filter((student) =>
+        student.name.toLowerCase().includes(query.toLowerCase())
+      ),
+    [students, query]
+  );
+
+  const addStudent = (student) => {
+    setStudents((current) => [student, ...current]);
+    setModal(false);
+  };
+
+  return (
+    <div className="page-stack">
+      <div className="page-heading">
+        <div>
+          <div className="page-eyebrow">STUDENTS</div>
+          <h1>Student directory</h1>
+          <p>Manage every student from one connected academic record.</p>
+        </div>
+        <button className="primary-button" onClick={() => setModal(true)}>
+          <Plus size={16} />
+          Add student
+        </button>
+      </div>
+
+      <div className="large-table-card">
+        <div className="marks-toolbar">
+          <div className="student-search">
+            <Search size={17} />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search students..."
+            />
+          </div>
+
+          <span>{filtered.length} students</span>
+        </div>
+
+        <div className="data-table">
+          <div className="table-row table-header">
+            <span>Student</span>
+            <span>Class</span>
+            <span>Average</span>
+            <span>Attendance</span>
+            <span>Status</span>
+          </div>
+
+          {filtered.map((student) => (
+            <div className="table-row" key={student.id}>
+              <span className="table-student">
+                <i>{getInitials(student.name)}</i>
+                {student.name}
+              </span>
+              <span>{student.className}</span>
+              <strong className="score-cell">{student.avg || "—"}%</strong>
+              <span>{student.attendance || "—"}%</span>
+              <span className="status-pill">
+                {student.avg >= 90
+                  ? "Excellent"
+                  : student.avg >= 80
+                  ? "On track"
+                  : student.avg
+                  ? "Needs attention"
+                  : "New"}
+              </span>
+            </div>
+          ))}
+
+          {!filtered.length && (
+            <div className="empty-state">
+              <Search size={22} />
+              <strong>No students found</strong>
+              <span>Try another search.</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {modal && (
+        <StudentModal
+          onClose={() => setModal(false)}
+          onSave={addStudent}
+        />
+      )}
+    </div>
+  );
+}
+
+function AcademicsPage() {
+  const subjects = [
+    ["Mathematics", 82, 72],
+    ["Physics", 88, 84],
+    ["English", 91, 89],
+    ["Computer Science", 94, 92],
+    ["Chemistry", 86, 80],
+    ["Urdu", 90, 88],
+  ];
+
+  return (
+    <div className="page-stack">
+      <div className="page-heading">
+        <div>
+          <div className="page-eyebrow">ACADEMICS</div>
+          <h1>Academic overview</h1>
+          <p>Understand how every subject is performing across your classes.</p>
+        </div>
+      </div>
+
+      <div className="academic-hero">
+        <div>
+          <small>TERM PERFORMANCE</small>
+          <h2>87.4%</h2>
+          <p>Overall academic average</p>
+        </div>
+        <div className="academic-progress">
+          <span style={{ width: "87.4%" }} />
+        </div>
+        <div className="academic-meta">
+          <span>Previous term <strong>84.2%</strong></span>
+          <span>Change <strong>+3.2%</strong></span>
+        </div>
+      </div>
+
+      <div className="subject-grid">
+        {subjects.map(([name, score, progress]) => (
+          <div className="subject-card" key={name}>
+            <div className="subject-icon">
+              <BookOpen size={17} />
+            </div>
+            <div className="subject-head">
+              <div>
+                <strong>{name}</strong>
+                <span>Current average</span>
+              </div>
+              <b>{score}%</b>
+            </div>
+            <div className="subject-bar">
+              <span style={{ width: `${progress}%` }} />
+            </div>
+            <div className="subject-foot">
+              <span>Class progress</span>
+              <strong>+{score > 88 ? "4.2" : "2.8"}%</strong>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ExamsPage() {
+  const exams = [
+    ["24", "September", "Mathematics", "09:00 AM", "Scheduled"],
+    ["27", "September", "Physics", "09:00 AM", "Scheduled"],
+    ["30", "September", "English", "10:00 AM", "Draft"],
+    ["03", "October", "Computer Science", "09:30 AM", "Scheduled"],
+  ];
+
+  return (
+    <div className="page-stack">
+      <div className="page-heading">
+        <div>
+          <div className="page-eyebrow">EXAMS</div>
+          <h1>Exam schedule</h1>
+          <p>Keep assessments organized across every class.</p>
+        </div>
+        <button className="outline-button">
+          <Plus size={16} />
+          New exam
+        </button>
+      </div>
+
+      <div className="exam-overview">
+        <div>
+          <small>UPCOMING</small>
+          <strong>4</strong>
+          <span>Exams</span>
+        </div>
+        <div>
+          <small>THIS TERM</small>
+          <strong>18</strong>
+          <span>Assessments</span>
+        </div>
+        <div>
+          <small>COMPLETED</small>
+          <strong>12</strong>
+          <span>Assessments</span>
+        </div>
+      </div>
+
+      <div className="timeline-card">
+        <div className="card-heading">
+          <div>
+            <small>EXAM TIMELINE</small>
+            <h2>Upcoming assessments</h2>
+          </div>
+        </div>
+
+        <div className="exam-timeline">
+          {exams.map((exam) => (
+            <div className="exam-line" key={exam[2]}>
+              <div className="exam-date">
+                <strong>{exam[0]}</strong>
+                <span>{exam[1]}</span>
+              </div>
+              <div className="exam-line-dot" />
+              <div className="exam-info">
+                <strong>{exam[2]}</strong>
+                <span>{exam[3]}</span>
+              </div>
+              <span className={exam[4] === "Draft" ? "draft" : "status-pill"}>
+                {exam[4]}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MarksPage() {
+  const rows = [
+    ["Ahmed Raza", "9-A", 92, 88, 94],
+    ["Areeba Khan", "9-A", 94, 91, 89],
+    ["Hamza Ali", "9-B", 82, 84, 86],
+    ["Maham Noor", "9-B", 97, 95, 96],
+    ["Usman Tariq", "9-C", 78, 81, 79],
+  ];
+
+  return (
+    <div className="page-stack">
+      <div className="page-heading">
+        <div>
+          <div className="page-eyebrow">MARKS</div>
+          <h1>Marks management</h1>
+          <p>Enter, review and understand assessment results.</p>
+        </div>
+        <button className="primary-button">
+          <Plus size={16} />
+          Enter marks
+        </button>
+      </div>
+
+      <div className="marks-card">
+        <div className="table-summary-actions">
+          <div>
+            <small>MATHEMATICS · MID TERM</small>
+            <strong>Class 9</strong>
+          </div>
+          <span>5 students</span>
+        </div>
+
+        <div className="data-table marks-table">
+          <div className="table-row table-header">
+            <span>Student</span>
+            <span>Class</span>
+            <span>Quiz</span>
+            <span>Mid term</span>
+            <span>Final</span>
+          </div>
+
+          {rows.map((row) => (
+            <div className="table-row" key={row[0]}>
+              <span className="table-student">
+                <i>{getInitials(row[0])}</i>
+                {row[0]}
+              </span>
+              <span>{row[1]}</span>
+              <strong>{row[2]}%</strong>
+              <strong>{row[3]}%</strong>
+              <strong>{row[4]}%</strong>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AttendancePage() {
+  const classes = [
+    ["9-A", 96],
+    ["9-B", 93],
+    ["9-C", 91],
+    ["10-A", 95],
+    ["10-B", 97],
+  ];
+
+  return (
+    <div className="page-stack">
+      <div className="page-heading">
+        <div>
+          <div className="page-eyebrow">ATTENDANCE</div>
+          <h1>Attendance overview</h1>
+          <p>Track attendance patterns before they become problems.</p>
+        </div>
+      </div>
+
+      <div className="attendance-overview">
+        <div className="attendance-ring" style={{ "--value": "94.8%" }}>
+          <div>
+            <strong>94.8%</strong>
+            <span>Overall</span>
+          </div>
+        </div>
+        <div className="attendance-copy">
+          <small>THIS MONTH</small>
+          <h2>Attendance is trending positively.</h2>
+          <p>
+            Most classes remain above the school target. Three students are
+            currently below the attention threshold.
+          </p>
+          <div className="attendance-bars">
+            {classes.map(([name, value]) => (
+              <div key={name}>
+                <span>{name}</span>
+                <i>
+                  <b style={{ width: `${value}%` }} />
+                </i>
+                <strong>{value}%</strong>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PerformancePage() {
+  const subjects = [
+    ["Mathematics", 82, "+4.2%", "up"],
+    ["Physics", 88, "+2.8%", "up"],
+    ["English", 91, "+5.1%", "up"],
+    ["Computer Science", 94, "+7.2%", "up"],
+    ["Chemistry", 86, "-1.4%", "down"],
+  ];
+
+  return (
+    <div className="page-stack">
+      <div className="page-heading">
+        <div>
+          <div className="page-eyebrow">PERFORMANCE</div>
+          <h1>Student performance</h1>
+          <p>Find trends across subjects, classes and assessments.</p>
+        </div>
+      </div>
+
+      <div className="performance-hero">
+        <div className="performance-score">
+          <span>87.4</span>
+          <small>Average score</small>
+        </div>
+        <div className="performance-copy">
+          <small>ACADEMIC SIGNAL</small>
+          <h2>Overall performance is improving.</h2>
+          <p>
+            The strongest improvement is currently coming from Computer
+            Science and English.
+          </p>
+          <div className="performance-mini-chart">
+            <i style={{ height: "35%" }} />
+            <i style={{ height: "46%" }} />
+            <i style={{ height: "41%" }} />
+            <i style={{ height: "58%" }} />
+            <i style={{ height: "64%" }} />
+            <i style={{ height: "78%" }} />
+            <i style={{ height: "88%" }} />
+          </div>
+        </div>
+      </div>
+
+      <div className="performance-subjects">
+        {subjects.map(([name, score, change, direction], index) => (
+          <div className="performance-subject" key={name}>
+            <div className="subject-rank">0{index + 1}</div>
+            <div className="performance-subject-name">
+              <strong>{name}</strong>
+              <span>Class average</span>
+            </div>
+            <strong className="performance-score-small">{score}%</strong>
+            <span className={`change ${direction}`}>{change}</span>
+            <div className="performance-progress">
+              <span style={{ width: `${score}%` }} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AIPage() {
+  const [messages, setMessages] = useState([
+    {
+      role: "assistant",
+      text: "Hi Faizan. I can help you understand students, marks, attendance and academic performance. What would you like to know?",
+    },
+  ]);
+  const [input, setInput] = useState("");
+
+  const send = () => {
+    if (!input.trim()) return;
+
+    const question = input.trim();
+
+    setMessages((current) => [
+      ...current,
+      { role: "user", text: question },
+      {
+        role: "assistant",
+        text: `Based on the current SchoolMarks data, I would review ${question.toLowerCase()} across student performance, attendance and recent assessment trends. The current overall academic average is 87.4%.`,
+      },
+    ]);
+
+    setInput("");
+  };
+
+  return (
+    <div className="ai-page">
+      <div className="ai-workspace-head">
+        <div>
+          <div className="page-eyebrow">SCHOOLMARKS INTELLIGENCE</div>
+          <h1>Ask your academic data.</h1>
+          <p>Natural-language questions for your academic workspace.</p>
+        </div>
+        <div className="ai-workspace-status">
+          <span />
+          AI online
+        </div>
+      </div>
+
+      <div className="ai-workspace">
+        <div className="ai-chat">
+          <div className="chat-header">
+            <div className="chat-agent">
+              <div className="chat-agent-icon">
+                <BrainCircuit size={18} />
+              </div>
+              <div>
+                <strong>SchoolMarks AI</strong>
+                <span>Academic intelligence</span>
+              </div>
+            </div>
+
+            <div className="chat-modes">
+              <button className="active">Ask</button>
+              <button>Analyze</button>
+              <button>Summarize</button>
+            </div>
+          </div>
+
+          <div className="chat-scroll">
+            {messages.map((message, index) => (
+              <div
+                className={`chat-message ${message.role}`}
+                key={`${message.role}-${index}`}
+              >
+                <div className="message-avatar">
+                  {message.role === "assistant" ? <Sparkles size={14} /> : "FK"}
+                </div>
+                <div className="message-bubble">{message.text}</div>
+              </div>
+            ))}
+
+            <div className="chat-message assistant">
+              <div className="message-avatar">
+                <Sparkles size={14} />
+              </div>
+              <div className="chat-answer-list">
+                <strong>Try asking</strong>
+                <button onClick={() => setInput("Which students need attention?")}>
+                  Which students need attention?
+                </button>
+                <button onClick={() => setInput("How is attendance this month?")}>
+                  How is attendance this month?
+                </button>
+                <button onClick={() => setInput("Which subject improved most?")}>
+                  Which subject improved most?
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="chat-composer">
+            <div className="composer-input">
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") send();
+                }}
+                placeholder="Ask about your students..."
+              />
+              <button onClick={send}>
+                <ArrowRight size={17} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <aside className="ai-tools">
+          <div className="ai-tools-head">
+            <div>
+              <small>TOOLS</small>
+              <strong>Academic signals</strong>
+            </div>
+            <Sparkles size={17} />
+          </div>
+
+          <div className="tool-list">
+            {[
+              ["At-risk students", "18 students", Target],
+              ["Attendance signal", "94.8% average", Clock3],
+              ["Class performance", "87.4% average", TrendingUp],
+              ["Latest assessments", "126 entries", ClipboardCheck],
+            ].map(([title, value, Icon]) => (
+              <div className="tool-item" key={title}>
+                <div>
+                  <Icon size={16} />
+                </div>
+                <span>
+                  <strong>{title}</strong>
+                  <small>{value}</small>
+                </span>
+                <ChevronRight size={15} />
+              </div>
+            ))}
+          </div>
+
+          <div className="live-signals">
+            <span />
+            Live academic data
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+function AppLayout({ page, setPage, students, setStudents, onHome }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  let content;
+
+  switch (page) {
+    case "students":
+      content = <StudentsPage students={students} setStudents={setStudents} />;
+      break;
+    case "academics":
+      content = <AcademicsPage />;
+      break;
+    case "exams":
+      content = <ExamsPage />;
+      break;
+    case "marks":
+      content = <MarksPage />;
+      break;
+    case "attendance":
+      content = <AttendancePage />;
+      break;
+    case "performance":
+      content = <PerformancePage />;
+      break;
+    case "ai":
+      content = <AIPage />;
+      break;
+    default:
+      content = <DashboardPage students={students} />;
+  }
+
+  return (
+    <div className="app-shell">
+      <Sidebar
+        page={page}
+        setPage={setPage}
+        open={sidebarOpen}
+        setOpen={setSidebarOpen}
+      />
+
+      <main className="app-main">
+        <Topbar setOpen={setSidebarOpen} onHome={onHome} />
+        <div className="app-content">{content}</div>
+      </main>
+    </div>
+  );
+}
+
+export default function App() {
+  const [page, setPage] = useState("home");
+  const [students, setStudents] = useState(studentsSeed);
+
+  if (page === "home") {
+    return <HomePage onOpenApp={() => setPage("dashboard")} />;
+  }
+
+  return (
+    <AppLayout
+      page={page}
+      setPage={setPage}
+      students={students}
+      setStudents={setStudents}
+      onHome={() => setPage("home")}
+    />
+  );
 }
