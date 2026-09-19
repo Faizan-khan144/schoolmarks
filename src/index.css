@@ -2098,6 +2098,36 @@
   flex-direction: column;
 }
 
+.preview-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 11px;
+  border-radius: 8px;
+  margin-bottom: 2px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #6b756f;
+  cursor: default;
+}
+
+.preview-nav span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #d4d9d5;
+}
+
+.preview-nav.active {
+  background: #eef4f0;
+  color: var(--green);
+}
+
+.preview-nav.active span {
+  background: var(--green);
+}
+
+
 
 .preview-brand {
   display: flex;
