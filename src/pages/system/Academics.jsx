@@ -20,20 +20,20 @@ export default function Academics() {
       eyebrow: "Subjects",
       value: subjects.length,
       icon: BookOpen,
-      foot: "Across the school"
+      detail: "Across the school"
     },
     {
       eyebrow: "School average",
       value: average || 0,
       suffix: "%",
       icon: TrendingUp,
-      foot: "All subjects combined"
+      detail: "All subjects combined"
     },
     {
       eyebrow: "Topics mastered",
       value: subjectStats?.mastered || 0,
       icon: GraduationCap,
-      foot: "At or above 80%"
+      detail: "At or above 80%"
     }
   ]
 
@@ -42,7 +42,7 @@ export default function Academics() {
       <PageHeader
         eyebrow="ACADEMICS"
         title="Academic overview"
-        text="Understand how every subject is performing across your classes."
+        description="Understand how every subject is performing across your classes."
       />
 
       <div className="kpi-grid">

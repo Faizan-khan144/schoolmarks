@@ -12,19 +12,19 @@ export default function Exams({ navigate }) {
       eyebrow: "Upcoming",
       value: examStats.upcoming,
       icon: CalendarDays,
-      foot: "Exams this term"
+      detail: "Exams this term"
     },
     {
       eyebrow: "This week",
       value: examStats.thisWeek,
       icon: Clock3,
-      foot: "In the next 7 days"
+      detail: "In the next 7 days"
     },
     {
       eyebrow: "Completed",
       value: examStats.completed,
       icon: CheckCircle2,
-      foot: "Finished this term"
+      detail: "Finished this term"
     }
   ]
 
@@ -33,7 +33,7 @@ export default function Exams({ navigate }) {
       <PageHeader
         eyebrow="EXAMS"
         title="Exam schedule"
-        text="Keep assessments organized across every class."
+        description="Keep assessments organized across every class."
         actions={
           <button className="button button-primary button-sm" onClick={() => navigate("exam-form")}>
             <Plus size={14} /> New exam

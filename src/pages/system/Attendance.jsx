@@ -41,20 +41,20 @@ export default function Attendance() {
       value: overall || 0,
       suffix: "%",
       icon: Users,
-      foot: "Across every student"
+      detail: "Across every student"
     },
     {
       eyebrow: "This week",
       value: weeklyAverage || 0,
       suffix: "%",
       icon: CalendarDays,
-      foot: "Rolling 7-day average"
+      detail: "Rolling 7-day average"
     },
     {
       eyebrow: "Below attention",
       value: atRiskCount,
       icon: Clock3,
-      foot: "Students need a conversation"
+      detail: "Students need a conversation"
     }
   ]
 
@@ -63,7 +63,7 @@ export default function Attendance() {
       <PageHeader
         eyebrow="ATTENDANCE"
         title="Attendance overview"
-        text="Spot patterns before they become problems."
+        description="Spot patterns before they become problems."
       />
 
       <div className="kpi-grid">

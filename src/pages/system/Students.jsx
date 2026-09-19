@@ -46,7 +46,7 @@ export default function StudentsPage({ navigate }) {
       <PageHeader
         eyebrow="STUDENTS"
         title="Student directory"
-        text="Manage every student from one connected academic record."
+        description="Manage every student from one connected academic record."
         actions={
           <button className="button button-primary button-sm" onClick={() => setModal(true)}>
             <Plus size={16} /> Add student

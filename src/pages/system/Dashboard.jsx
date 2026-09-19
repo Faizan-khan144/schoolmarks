@@ -60,27 +60,27 @@ export default function Dashboard({ navigate }) {
       eyebrow: "Total students",
       value: students.length,
       icon: Users,
-      foot: `${classes.length} classes tracked`
+      detail: `${classes.length} classes tracked`
     },
     {
       eyebrow: "Class average",
       value: classAverage,
       suffix: "%",
       icon: BarChart3,
-      foot: "Across selected class"
+      detail: "Across selected class"
     },
     {
       eyebrow: "Class attendance",
       value: classAttendance,
       suffix: "%",
       icon: Clock3,
-      foot: "Across selected class"
+      detail: "Across selected class"
     },
     {
       eyebrow: "Upcoming exams",
       value: exams.filter(exam => exam.status === "Upcoming" || exam.status === "This week").length,
       icon: CalendarDays,
-      foot: "This term"
+      detail: "This term"
     }
   ]
 
@@ -105,7 +105,7 @@ export default function Dashboard({ navigate }) {
       <PageHeader
         eyebrow="Workspace"
         title={`${greeting()}, ${firstName}`}
-        text="Here is how your school is performing today."
+        description="Here is how your school is performing today."
         actions={
           <button className="button button-primary button-sm" onClick={() => navigate("ai-insights")}>
             <Sparkles size={14} /> AI insights

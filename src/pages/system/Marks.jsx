@@ -59,19 +59,19 @@ export default function Marks({ navigate }) {
       value: available,
       suffix: "%",
       icon: TrendingUp,
-      foot: "Across all assessments"
+      detail: "Across all assessments"
     },
     {
       eyebrow: "Top subject",
       value: bestSubject?.code || "—",
       icon: ClipboardCheck,
-      foot: `${Math.round(Number(bestSubject?.average || 0))}% average`
+      detail: `${Math.round(Number(bestSubject?.average || 0))}% average`
     },
     {
       eyebrow: "Assessments",
       value: marks.length,
       icon: ClipboardCheck,
-      foot: "Records tracked"
+      detail: "Records tracked"
     }
   ]
 
@@ -80,7 +80,7 @@ export default function Marks({ navigate }) {
       <PageHeader
         eyebrow="MARKS"
         title="Marks management"
-        text="Enter, review and understand assessment results."
+        description="Enter, review and understand assessment results."
         actions={
           <button className="button button-primary button-sm" onClick={() => navigate("enter-marks")}>
             <Plus size={14} />
