@@ -10948,6 +10948,29 @@ img {
 /* ---- Extra manual rules ---- */
 .stat-card-detail { font-size: 12.5px; color: var(--muted); }
 
+.change.up { color: var(--green-700); background: rgba(23, 106, 72, 0.1); }
+.change.down { color: var(--danger); background: var(--danger-soft); }
+
+.draft {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--muted);
+  background: var(--charcoal-100);
+}
+
+.exam-status-upcoming { color: var(--green-700); background: var(--green-100); }
+.exam-status-this-week { color: #9c6a14; background: #fbf4e4; }
+.exam-status-completed { color: var(--charcoal-500); background: var(--charcoal-100); }
+
+.students-row-status-excellent { color: var(--green-700); background: var(--green-50); }
+.students-row-status-on-track { color: var(--green-700); background: var(--green-100); }
+.students-row-status-needs-attention { color: #9c6a14; background: #fbf4e4; }
+.students-row-status-new { color: var(--charcoal-500); background: var(--charcoal-100); }
+
 /* ---- Legacy token bridge (original values, used by restored rules) ---- */
 :root {
   --accent: #4f46e5;
