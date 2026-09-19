@@ -1,14 +1,17 @@
 const STORAGE_PREFIX = "schoolmarks_"
+const STORAGE_VERSION = "v2"
 
 const keys = {
-  students: `${STORAGE_PREFIX}students`,
-  classes: `${STORAGE_PREFIX}classes`,
-  subjects: `${STORAGE_PREFIX}subjects`,
-  marks: `${STORAGE_PREFIX}marks`,
-  attendance: `${STORAGE_PREFIX}attendance`,
-  exams: `${STORAGE_PREFIX}exams`,
-  settings: `${STORAGE_PREFIX}settings`,
-  initialized: `${STORAGE_PREFIX}initialized`
+  students: `${STORAGE_PREFIX}${STORAGE_VERSION}_students`,
+  classes: `${STORAGE_PREFIX}${STORAGE_VERSION}_classes`,
+  subjects: `${STORAGE_PREFIX}${STORAGE_VERSION}_subjects`,
+  marks: `${STORAGE_PREFIX}${STORAGE_VERSION}_marks`,
+  attendance: `${STORAGE_PREFIX}${STORAGE_VERSION}_attendance`,
+  exams: `${STORAGE_PREFIX}${STORAGE_VERSION}_exams`,
+  notices: `${STORAGE_PREFIX}${STORAGE_VERSION}_notices`,
+  profile: `${STORAGE_PREFIX}${STORAGE_VERSION}_profile`,
+  settings: `${STORAGE_PREFIX}${STORAGE_VERSION}_settings`,
+  initialized: `${STORAGE_PREFIX}${STORAGE_VERSION}_initialized`
 }
 
 const clone = value => JSON.parse(JSON.stringify(value))
@@ -56,41 +59,67 @@ export const saveAttendance = attendance => write(keys.attendance, attendance)
 export const getExams = () => read(keys.exams, [])
 export const saveExams = exams => write(keys.exams, exams)
 
+export const getNotices = () => read(keys.notices, [])
+export const saveNotices = notices => write(keys.notices, notices)
+
+export const getProfile = () =>
+  read(keys.profile, {
+    name: "School Admin",
+    role: "Academic Administrator",
+    email: "admin@schoolmarks.edu",
+    phone: "+92 300 000 0000",
+    school: "Greenfield Academy",
+    bio: "Managing academic performance, attendance and student records.",
+    joinedAt: "2024-09-01"
+  })
+
+export const saveProfile = profile => write(keys.profile, profile)
+
 export const getSettings = () =>
   read(keys.settings, {
-    schoolName: "SchoolMarks",
+    schoolName: "Greenfield Academy",
     academicYear: "2026",
+    term: "Mid-Term 2026",
     passingPercentage: 40,
-    attendanceThreshold: 75
+    attendanceThreshold: 75,
+    weekStartsOn: "monday"
   })
 
 export const saveSettings = settings => write(keys.settings, settings)
+
+export const getStorageVersion = () =>
+  localStorage.getItem(`${STORAGE_PREFIX}${STORAGE_VERSION}_initialized`) === "true"
 
 export const generateId = prefix => {
   const random = Math.random().toString(36).slice(2, 9)
   return `${prefix}-${Date.now()}-${random}`
 }
 
-export const initializeStorage = ({
-  students = [],
-  classes = [],
-  subjects = []
-} = {}) => {
+export const initializeStorage = (seed = {}) => {
+  const {
+    students = [],
+    classes = [],
+    subjects = [],
+    exams = [],
+    marks = [],
+    attendance = [],
+    notices = [],
+    profile = {},
+    settings = {}
+  } = seed
+
   const initialized = localStorage.getItem(keys.initialized)
 
   if (!initialized) {
     saveStudents(students)
     saveClasses(classes)
     saveSubjects(subjects)
-    saveMarks([])
-    saveAttendance([])
-    saveExams([])
-    saveSettings({
-      schoolName: "SchoolMarks",
-      academicYear: "2026",
-      passingPercentage: 40,
-      attendanceThreshold: 75
-    })
+    saveExams(exams)
+    saveMarks(marks)
+    saveAttendance(attendance)
+    saveNotices(notices)
+    saveProfile(profile)
+    saveSettings(settings)
 
     localStorage.setItem(keys.initialized, "true")
 
@@ -100,18 +129,9 @@ export const initializeStorage = ({
   return false
 }
 
-export const resetStorage = ({
-  students = [],
-  classes = [],
-  subjects = []
-} = {}) => {
+export const resetStorage = (seed = {}) => {
   Object.values(keys).forEach(remove)
-
-  initializeStorage({
-    students,
-    classes,
-    subjects
-  })
+  initializeStorage(seed)
 }
 
 export const clearSchoolData = () => {
@@ -119,7 +139,7 @@ export const clearSchoolData = () => {
 }
 
 export const exportStorageData = () => ({
-  version: "1.0",
+  version: STORAGE_VERSION,
   exportedAt: new Date().toISOString(),
   students: getStudents(),
   classes: getClasses(),
@@ -127,6 +147,8 @@ export const exportStorageData = () => ({
   marks: getMarks(),
   attendance: getAttendance(),
   exams: getExams(),
+  notices: getNotices(),
+  profile: getProfile(),
   settings: getSettings()
 })
 
@@ -141,6 +163,8 @@ export const importStorageData = data => {
   if (Array.isArray(data.marks)) saveMarks(data.marks)
   if (Array.isArray(data.attendance)) saveAttendance(data.attendance)
   if (Array.isArray(data.exams)) saveExams(data.exams)
+  if (Array.isArray(data.notices)) saveNotices(data.notices)
+  if (data.profile && typeof data.profile === "object") saveProfile(data.profile)
   if (data.settings && typeof data.settings === "object") {
     saveSettings(data.settings)
   }
@@ -150,168 +174,93 @@ export const importStorageData = data => {
   return true
 }
 
-export const getStudentById = id =>
-  getStudents().find(student => student.id === id)
+export const getStudentById = id => getStudents().find(student => student.id === id)
+export const getClassById = id => getClasses().find(item => item.id === id)
+export const getSubjectById = id => getSubjects().find(subject => subject.id === id)
+export const getExamById = id => getExams().find(exam => exam.id === id)
 
-export const getClassById = id =>
-  getClasses().find(item => item.id === id)
-
-export const getSubjectById = id =>
-  getSubjects().find(subject => subject.id === id)
+const withId = (item, prefix, extra = {}) => ({
+  id: item.id || generateId(prefix),
+  ...extra,
+  ...item
+})
 
 export const addStudent = student => {
-  const students = getStudents()
-
-  const newStudent = {
-    id: student.id || generateId("student"),
-    joinedAt: student.joinedAt || new Date().toISOString().slice(0, 10),
-    ...student
-  }
-
-  saveStudents([...students, newStudent])
-
+  const newStudent = withId(student, "student", {
+    joinedAt: new Date().toISOString().slice(0, 10)
+  })
+  saveStudents([...getStudents(), newStudent])
   return newStudent
 }
 
 export const updateStudent = (id, updates) => {
-  const students = getStudents()
-
-  const updated = students.map(student =>
-    student.id === id
-      ? {
-          ...student,
-          ...updates,
-          id
-        }
-      : student
+  const updated = getStudents().map(student =>
+    student.id === id ? { ...student, ...updates, id } : student
   )
-
   saveStudents(updated)
-
   return updated.find(student => student.id === id)
 }
 
 export const deleteStudent = id => {
-  const students = getStudents().filter(student => student.id !== id)
-  const marks = getMarks().filter(mark => mark.studentId !== id)
-  const attendance = getAttendance().filter(
-    record => record.studentId !== id
-  )
-
-  saveStudents(students)
-  saveMarks(marks)
-  saveAttendance(attendance)
-
+  saveStudents(getStudents().filter(student => student.id !== id))
+  saveMarks(getMarks().filter(mark => mark.studentId !== id))
+  saveAttendance(getAttendance().filter(record => record.studentId !== id))
   return true
 }
 
 export const addClass = classData => {
-  const classes = getClasses()
-
-  const newClass = {
-    id: classData.id || generateId("class"),
-    ...classData
-  }
-
-  saveClasses([...classes, newClass])
-
+  const newClass = withId(classData, "class", { studentCount: 0 })
+  saveClasses([...getClasses(), newClass])
   return newClass
 }
 
 export const updateClass = (id, updates) => {
-  const classes = getClasses()
-
-  const updated = classes.map(item =>
-    item.id === id
-      ? {
-          ...item,
-          ...updates,
-          id
-        }
-      : item
+  const updated = getClasses().map(item =>
+    item.id === id ? { ...item, ...updates, id } : item
   )
-
   saveClasses(updated)
-
   return updated.find(item => item.id === id)
 }
 
 export const deleteClass = id => {
-  const classes = getClasses().filter(item => item.id !== id)
-
-  saveClasses(classes)
-
+  saveClasses(getClasses().filter(item => item.id !== id))
   return true
 }
 
 export const addSubject = subject => {
-  const subjects = getSubjects()
-
-  const newSubject = {
-    id: subject.id || generateId("subject"),
-    ...subject
-  }
-
-  saveSubjects([...subjects, newSubject])
-
+  const newSubject = withId(subject, "subject")
+  saveSubjects([...getSubjects(), newSubject])
   return newSubject
 }
 
 export const updateSubject = (id, updates) => {
-  const subjects = getSubjects()
-
-  const updated = subjects.map(subject =>
-    subject.id === id
-      ? {
-          ...subject,
-          ...updates,
-          id
-        }
-      : subject
+  const updated = getSubjects().map(subject =>
+    subject.id === id ? { ...subject, ...updates, id } : subject
   )
-
   saveSubjects(updated)
-
   return updated.find(subject => subject.id === id)
 }
 
 export const deleteSubject = id => {
-  const subjects = getSubjects().filter(subject => subject.id !== id)
-
-  saveSubjects(subjects)
-
+  saveSubjects(getSubjects().filter(subject => subject.id !== id))
+  saveMarks(getMarks().filter(mark => mark.subjectId !== id))
+  saveExams(getExams().filter(exam => exam.subjectId !== id))
   return true
 }
 
 export const addMark = mark => {
-  const marks = getMarks()
-
-  const newMark = {
-    id: mark.id || generateId("mark"),
-    createdAt: mark.createdAt || new Date().toISOString(),
-    ...mark
-  }
-
-  saveMarks([...marks, newMark])
-
+  const newMark = withId(mark, "mark", {
+    createdAt: new Date().toISOString()
+  })
+  saveMarks([...getMarks(), newMark])
   return newMark
 }
 
 export const updateMark = (id, updates) => {
-  const marks = getMarks()
-
-  const updated = marks.map(mark =>
-    mark.id === id
-      ? {
-          ...mark,
-          ...updates,
-          id
-        }
-      : mark
+  const updated = getMarks().map(mark =>
+    mark.id === id ? { ...mark, ...updates, id } : mark
   )
-
   saveMarks(updated)
-
   return updated.find(mark => mark.id === id)
 }
 
@@ -321,34 +270,18 @@ export const deleteMark = id => {
 }
 
 export const addAttendance = record => {
-  const attendance = getAttendance()
-
-  const newRecord = {
-    id: record.id || generateId("attendance"),
-    createdAt: record.createdAt || new Date().toISOString(),
-    ...record
-  }
-
-  saveAttendance([...attendance, newRecord])
-
+  const newRecord = withId(record, "attendance", {
+    createdAt: new Date().toISOString()
+  })
+  saveAttendance([...getAttendance(), newRecord])
   return newRecord
 }
 
 export const updateAttendance = (id, updates) => {
-  const attendance = getAttendance()
-
-  const updated = attendance.map(record =>
-    record.id === id
-      ? {
-          ...record,
-          ...updates,
-          id
-        }
-      : record
+  const updated = getAttendance().map(record =>
+    record.id === id ? { ...record, ...updates, id } : record
   )
-
   saveAttendance(updated)
-
   return updated.find(record => record.id === id)
 }
 
@@ -358,40 +291,44 @@ export const deleteAttendance = id => {
 }
 
 export const addExam = exam => {
-  const exams = getExams()
-
-  const newExam = {
-    id: exam.id || generateId("exam"),
-    createdAt: exam.createdAt || new Date().toISOString(),
-    ...exam
-  }
-
-  saveExams([...exams, newExam])
-
+  const newExam = withId(exam, "exam", {
+    createdAt: new Date().toISOString()
+  })
+  saveExams([...getExams(), newExam])
   return newExam
 }
 
 export const updateExam = (id, updates) => {
-  const exams = getExams()
-
-  const updated = exams.map(exam =>
-    exam.id === id
-      ? {
-          ...exam,
-          ...updates,
-          id
-        }
-      : exam
+  const updated = getExams().map(exam =>
+    exam.id === id ? { ...exam, ...updates, id } : exam
   )
-
   saveExams(updated)
-
   return updated.find(exam => exam.id === id)
 }
 
 export const deleteExam = id => {
   saveExams(getExams().filter(exam => exam.id !== id))
   saveMarks(getMarks().filter(mark => mark.examId !== id))
+  return true
+}
 
+export const addNotice = notice => {
+  const newNotice = withId(notice, "notice", {
+    createdAt: new Date().toISOString()
+  })
+  saveNotices([...getNotices(), newNotice])
+  return newNotice
+}
+
+export const updateNotice = (id, updates) => {
+  const updated = getNotices().map(notice =>
+    notice.id === id ? { ...notice, ...updates, id } : notice
+  )
+  saveNotices(updated)
+  return updated.find(notice => notice.id === id)
+}
+
+export const deleteNotice = id => {
+  saveNotices(getNotices().filter(notice => notice.id !== id))
   return true
 }

@@ -1,1058 +1,1165 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Activity,
-  ArrowDownRight,
+  ArrowDown,
   ArrowRight,
   ArrowUpRight,
-  Award,
   BarChart3,
-  Bell,
   BookOpen,
-  Brain,
+  BrainCircuit,
   CalendarDays,
   Check,
-  CheckCircle2,
-  ChevronDown,
   ChevronRight,
+  CircleCheck,
   ClipboardCheck,
   Clock3,
-  Code2,
-  Database,
-  Edit3,
-  FileBarChart,
-  FileCheck2,
-  FileText,
   GraduationCap,
-  Home,
-  Layers3,
   LayoutDashboard,
-  LogOut,
   Menu,
-  MessageSquare,
-  MoreHorizontal,
-  PenLine,
+  MessageSquareText,
   Plus,
-  RefreshCw,
   Search,
-  Settings,
   ShieldCheck,
   Sparkles,
-  Star,
   Target,
-  Trash2,
   TrendingUp,
-  User,
   Users,
   X,
-  Zap
 } from "lucide-react";
-import Exams from "./pages/system/Exams";
 
-const logoPath = "/logo/schoolmarks-logo.png";
-
-const seedStudents = [
-  {
-    id: "STU-001",
-    name: "Ayaan Ahmed",
-    roll: "09-001",
-    className: "Class 9-A",
-    gender: "Male",
-    status: "Active",
-    attendance: 94,
-    average: 88
-  },
-  {
-    id: "STU-002",
-    name: "Sara Khan",
-    roll: "09-002",
-    className: "Class 9-A",
-    gender: "Female",
-    status: "Active",
-    attendance: 97,
-    average: 92
-  },
-  {
-    id: "STU-003",
-    name: "Hamza Ali",
-    roll: "09-003",
-    className: "Class 9-A",
-    gender: "Male",
-    status: "Active",
-    attendance: 89,
-    average: 81
-  },
-  {
-    id: "STU-004",
-    name: "Hania Raza",
-    roll: "09-004",
-    className: "Class 9-A",
-    gender: "Female",
-    status: "Active",
-    attendance: 96,
-    average: 95
-  },
-  {
-    id: "STU-005",
-    name: "Usman Tariq",
-    roll: "09-005",
-    className: "Class 9-B",
-    gender: "Male",
-    status: "Active",
-    attendance: 84,
-    average: 76
-  },
-  {
-    id: "STU-006",
-    name: "Maham Noor",
-    roll: "09-006",
-    className: "Class 9-B",
-    gender: "Female",
-    status: "Active",
-    attendance: 91,
-    average: 86
-  },
-  {
-    id: "STU-007",
-    name: "Zain Malik",
-    roll: "10-A-001",
-    className: "Class 10-A",
-    gender: "Male",
-    status: "Active",
-    attendance: 93,
-    average: 89
-  },
-  {
-    id: "STU-008",
-    name: "Anaya Hassan",
-    roll: "10-A-002",
-    className: "Class 10-A",
-    gender: "Female",
-    status: "Active",
-    attendance: 98,
-    average: 96
-  }
+const studentsSeed = [
+  { id: 1, name: "Ahmed Raza", className: "9-A", avg: 91, attendance: 96 },
+  { id: 2, name: "Areeba Khan", className: "9-A", avg: 88, attendance: 94 },
+  { id: 3, name: "Hamza Ali", className: "9-B", avg: 84, attendance: 91 },
+  { id: 4, name: "Maham Noor", className: "9-B", avg: 96, attendance: 98 },
+  { id: 5, name: "Usman Tariq", className: "9-C", avg: 79, attendance: 87 },
+  { id: 6, name: "Hiba Fatima", className: "9-C", avg: 93, attendance: 95 },
 ];
 
 const navItems = [
-  {
-    id: "dashboard",
-    label: "Dashboard",
-    icon: LayoutDashboard
-  },
-  {
-    id: "students",
-    label: "Students",
-    icon: Users
-  },
-  {
-    id: "academics",
-    label: "Academics",
-    icon: BookOpen
-  },
-  {
-    id: "exams",
-    label: "Exams",
-    icon: ClipboardCheck
-  },
-  {
-    id: "marks",
-    label: "Marks",
-    icon: PenLine
-  },
-  {
-    id: "results",
-    label: "Results",
-    icon: FileCheck2
-  },
-  {
-    id: "attendance",
-    label: "Attendance",
-    icon: CalendarDays
-  },
-  {
-    id: "performance",
-    label: "Performance",
-    icon: TrendingUp
-  }
+  { id: "dashboard", label: "Overview", icon: LayoutDashboard },
+  { id: "students", label: "Students", icon: Users },
+  { id: "academics", label: "Academics", icon: BookOpen },
+  { id: "exams", label: "Exams", icon: CalendarDays },
+  { id: "marks", label: "Marks", icon: ClipboardCheck },
+  { id: "attendance", label: "Attendance", icon: Clock3 },
+  { id: "performance", label: "Performance", icon: TrendingUp },
+  { id: "ai", label: "AI Assistant", icon: BrainCircuit },
 ];
 
-const workflowSteps = [
+const problems = [
+  {
+    title: "Paper registers",
+    text: "Marks and attendance disappear into notebooks, folders and disconnected files.",
+    icon: ClipboardCheck,
+  },
+  {
+    title: "WhatsApp messages",
+    text: "Important academic updates get buried inside everyday conversations.",
+    icon: MessageSquareText,
+  },
+  {
+    title: "Spreadsheets",
+    text: "Teachers spend hours managing rows instead of focusing on students.",
+    icon: BarChart3,
+  },
+  {
+    title: "Manual reports",
+    text: "Creating meaningful performance reports becomes repetitive every term.",
+    icon: Activity,
+  },
+];
+
+const workflow = [
+  {
+    title: "Register students",
+    text: "Create student profiles with class, subjects, attendance and academic records.",
+    icon: Users,
+  },
+  {
+    title: "Record marks",
+    text: "Enter assessments once and keep every result connected to the student.",
+    icon: ClipboardCheck,
+  },
+  {
+    title: "Track attendance",
+    text: "Monitor attendance patterns without maintaining separate registers.",
+    icon: Clock3,
+  },
+  {
+    title: "Analyze performance",
+    text: "Turn marks and attendance into useful academic insights.",
+    icon: BarChart3,
+  },
+  {
+    title: "AI insights",
+    text: "Ask questions about students and receive structured academic insights.",
+    icon: BrainCircuit,
+  },
+  {
+    title: "Permanent history",
+    text: "Keep a continuous academic record from first entry to future results.",
+    icon: ShieldCheck,
+  },
+];
+
+const modules = [
   {
     number: "01",
-    title: "Scan",
-    description: "Capture student records, marks and attendance in seconds.",
-    icon: Search
+    title: "Student Management",
+    text: "Keep every student profile organized in one place.",
+    icon: Users,
   },
   {
     number: "02",
-    title: "Process",
-    description: "SchoolMarks organizes academic information automatically.",
-    icon: Database
+    title: "Marks & Results",
+    text: "Record assessments and instantly understand class performance.",
+    icon: ClipboardCheck,
   },
   {
     number: "03",
-    title: "Understand",
-    description: "Turn raw academic data into clear insights.",
-    icon: Brain
+    title: "Attendance",
+    text: "Track attendance trends and identify students who need attention.",
+    icon: Clock3,
   },
   {
     number: "04",
-    title: "Preserve",
-    description: "Keep every important academic record available for the future.",
-    icon: ShieldCheck
-  }
+    title: "Academic Analytics",
+    text: "Turn school data into clear visual performance signals.",
+    icon: TrendingUp,
+  },
+  {
+    number: "05",
+    title: "AI Assistant",
+    text: "Ask natural-language questions about your academic data.",
+    icon: BrainCircuit,
+  },
+  {
+    number: "06",
+    title: "Permanent Records",
+    text: "Build a reliable academic history for every student.",
+    icon: ShieldCheck,
+  },
 ];
 
-const aiQuestions = [
-  "Which students need academic support?",
-  "Which class has the strongest average?",
-  "Show students with attendance below 75%.",
-  "Which subjects need the most attention?",
-  "Who are the top performing students?",
-  "Compare Class 9-A and Class 9-B.",
-  "Find students with both low marks and low attendance.",
-  "Summarize this month's academic performance.",
-  "Which students improved the most?",
-  "What should teachers focus on next?"
-];
-
-const subjects = [
-  "Mathematics",
-  "English",
-  "Physics",
-  "Chemistry",
-  "Biology",
-  "Computer Science",
-  "Urdu",
-  "Pakistan Studies"
-];
-
-function useCountUp(target, duration = 900) {
-  const [value, setValue] = useState(0);
-
-  useEffect(() => {
-    let frame;
-    const start = performance.now();
-
-    const animate = now => {
-      const progress = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setValue(Math.round(target * eased));
-
-      if (progress < 1) {
-        frame = requestAnimationFrame(animate);
-      }
-    };
-
-    frame = requestAnimationFrame(animate);
-
-    return () => cancelAnimationFrame(frame);
-  }, [target, duration]);
-
-  return value;
+function getInitials(name) {
+  return name
+    .split(" ")
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 }
 
-function useReveal() {
+function Reveal({ children, className = "", delay = 0 }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const element = ref.current;
-
-    if (!element) {
-      return;
-    }
+    const node = ref.current;
+    if (!node) return;
 
     const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0]?.isIntersecting) {
+      ([entry]) => {
+        if (entry.isIntersecting) {
           setVisible(true);
           observer.disconnect();
         }
       },
-      {
-        threshold: 0.12
-      }
+      { threshold: 0.12 }
     );
 
-    observer.observe(element);
+    observer.observe(node);
 
     return () => observer.disconnect();
   }, []);
 
-  return [ref, visible];
-}
-
-function Reveal({ children, className = "" }) {
-  const [ref, visible] = useReveal();
-
   return (
     <div
       ref={ref}
-      className={`${className} reveal ${visible ? "reveal-visible" : ""}`}
+      className={`reveal ${visible ? "is-visible" : ""} ${className}`}
+      style={{ "--delay": `${delay}ms` }}
     >
       {children}
     </div>
   );
 }
 
-function Logo({ compact = false }) {
+function Logo({ dark = false }) {
   return (
-    <div className={`brand-logo ${compact ? "brand-logo-compact" : ""}`}>
-      <img src={logoPath} alt="SchoolMarks" />
-    </div>
-  );
-}
-
-function Toast({ toast, close }) {
-  if (!toast) {
-    return null;
-  }
-
-  return (
-    <div className="toast">
-      <div className="toast-icon">
-        <CheckCircle2 size={18} />
+    <div className={`logo ${dark ? "logo-dark" : ""}`}>
+      <div className="logo-image">
+        <img src="/logo.png" alt="SchoolMarks" />
+        <span>SM</span>
       </div>
-
-      <div>
-        <strong>{toast.title}</strong>
-        <span>{toast.message}</span>
+      <div className="logo-copy">
+        <strong>SchoolMarks</strong>
+        <small>Academic intelligence</small>
       </div>
-
-      <button onClick={close}>
-        <X size={16} />
-      </button>
     </div>
   );
 }
 
-function CountMetric({ value, suffix = "", label }) {
-  const count = useCountUp(value);
-
+function ProductDashboard() {
   return (
-    <div className="count-metric">
-      <strong>
-        {count}
-        {suffix}
-      </strong>
-      <span>{label}</span>
-    </div>
-  );
-}
-
-function ProductPreview() {
-  return (
-    <div className="product-preview">
-      <div className="preview-glow" />
+    <div className="product-stage">
+      <div className="stage-glow stage-glow-one" />
+      <div className="stage-glow stage-glow-two" />
 
       <div className="preview-window">
         <div className="preview-topbar">
           <div className="preview-dots">
-            <span />
-            <span />
-            <span />
+            <i />
+            <i />
+            <i />
           </div>
 
-          <div className="preview-search">
-            <Search size={12} />
-            Search anything
+          <div className="preview-address">
+            schoolmarks.app/dashboard
           </div>
 
-          <div className="preview-avatar">SA</div>
+          <div className="preview-avatar">FK</div>
         </div>
 
-        <div className="preview-body">
-          <div className="preview-sidebar">
-            <div className="preview-mini-logo">
-              <Logo compact />
+        <div className="preview-layout">
+          <aside className="preview-sidebar">
+            <div className="preview-brand">
+              <div>SM</div>
+              <span>SchoolMarks</span>
             </div>
 
-            {[
-              LayoutDashboard,
-              Users,
-              BookOpen,
-              ClipboardCheck,
-              PenLine,
-              TrendingUp
-            ].map((Icon, index) => (
-              <div
-                className={`preview-side-icon ${
-                  index === 0 ? "active" : ""
-                }`}
-                key={index}
-              >
-                <Icon size={13} />
-              </div>
-            ))}
-          </div>
+            {["Overview", "Students", "Academics", "Marks", "Attendance"].map(
+              (item, index) => (
+                <div
+                  className={`preview-nav ${index === 0 ? "active" : ""}`}
+                  key={item}
+                >
+                  <span />
+                  {item}
+                </div>
+              )
+            )}
+          </aside>
 
           <div className="preview-content">
             <div className="preview-heading">
               <div>
-                <span>Overview</span>
-                <strong>Good morning, School Admin</strong>
+                <small>ACADEMIC OVERVIEW</small>
+                <h3>Good morning, Faizan</h3>
               </div>
-
-              <button>
-                <Plus size={12} />
-                Add record
-              </button>
-            </div>
-
-            <div className="preview-stats">
-              <div>
-                <span>Total students</span>
-                <strong>1,284</strong>
-                <small>
-                  <ArrowUpRight size={10} />
-                  8.4%
-                </small>
-              </div>
-
-              <div>
-                <span>Attendance</span>
-                <strong>91.8%</strong>
-                <small>
-                  <ArrowUpRight size={10} />
-                  2.1%
-                </small>
-              </div>
-
-              <div>
-                <span>Average score</span>
-                <strong>84.6%</strong>
-                <small>
-                  <ArrowUpRight size={10} />
-                  4.7%
-                </small>
+              <div className="preview-live">
+                <span />
+                Live
               </div>
             </div>
 
-            <div className="preview-main-grid">
+            <div className="preview-kpis">
+              <div>
+                <small>Total Students</small>
+                <strong>842</strong>
+                <em>+24 this month</em>
+              </div>
+              <div>
+                <small>Average Score</small>
+                <strong>87.4%</strong>
+                <em>+3.2% vs term start</em>
+              </div>
+              <div>
+                <small>Attendance</small>
+                <strong>94.8%</strong>
+                <em>+1.8% this month</em>
+              </div>
+              <div>
+                <small>At Risk</small>
+                <strong>18</strong>
+                <em className="negative">Needs attention</em>
+              </div>
+            </div>
+
+            <div className="preview-grid">
               <div className="preview-chart-card">
-                <div className="preview-card-title">
-                  <span>Academic performance</span>
-                  <MoreHorizontal size={13} />
-                </div>
-
-                <div className="fake-chart">
-                  <div className="chart-line chart-line-one" />
-                  <div className="chart-line chart-line-two" />
-                  <div className="chart-line chart-line-three" />
-                  <div className="chart-area" />
-                </div>
-              </div>
-
-              <div className="preview-list-card">
-                <div className="preview-card-title">
-                  <span>Top students</span>
-                  <ChevronRight size={13} />
-                </div>
-
-                {[
-                  ["AH", "Anaya Hassan", "96%"],
-                  ["HN", "Hania Raza", "95%"],
-                  ["SK", "Sara Khan", "92%"]
-                ].map(student => (
-                  <div className="preview-student" key={student[1]}>
-                    <div className="preview-student-avatar">
-                      {student[0]}
-                    </div>
-
-                    <div>
-                      <strong>{student[1]}</strong>
-                      <span>Class 10-A</span>
-                    </div>
-
-                    <b>{student[2]}</b>
+                <div className="preview-card-head">
+                  <div>
+                    <small>CLASS PERFORMANCE</small>
+                    <strong>Academic progress</strong>
                   </div>
-                ))}
+                  <span>Last 6 months</span>
+                </div>
+
+                <div className="preview-chart">
+                  <div className="chart-lines">
+                    <i />
+                    <i />
+                    <i />
+                    <i />
+                  </div>
+
+                  <svg viewBox="0 0 500 180" preserveAspectRatio="none">
+                    <path
+                      d="M0 145 C40 130 55 138 90 116 S140 104 170 111 S220 86 255 92 S310 62 340 72 S390 40 425 52 S465 25 500 35"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                    />
+                  </svg>
+
+                  <div className="chart-labels">
+                    <span>Jan</span>
+                    <span>Feb</span>
+                    <span>Mar</span>
+                    <span>Apr</span>
+                    <span>May</span>
+                    <span>Jun</span>
+                  </div>
+                </div>
               </div>
+
+              <div className="preview-ai-card">
+                <div className="preview-ai-icon">
+                  <Sparkles size={15} />
+                </div>
+                <small>AI INSIGHT</small>
+                <strong>Performance signal detected</strong>
+                <p>
+                  18 students show a drop in Mathematics performance over the
+                  last two assessments.
+                </p>
+                <button>Review students <ArrowUpRight size={14} /></button>
+              </div>
+            </div>
+
+            <div className="preview-table">
+              <div className="preview-table-head">
+                <span>Student</span>
+                <span>Class</span>
+                <span>Average</span>
+                <span>Attendance</span>
+                <span>Status</span>
+              </div>
+
+              {[
+                ["Areeba Khan", "9-A", "94%", "97%", "Excellent"],
+                ["Maham Noor", "9-B", "91%", "95%", "On track"],
+                ["Ahmed Raza", "9-A", "87%", "93%", "On track"],
+              ].map((row) => (
+                <div className="preview-table-row" key={row[0]}>
+                  <span>{row[0]}</span>
+                  <span>{row[1]}</span>
+                  <span>{row[2]}</span>
+                  <span>{row[3]}</span>
+                  <span>{row[4]}</span>
+                </div>
+              ))}
             </div>
           </div>
+        </div>
+      </div>
+
+      <div className="floating-stat floating-stat-one">
+        <TrendingUp size={16} />
+        <div>
+          <strong>+12.8%</strong>
+          <span>Class progress</span>
+        </div>
+      </div>
+
+      <div className="floating-stat floating-stat-two">
+        <CircleCheck size={16} />
+        <div>
+          <strong>94.8%</strong>
+          <span>Attendance</span>
         </div>
       </div>
     </div>
   );
 }
 
-function Workflow() {
+function HomeAI() {
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
+
+  const ask = () => {
+    const q = question.toLowerCase();
+
+    if (!question.trim()) {
+      setAnswer("Ask me something about your students, marks or attendance.");
+      return;
+    }
+
+    if (q.includes("attendance")) {
+      setAnswer(
+        "Class 9-A currently has the strongest attendance at 95.8%. Three students are below the 85% attention threshold."
+      );
+      return;
+    }
+
+    if (q.includes("top") || q.includes("best")) {
+      setAnswer(
+        "Maham Noor is currently the highest-performing student with a 96% average and 98% attendance."
+      );
+      return;
+    }
+
+    if (q.includes("math")) {
+      setAnswer(
+        "Mathematics is the main improvement area this term. The class average is 82%, with performance improving across the latest assessment."
+      );
+      return;
+    }
+
+    setAnswer(
+      "Based on the current academic records, overall class performance is trending positively with an average score of 87.4%."
+    );
+  };
+
   return (
-    <section className="workflow-section">
-      <div className="section-container">
-        <Reveal className="section-intro">
-          <span className="eyebrow">Simple by design</span>
-          <h2>From scan to permanent history.</h2>
-          <p>
-            SchoolMarks turns everyday school activity into organized,
-            searchable and useful academic history.
-          </p>
-        </Reveal>
-
-        <div className="workflow-grid">
-          {workflowSteps.map((step, index) => {
-            const Icon = step.icon;
-
-            return (
-              <Reveal
-                className="workflow-card"
-                key={step.number}
-              >
-                <div className="workflow-number">{step.number}</div>
-
-                <div className="workflow-icon">
-                  <Icon size={22} />
-                </div>
-
-                <div>
-                  <h3>{step.title}</h3>
-                  <p>{step.description}</p>
-                </div>
-
-                {index < workflowSteps.length - 1 && (
-                  <ArrowRight className="workflow-arrow" size={18} />
-                )}
-              </Reveal>
-            );
-          })}
+    <div className="home-ai-box">
+      <div className="home-ai-header">
+        <div className="ai-title-row">
+          <div className="ai-icon">
+            <BrainCircuit size={18} />
+          </div>
+          <div>
+            <small>SchoolMarks Intelligence</small>
+            <strong>Ask your academic data</strong>
+          </div>
+        </div>
+        <div className="home-ai-bot">
+          <span />
+          Online
         </div>
       </div>
-    </section>
+
+      <div className="ai-mode-row">
+        <span>Ask anything about your school</span>
+        <Sparkles size={14} />
+      </div>
+
+      <div className="home-ai-input">
+        <input
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") ask();
+          }}
+          placeholder="e.g. Which students need attention?"
+        />
+        <button onClick={ask}>
+          <ArrowRight size={17} />
+        </button>
+      </div>
+
+      <div className="home-ai-suggestions">
+        {["Who has the best attendance?", "Show top students", "How is Maths doing?"].map(
+          (item) => (
+            <button
+              key={item}
+              onClick={() => {
+                setQuestion(item);
+                setTimeout(ask, 0);
+              }}
+            >
+              {item}
+            </button>
+          )
+        )}
+      </div>
+
+      {answer && (
+        <div className="home-ai-answer">
+          <div className="answer-head">
+            <Sparkles size={15} />
+            <span>AI response</span>
+          </div>
+          <p>{answer}</p>
+        </div>
+      )}
+    </div>
   );
 }
 
-function HomeAI({ navigate }) {
-  const [selected, setSelected] = useState(aiQuestions[0]);
-
+function HomePage({ onOpenApp }) {
   return (
-    <section className="home-ai-section">
-      <div className="section-container">
-        <Reveal className="ai-showcase">
-          <div className="ai-copy">
-            <span className="eyebrow">School intelligence</span>
+    <div className="public-site">
+      <nav className="public-nav">
+        <Logo />
 
-            <h2>
-              Ask your school data
-              <span> better questions.</span>
-            </h2>
+        <div className="public-nav-links">
+          <a href="#problem">Why SchoolMarks</a>
+          <a href="#workflow">Workflow</a>
+          <a href="#modules">Platform</a>
+          <a href="#ai">AI</a>
+        </div>
 
-            <p>
-              Explore student performance, attendance and academic trends
-              through a simple AI workspace built around your school's data.
-            </p>
+        <div className="nav-actions">
+          <button className="nav-ai" onClick={onOpenApp}>
+            Open platform
+            <ArrowUpRight size={15} />
+          </button>
+          <button className="nav-cta" onClick={onOpenApp}>
+            Get started
+            <ArrowRight size={15} />
+          </button>
+        </div>
+      </nav>
 
-            <button
-              className="primary-button"
-              onClick={() => navigate("ai")}
-            >
-              Open AI workspace
-              <ArrowRight size={17} />
-            </button>
+      <main>
+        <section className="hero">
+          <div className="hero-grid" />
+          <div className="hero-orb orb-one" />
+          <div className="hero-orb orb-two" />
+
+          <div className="hero-copy">
+            <Reveal>
+              <div className="hero-label">
+                <span className="pulse-dot" />
+                Modern academic management
+              </div>
+            </Reveal>
+
+            <Reveal delay={70}>
+              <h1>
+                Every student.
+                <br />
+                <span>One academic history.</span>
+              </h1>
+            </Reveal>
+
+            <Reveal delay={130}>
+              <p>
+                SchoolMarks brings students, marks, attendance, exams,
+                performance and AI-powered insights into one intelligent
+                academic platform.
+              </p>
+            </Reveal>
+
+            <Reveal delay={190}>
+              <div className="hero-buttons">
+                <button className="primary-button" onClick={onOpenApp}>
+                  Explore SchoolMarks
+                  <ArrowRight size={17} />
+                </button>
+                <a className="secondary-button" href="#workflow">
+                  See how it works
+                  <ArrowDown size={16} />
+                </a>
+              </div>
+            </Reveal>
+
+            <Reveal delay={250}>
+              <div className="hero-proof">
+                <div className="proof-avatars">
+                  <span>AK</span>
+                  <span>AN</span>
+                  <span>MR</span>
+                  <span>HN</span>
+                </div>
+                <div>
+                  <strong>Built for modern schools</strong>
+                  <small>Students · Teachers · Administrators</small>
+                </div>
+              </div>
+            </Reveal>
           </div>
 
-          <div className="ai-panel">
-            <div className="ai-panel-top">
-              <div className="ai-panel-title">
-                <div className="ai-icon">
-                  <Sparkles size={17} />
-                </div>
+          <Reveal delay={120} className="hero-product">
+            <ProductDashboard />
+          </Reveal>
 
-                <div>
-                  <strong>SchoolMarks AI</strong>
-                  <span>Academic assistant</span>
-                </div>
-              </div>
+          <div className="hero-bottom-stats">
+            <div>
+              <strong>842+</strong>
+              <span>Students managed</span>
+            </div>
+            <div>
+              <strong>94.8%</strong>
+              <span>Average attendance</span>
+            </div>
+            <div>
+              <strong>87.4%</strong>
+              <span>Academic average</span>
+            </div>
+            <div>
+              <strong>24/7</strong>
+              <span>Academic visibility</span>
+            </div>
+          </div>
+        </section>
 
-              <span className="ai-status">
+        <div className="marquee-wrap">
+          <div className="marquee">
+            {[
+              "Schools",
+              "Teachers",
+              "Students",
+              "Administrators",
+              "Academic Teams",
+              "Coordinators",
+              "Modern Classrooms",
+              "Schools",
+              "Teachers",
+              "Students",
+              "Administrators",
+              "Academic Teams",
+            ].map((item, index) => (
+              <span key={`${item}-${index}`}>
                 <i />
-                Ready
+                {item}
               </span>
+            ))}
+          </div>
+        </div>
+
+        <section className="section problem-section" id="problem">
+          <Reveal>
+            <div className="section-eyebrow">THE PROBLEM</div>
+            <h2>
+              Academic data shouldn't
+              <br />
+              live in <span>four different places.</span>
+            </h2>
+            <p className="section-intro">
+              Schools still rely on disconnected tools for marks, attendance,
+              student records and reports. SchoolMarks brings those signals
+              together.
+            </p>
+          </Reveal>
+
+          <div className="problem-layout">
+            <div className="problem-points">
+              {problems.map((problem, index) => {
+                const Icon = problem.icon;
+
+                return (
+                  <Reveal delay={index * 70} key={problem.title}>
+                    <div className="problem-point">
+                      <div className="problem-icon">
+                        <Icon size={18} />
+                      </div>
+                      <div>
+                        <strong>{problem.title}</strong>
+                        <p>{problem.text}</p>
+                      </div>
+                      <ArrowUpRight size={17} />
+                    </div>
+                  </Reveal>
+                );
+              })}
             </div>
 
-            <div className="ai-question">
-              <span>Your question</span>
-              <strong>{selected}</strong>
-            </div>
-
-            <div className="ai-answer">
-              <div className="ai-answer-icon">
-                <Brain size={16} />
-              </div>
-
-              <div>
-                <span>SchoolMarks AI</span>
+            <Reveal className="signal-board" delay={150}>
+              <div className="signal-main">
+                <div className="signal-circle">
+                  <span />
+                  <strong>1</strong>
+                </div>
+                <small>SchoolMarks</small>
+                <h3>One academic source of truth.</h3>
                 <p>
-                  I can analyze student records, attendance and marks to
-                  generate a useful academic summary for this question.
+                  Connect the information that teachers already collect and
+                  turn it into a continuous academic record.
                 </p>
               </div>
-            </div>
 
-            <div className="ai-chips">
-              {aiQuestions.slice(0, 4).map(question => (
-                <button
-                  key={question}
-                  className={selected === question ? "active" : ""}
-                  onClick={() => setSelected(question)}
-                >
-                  {question}
-                </button>
-              ))}
-            </div>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
+              <div className="signal-details">
+                <div>
+                  <span>Marks</span>
+                  <strong>Connected</strong>
+                </div>
+                <div>
+                  <span>Attendance</span>
+                  <strong>Connected</strong>
+                </div>
+                <div>
+                  <span>Results</span>
+                  <strong>Connected</strong>
+                </div>
+                <div>
+                  <span>Insights</span>
+                  <strong>Connected</strong>
+                </div>
+              </div>
 
-function HomePage({ navigate }) {
-  return (
-    <main className="home-page">
-      <section className="hero-section">
-        <div className="hero-grid" />
-
-        <div className="hero-container">
-          <Reveal className="hero-copy">
-            <div className="hero-badge">
-              <span className="status-dot" />
-              Modern academic management
-            </div>
-
-            <h1>
-              School data,
-              <br />
-              <span>made simple.</span>
-            </h1>
-
-            <p>
-              SchoolMarks gives schools one clean place to manage students,
-              academics, exams, marks, attendance and performance.
-            </p>
-
-            <div className="hero-actions">
-              <button
-                className="primary-button"
-                onClick={() => navigate("dashboard")}
-              >
-                Open dashboard
-                <ArrowRight size={17} />
-              </button>
-
-              <button
-                className="secondary-button"
-                onClick={() => navigate("ai")}
-              >
-                Explore AI
+              <div className="signal-warning">
                 <Sparkles size={16} />
-              </button>
-            </div>
+                <span>Academic intelligence active</span>
+              </div>
+            </Reveal>
+          </div>
+        </section>
 
-            <div className="hero-metrics">
-              <CountMetric
-                value={1284}
-                label="Students managed"
-                suffix="+"
-              />
-
-              <CountMetric
-                value={92}
-                label="Average attendance"
-                suffix="%"
-              />
-
-              <CountMetric
-                value={100}
-                label="Digital records"
-                suffix="%"
-              />
-            </div>
-          </Reveal>
-
-          <Reveal className="hero-visual">
-            <ProductPreview />
-          </Reveal>
-        </div>
-      </section>
-
-      <Workflow />
-
-      <section className="feature-section">
-        <div className="section-container">
-          <Reveal className="section-intro">
-            <span className="eyebrow">One connected system</span>
-            <h2>Everything academic. One workspace.</h2>
-            <p>
-              Replace disconnected spreadsheets and scattered records with a
-              consistent school management experience.
+        <section className="section workflow-section" id="workflow">
+          <Reveal>
+            <div className="section-eyebrow">THE WORKFLOW</div>
+            <h2>
+              From first entry to
+              <br />
+              <span>permanent academic history.</span>
+            </h2>
+            <p className="section-intro">
+              Every important academic event becomes part of the same
+              connected student record.
             </p>
           </Reveal>
 
-          <div className="feature-grid">
-            {[
-              {
-                icon: Users,
-                title: "Student management",
-                text: "Keep profiles, classes and academic history organized."
-              },
-              {
-                icon: ClipboardCheck,
-                title: "Exams",
-                text: "Create and manage examinations with dates, classes and subjects."
-              },
-              {
-                icon: PenLine,
-                title: "Marks",
-                text: "Record results and make academic progress easier to understand."
-              },
-              {
-                icon: CalendarDays,
-                title: "Attendance",
-                text: "Track daily attendance and identify patterns quickly."
-              },
-              {
-                icon: BarChart3,
-                title: "Performance",
-                text: "Turn marks into clear performance insights."
-              },
-              {
-                icon: Brain,
-                title: "AI workspace",
-                text: "Ask questions about your academic data and get useful summaries."
-              }
-            ].map(feature => {
-              const Icon = feature.icon;
+          <div className="workflow-line">
+            {workflow.map((step, index) => {
+              const Icon = step.icon;
 
               return (
-                <Reveal className="feature-card" key={feature.title}>
-                  <div className="feature-icon">
-                    <Icon size={21} />
+                <Reveal
+                  delay={index * 80}
+                  className="workflow-step"
+                  key={step.title}
+                >
+                  <div className="workflow-number">0{index + 1}</div>
+                  <div className="workflow-icon">
+                    <Icon size={20} />
                   </div>
-
-                  <h3>{feature.title}</h3>
-                  <p>{feature.text}</p>
-
-                  <ArrowUpRight
-                    className="feature-arrow"
-                    size={18}
-                  />
+                  <div>
+                    <h3>{step.title}</h3>
+                    <p>{step.text}</p>
+                  </div>
+                  {index < workflow.length - 1 && (
+                    <div className="workflow-arrow">
+                      <ArrowRight size={15} />
+                    </div>
+                  )}
                 </Reveal>
               );
             })}
           </div>
-        </div>
-      </section>
+        </section>
 
-      <HomeAI navigate={navigate} />
-
-      <section className="cta-section">
-        <div className="section-container">
-          <Reveal className="cta-card">
-            <div>
-              <span className="eyebrow">Built for schools</span>
-              <h2>Ready to make academic management simpler?</h2>
+        <section className="section intelligence-section" id="ai">
+          <div className="intelligence-layout">
+            <Reveal className="intelligence-copy">
+              <div className="light-eyebrow">
+                <Sparkles size={14} />
+                SCHOOLMARKS AI
+              </div>
+              <h2>
+                Your school data can
+                <br />
+                <span>answer questions.</span>
+              </h2>
               <p>
-                Start with the dashboard and keep every important record
-                connected.
+                Instead of searching through spreadsheets, ask SchoolMarks
+                what is happening across your students and classes.
               </p>
-            </div>
 
-            <button
-              className="primary-button"
-              onClick={() => navigate("dashboard")}
-            >
-              Enter SchoolMarks
-              <ArrowRight size={17} />
-            </button>
-          </Reveal>
-        </div>
-      </section>
-    </main>
-  );
-}
+              <div className="ai-capabilities">
+                <div>
+                  <Check size={15} />
+                  Student performance analysis
+                </div>
+                <div>
+                  <Check size={15} />
+                  Attendance signals
+                </div>
+                <div>
+                  <Check size={15} />
+                  Class-level insights
+                </div>
+                <div>
+                  <Check size={15} />
+                  Natural-language questions
+                </div>
+              </div>
+            </Reveal>
 
-function Sidebar({ page, setPage, collapsed, setCollapsed }) {
-  return (
-    <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-      <div className="sidebar-brand">
-        <Logo compact={!collapsed} />
-
-        {!collapsed && (
-          <div className="sidebar-brand-copy">
-            <strong>SchoolMarks</strong>
-            <span>Academic OS</span>
+            <Reveal delay={130}>
+              <HomeAI />
+            </Reveal>
           </div>
-        )}
-      </div>
+        </section>
 
-      <div className="sidebar-section-label">
-        {!collapsed && "Workspace"}
-      </div>
+        <section className="section modules-section" id="modules">
+          <Reveal>
+            <div className="section-eyebrow">THE PLATFORM</div>
+            <h2>
+              Everything your school needs.
+              <br />
+              <span>Nothing scattered.</span>
+            </h2>
+          </Reveal>
 
-      <nav className="sidebar-nav">
-        {navItems.map(item => {
-          const Icon = item.icon;
+          <div className="module-grid">
+            {modules.map((module, index) => {
+              const Icon = module.icon;
 
-          return (
-            <button
-              className={`sidebar-link ${
-                page === item.id ? "active" : ""
-              }`}
-              onClick={() => setPage(item.id)}
-              key={item.id}
-              title={collapsed ? item.label : undefined}
-            >
-              <Icon size={18} />
-              {!collapsed && <span>{item.label}</span>}
-            </button>
-          );
-        })}
-      </nav>
+              return (
+                <Reveal delay={index * 60} key={module.title}>
+                  <div className="module-card">
+                    <div className="module-number">{module.number}</div>
+                    <div className="module-icon">
+                      <Icon size={19} />
+                    </div>
+                    <h3>{module.title}</h3>
+                    <p>{module.text}</p>
+                    <ArrowUpRight className="module-arrow" size={17} />
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
+        </section>
 
-      <div className="sidebar-section-label sidebar-secondary-label">
-        {!collapsed && "System"}
-      </div>
+        <section className="section analytics-section">
+          <Reveal>
+            <div className="section-eyebrow">ACADEMIC ANALYTICS</div>
+            <h2>
+              See performance
+              <br />
+              <span>as it changes.</span>
+            </h2>
+          </Reveal>
 
-      <nav className="sidebar-nav">
-        <button
-          className={`sidebar-link ${page === "ai" ? "active" : ""}`}
-          onClick={() => setPage("ai")}
-          title={collapsed ? "AI workspace" : undefined}
-        >
-          <Sparkles size={18} />
-          {!collapsed && <span>AI workspace</span>}
-        </button>
+          <div className="analytics-layout">
+            <Reveal className="analytics-main">
+              <div className="analytics-header">
+                <div>
+                  <small>CLASS PERFORMANCE</small>
+                  <strong>Average academic score</strong>
+                </div>
+                <div className="growth-badge">
+                  <TrendingUp size={14} />
+                  +8.4%
+                </div>
+              </div>
 
-        <button
-          className={`sidebar-link ${
-            page === "profile" ? "active" : ""
-          }`}
-          onClick={() => setPage("profile")}
-          title={collapsed ? "Profile" : undefined}
-        >
-          <User size={18} />
-          {!collapsed && <span>Profile</span>}
-        </button>
+              <div className="large-chart">
+                <div className="chart-y">
+                  <span>100%</span>
+                  <span>75%</span>
+                  <span>50%</span>
+                  <span>25%</span>
+                  <span>0%</span>
+                </div>
 
-        <button
-          className={`sidebar-link ${
-            page === "settings" ? "active" : ""
-          }`}
-          onClick={() => setPage("settings")}
-          title={collapsed ? "Settings" : undefined}
-        >
-          <Settings size={18} />
-          {!collapsed && <span>Settings</span>}
-        </button>
-      </nav>
+                <div className="large-chart-area">
+                  <div className="large-grid-lines">
+                    <i />
+                    <i />
+                    <i />
+                    <i />
+                    <i />
+                  </div>
 
-      <button
-        className="sidebar-collapse"
-        onClick={() => setCollapsed(!collapsed)}
-      >
-        {collapsed ? (
-          <ChevronRight size={17} />
-        ) : (
-          <>
-            <ChevronDown size={17} />
-            <span>Collapse sidebar</span>
-          </>
-        )}
-      </button>
-    </aside>
+                  <svg viewBox="0 0 800 300" preserveAspectRatio="none">
+                    <path
+                      d="M0 238 C50 220 70 228 120 202 S180 198 230 210 S285 174 330 185 S390 142 440 160 S495 122 545 132 S600 90 650 106 S720 58 800 68"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                  </svg>
+
+                  <div className="chart-months">
+                    <span>Jan</span>
+                    <span>Feb</span>
+                    <span>Mar</span>
+                    <span>Apr</span>
+                    <span>May</span>
+                    <span>Jun</span>
+                    <span>Jul</span>
+                    <span>Aug</span>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+
+            <div className="analytics-side">
+              {[
+                ["Students", "842", "+24"],
+                ["Attendance", "94.8%", "+1.8%"],
+                ["Avg. marks", "87.4%", "+3.2%"],
+              ].map((item, index) => (
+                <Reveal delay={index * 90} key={item[0]}>
+                  <div className="metric-card">
+                    <div className="metric-icon">
+                      {index === 0 ? (
+                        <Users size={17} />
+                      ) : index === 1 ? (
+                        <Clock3 size={17} />
+                      ) : (
+                        <Target size={17} />
+                      )}
+                    </div>
+                    <div>
+                      <small>{item[0]}</small>
+                      <strong>{item[1]}</strong>
+                    </div>
+                    <span>{item[2]}</span>
+                    <div className="metric-bar">
+                      <i style={{ width: `${72 + index * 8}%` }} />
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section compare-section">
+          <Reveal>
+            <div className="section-eyebrow">WHY SCHOOLMARKS</div>
+            <h2>
+              From fragmented records
+              <br />
+              <span>to one continuous system.</span>
+            </h2>
+          </Reveal>
+
+          <Reveal delay={100}>
+            <div className="compare-table">
+              <div className="compare-head">
+                <span>Traditional school management</span>
+                <span className="schoolmarks-col">SchoolMarks</span>
+              </div>
+
+              {[
+                ["Paper registers", "Digital student records"],
+                ["Separate spreadsheets", "Connected academic data"],
+                ["Manual calculations", "Automatic performance insights"],
+                ["Scattered attendance", "Central attendance history"],
+                ["Static reports", "Live analytics"],
+                ["Search everything manually", "Ask SchoolMarks AI"],
+              ].map((row) => (
+                <div className="compare-row" key={row[0]}>
+                  <span>
+                    <X size={15} />
+                    {row[0]}
+                  </span>
+                  <span className="schoolmarks-col">
+                    <Check size={15} />
+                    {row[1]}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </section>
+
+        <section className="cta-section">
+          <div className="cta-glow" />
+          <Reveal className="cta-content">
+            <div className="section-eyebrow">SCHOOLMARKS</div>
+            <h2>
+              Build a better academic
+              <br />
+              <span>record for every student.</span>
+            </h2>
+            <p>
+              Bring marks, attendance, performance and academic intelligence
+              together in one modern platform.
+            </p>
+
+            <div className="cta-buttons">
+              <button className="light-button" onClick={onOpenApp}>
+                Open SchoolMarks
+                <ArrowRight size={16} />
+              </button>
+              <a className="dark-button" href="#workflow">
+                Explore workflow
+                <ArrowDown size={15} />
+              </a>
+            </div>
+          </Reveal>
+        </section>
+      </main>
+
+      <footer className="public-footer">
+        <Logo dark />
+        <div className="footer-links">
+          <a href="#problem">Problem</a>
+          <a href="#workflow">Workflow</a>
+          <a href="#modules">Platform</a>
+          <a href="#ai">AI</a>
+        </div>
+        <span>© 2026 SchoolMarks</span>
+      </footer>
+    </div>
   );
 }
 
-function Topbar({ profile, page, setPage }) {
-  const current =
-    navItems.find(item => item.id === page) ||
-    [
-      { id: "ai", label: "AI workspace" },
-      { id: "profile", label: "Profile" },
-      { id: "settings", label: "Settings" }
-    ].find(item => item.id === page);
-
+function Sidebar({ page, setPage, open, setOpen }) {
   return (
-    <header className="topbar">
-      <div className="topbar-left">
-        <div>
-          <span className="topbar-overline">SchoolMarks</span>
-          <h1>{current?.label || "Dashboard"}</h1>
+    <>
+      <div
+        className={`sidebar-backdrop ${open ? "show" : ""}`}
+        onClick={() => setOpen(false)}
+      />
+
+      <aside className={`app-sidebar ${open ? "open" : ""}`}>
+        <div className="sidebar-head">
+          <Logo />
+          <button className="mobile-close" onClick={() => setOpen(false)}>
+            <X size={18} />
+          </button>
         </div>
+
+        <div className="school-switcher">
+          <div className="school-avatar">JS</div>
+          <div>
+            <strong>JEB School</strong>
+            <span>Secondary Campus</span>
+          </div>
+          <ChevronRight size={15} />
+        </div>
+
+        <div className="sidebar-label">Workspace</div>
+
+        <nav className="sidebar-nav">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+
+            return (
+              <button
+                key={item.id}
+                className={page === item.id ? "active" : ""}
+                onClick={() => {
+                  setPage(item.id);
+                  setOpen(false);
+                }}
+              >
+                <Icon size={18} />
+                <span>{item.label}</span>
+                {item.id === "ai" && <em>AI</em>}
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="sidebar-bottom">
+          <button className="sidebar-setting">
+            <ShieldCheck size={17} />
+            <span>Academic records protected</span>
+          </button>
+
+          <div className="profile-mini">
+            <div>FK</div>
+            <span>
+              <strong>Faizan Khan</strong>
+              <small>Administrator</small>
+            </span>
+          </div>
+        </div>
+      </aside>
+    </>
+  );
+}
+
+function Topbar({ setOpen, onHome }) {
+  return (
+    <header className="app-topbar">
+      <div className="topbar-left">
+        <button className="mobile-menu" onClick={() => setOpen(true)}>
+          <Menu size={20} />
+        </button>
+        <button className="breadcrumb-home" onClick={onHome}>
+          SchoolMarks
+        </button>
+        <ChevronRight size={14} />
+        <span>Academic workspace</span>
       </div>
 
       <div className="topbar-actions">
+        <button className="search-button">
+          <Search size={17} />
+          <span>Search</span>
+          <kbd>⌘ K</kbd>
+        </button>
+
         <button className="icon-button">
-          <Search size={18} />
+          <Activity size={18} />
         </button>
 
-        <button className="icon-button notification-button">
-          <Bell size={18} />
-          <i />
+        <button className="top-ai">
+          <Sparkles size={16} />
+          AI
         </button>
 
-        <button
-          className="profile-trigger"
-          onClick={() => setPage("profile")}
-        >
-          <div className="profile-avatar">
-            {profile.name
-              ?.split(" ")
-              .map(part => part[0])
-              .join("")
-              .slice(0, 2)
-              .toUpperCase()}
-          </div>
-
-          <div className="profile-trigger-copy">
-            <strong>{profile.name}</strong>
-            <span>{profile.role}</span>
-          </div>
-
-          <ChevronDown size={15} />
-        </button>
+        <div className="top-avatar">FK</div>
       </div>
     </header>
   );
 }
 
-function StatCard({
-  label,
-  value,
-  suffix = "",
-  change,
-  icon: Icon,
-  positive = true
-}) {
-  const numeric = Number(String(value).replace(/,/g, ""));
-  const count = useCountUp(Number.isFinite(numeric) ? numeric : 0);
-
+function StatCard({ icon: Icon, label, value, trend, danger }) {
   return (
-    <div className="stat-card">
-      <div className="stat-card-top">
-        <div className="stat-icon">
-          <Icon size={19} />
-        </div>
-
-        <span
-          className={`stat-change ${
-            positive ? "positive" : "negative"
-          }`}
-        >
-          {positive ? (
-            <ArrowUpRight size={13} />
-          ) : (
-            <ArrowDownRight size={13} />
-          )}
-          {change}
-        </span>
+    <div className="dashboard-stat">
+      <div className="stat-icon">
+        <Icon size={18} />
       </div>
-
-      <div className="stat-value">
-        {typeof value === "number" ? count.toLocaleString() : value}
-        {suffix}
-      </div>
-
-      <span className="stat-label">{label}</span>
+      <span>{label}</span>
+      <strong>{value}</strong>
+      <small className={danger ? "danger-text" : ""}>{trend}</small>
     </div>
   );
 }
 
-function DashboardPage({ navigate, students }) {
-  const totalStudents = students.length;
-  const average =
-    students.length > 0
-      ? Math.round(
-          students.reduce(
-            (sum, student) => sum + Number(student.average || 0),
-            0
-          ) / students.length
-        )
-      : 0;
-
-  const attendance =
-    students.length > 0
-      ? Math.round(
-          students.reduce(
-            (sum, student) => sum + Number(student.attendance || 0),
-            0
-          ) / students.length
-        )
-      : 0;
-
-  const topStudents = [...students]
-    .sort((a, b) => Number(b.average) - Number(a.average))
-    .slice(0, 5);
-
+function DashboardPage({ students }) {
   return (
-    <div className="dashboard-page">
-      <section className="dashboard-welcome">
+    <div className="page-stack">
+      <div className="page-heading">
         <div>
-          <span className="eyebrow">Overview</span>
-          <h2>Good morning, School Admin.</h2>
-          <p>
-            Here's what's happening across your academic workspace.
-          </p>
+          <div className="page-eyebrow">OVERVIEW</div>
+          <h1>Good morning, Faizan.</h1>
+          <p>Here is what is happening across your academic workspace.</p>
         </div>
 
-        <button
-          className="primary-button"
-          onClick={() => navigate("students")}
-        >
-          <Plus size={17} />
-          Add student
-        </button>
-      </section>
+        <div className="heading-actions">
+          <button className="outline-button">
+            <CalendarDays size={16} />
+            This term
+          </button>
+        </div>
+      </div>
 
-      <section className="stats-grid">
+      <div className="dashboard-stat-grid">
         <StatCard
-          label="Total students"
-          value={totalStudents}
-          change="8.4%"
           icon={Users}
+          label="Total students"
+          value="842"
+          trend="+24 this month"
         />
-
         <StatCard
-          label="Average attendance"
-          value={attendance}
-          suffix="%"
-          change="2.1%"
-          icon={CalendarDays}
-        />
-
-        <StatCard
+          icon={TrendingUp}
           label="Average score"
-          value={average}
-          suffix="%"
-          change="4.7%"
-          icon={BarChart3}
+          value="87.4%"
+          trend="+3.2% vs last term"
         />
-
         <StatCard
-          label="Active classes"
-          value={6}
-          change="1 new"
-          icon={GraduationCap}
+          icon={Clock3}
+          label="Attendance"
+          value="94.8%"
+          trend="+1.8% this month"
         />
-      </section>
+        <StatCard
+          icon={Target}
+          label="Needs attention"
+          value="18"
+          trend="Students below target"
+          danger
+        />
+      </div>
 
-      <section className="dashboard-grid">
-        <div className="dashboard-card performance-card">
-          <div className="dashboard-card-header">
+      <div className="dashboard-grid-main">
+        <div className="dashboard-chart-card">
+          <div className="card-heading">
             <div>
-              <span>Academic performance</span>
-              <h3>Performance overview</h3>
+              <small>ACADEMIC PERFORMANCE</small>
+              <h2>Class average trend</h2>
             </div>
-
-            <button>
-              This term
-              <ChevronDown size={14} />
-            </button>
+            <select className="select-field">
+              <option>Last 6 months</option>
+              <option>This term</option>
+            </select>
           </div>
 
-          <div className="performance-chart">
-            <div className="chart-y">
+          <div className="dashboard-big-chart">
+            <div className="big-chart-labels">
               <span>100</span>
               <span>80</span>
               <span>60</span>
@@ -1061,527 +1168,426 @@ function DashboardPage({ navigate, students }) {
               <span>0</span>
             </div>
 
-            <div className="chart-area-large">
-              <div className="chart-grid-lines">
+            <div className="big-chart-area">
+              <div className="big-chart-grid">
                 <i />
                 <i />
                 <i />
                 <i />
                 <i />
               </div>
-
-              <svg
-                viewBox="0 0 700 250"
-                preserveAspectRatio="none"
-                className="performance-svg"
-              >
+              <svg viewBox="0 0 700 270" preserveAspectRatio="none">
                 <path
-                  d="M0 190 C60 175 85 185 130 145 C180 100 215 125 260 118 C305 110 330 80 375 95 C420 110 450 74 500 72 C550 70 580 45 620 58 C655 70 675 42 700 30"
+                  d="M0 215 C55 195 80 202 125 181 S180 165 225 181 S275 142 325 151 S380 124 425 138 S485 88 530 104 S595 62 640 80 S680 48 700 55"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="4"
-                  strokeLinecap="round"
                 />
               </svg>
-
-              <div className="chart-months">
-                <span>Jan</span>
-                <span>Feb</span>
+              <div className="big-chart-months">
                 <span>Mar</span>
                 <span>Apr</span>
                 <span>May</span>
                 <span>Jun</span>
                 <span>Jul</span>
+                <span>Aug</span>
+                <span>Sep</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="dashboard-card">
-          <div className="dashboard-card-header">
-            <div>
-              <span>Students</span>
-              <h3>Top performers</h3>
+        <div className="dashboard-ai-card">
+          <div className="ai-card-label">
+            <Sparkles size={14} />
+            SCHOOLMARKS AI
+          </div>
+          <div className="ai-signal">
+            <div className="signal-icon warning">
+              <TrendingUp size={18} />
             </div>
-
-            <button onClick={() => navigate("students")}>
-              View all
-              <ChevronRight size={14} />
-            </button>
-          </div>
-
-          <div className="student-mini-list">
-            {topStudents.map((student, index) => (
-              <div className="student-mini-row" key={student.id}>
-                <div className="rank">{index + 1}</div>
-
-                <div className="mini-avatar">
-                  {student.name
-                    .split(" ")
-                    .map(part => part[0])
-                    .join("")
-                    .slice(0, 2)}
-                </div>
-
-                <div className="mini-student-copy">
-                  <strong>{student.name}</strong>
-                  <span>{student.className}</span>
-                </div>
-
-                <b>{student.average}%</b>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="dashboard-bottom-grid">
-        <div className="dashboard-card">
-          <div className="dashboard-card-header">
             <div>
-              <span>Quick actions</span>
-              <h3>Common tasks</h3>
+              <strong>Performance signal</strong>
+              <span>Needs review</span>
             </div>
           </div>
-
-          <div className="quick-actions">
-            {[
-              ["students", Users, "Students"],
-              ["exams", ClipboardCheck, "Create exam"],
-              ["marks", PenLine, "Enter marks"],
-              ["attendance", CalendarDays, "Attendance"]
-            ].map(([id, Icon, label]) => (
-              <button
-                key={id}
-                onClick={() => navigate(id)}
-              >
-                <Icon size={18} />
-                <span>{label}</span>
-                <ArrowUpRight size={15} />
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="dashboard-card insight-card">
-          <div className="insight-icon">
-            <Sparkles size={20} />
-          </div>
-
-          <div>
-            <span>SchoolMarks insight</span>
-            <h3>Your academic data is ready to explore.</h3>
-            <p>
-              Ask the AI workspace about attendance, performance or
-              students who may need additional support.
-            </p>
-          </div>
-
-          <button onClick={() => navigate("ai")}>
-            Ask AI
-            <ArrowRight size={15} />
+          <h3>Mathematics performance has changed.</h3>
+          <p>
+            18 students show a lower average across the latest two
+            assessments.
+          </p>
+          <button>
+            Review insight
+            <ArrowUpRight size={15} />
           </button>
         </div>
-      </section>
+      </div>
+
+      <div className="dashboard-lower-grid">
+        <div className="table-card">
+          <div className="card-heading">
+            <div>
+              <small>RECENT STUDENTS</small>
+              <h2>Student performance</h2>
+            </div>
+            <button className="text-button">View all</button>
+          </div>
+
+          <div className="data-table">
+            <div className="table-row table-header">
+              <span>Student</span>
+              <span>Class</span>
+              <span>Average</span>
+              <span>Attendance</span>
+            </div>
+
+            {students.slice(0, 5).map((student) => (
+              <div className="table-row" key={student.id}>
+                <span className="table-student">
+                  <i>{getInitials(student.name)}</i>
+                  {student.name}
+                </span>
+                <span>{student.className}</span>
+                <strong>{student.avg}%</strong>
+                <span>{student.attendance}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="side-card">
+          <div className="card-heading">
+            <div>
+              <small>ACADEMIC PULSE</small>
+              <h2>This week</h2>
+            </div>
+          </div>
+
+          <div className="pulse-grid">
+            <div className="pulse-card">
+              <div className="pulse-card-icon">
+                <ClipboardCheck size={16} />
+              </div>
+              <strong>126</strong>
+              <span>Marks entered</span>
+            </div>
+
+            <div className="pulse-card">
+              <div className="pulse-card-icon">
+                <Clock3 size={16} />
+              </div>
+              <strong>842</strong>
+              <span>Attendance records</span>
+            </div>
+
+            <div className="pulse-card">
+              <div className="pulse-card-icon">
+                <BookOpen size={16} />
+              </div>
+              <strong>18</strong>
+              <span>Classes active</span>
+            </div>
+
+            <div className="pulse-card">
+              <div className="pulse-card-icon">
+                <BrainCircuit size={16} />
+              </div>
+              <strong>32</strong>
+              <span>AI questions</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
-function StudentsPage({ students, setStudents, notify }) {
-  const [query, setQuery] = useState("");
-  const [classFilter, setClassFilter] = useState("All");
-  const [showModal, setShowModal] = useState(false);
-  const [editing, setEditing] = useState(null);
+function StudentModal({ onClose, onSave }) {
+  const [name, setName] = useState("");
+  const [className, setClassName] = useState("9-A");
 
-  const [form, setForm] = useState({
-    name: "",
-    roll: "",
-    className: "Class 9-A",
-    gender: "Male"
-  });
+  const submit = () => {
+    if (!name.trim()) return;
 
-  const classes = [
-    "All",
-    ...Array.from(new Set(students.map(student => student.className)))
-  ];
-
-  const filtered = useMemo(() => {
-    const normalized = query.toLowerCase().trim();
-
-    return students.filter(student => {
-      const matchesQuery =
-        !normalized ||
-        student.name.toLowerCase().includes(normalized) ||
-        student.roll.toLowerCase().includes(normalized);
-
-      const matchesClass =
-        classFilter === "All" ||
-        student.className === classFilter;
-
-      return matchesQuery && matchesClass;
+    onSave({
+      id: Date.now(),
+      name: name.trim(),
+      className,
+      avg: 0,
+      attendance: 0,
     });
-  }, [students, query, classFilter]);
-
-  const openAdd = () => {
-    setEditing(null);
-    setForm({
-      name: "",
-      roll: "",
-      className: "Class 9-A",
-      gender: "Male"
-    });
-    setShowModal(true);
-  };
-
-  const openEdit = student => {
-    setEditing(student);
-    setForm({
-      name: student.name,
-      roll: student.roll,
-      className: student.className,
-      gender: student.gender
-    });
-    setShowModal(true);
-  };
-
-  const saveStudent = event => {
-    event.preventDefault();
-
-    if (!form.name.trim() || !form.roll.trim()) {
-      notify("Missing information", "Name and roll number are required.");
-      return;
-    }
-
-    if (editing) {
-      setStudents(current =>
-        current.map(student =>
-          student.id === editing.id
-            ? {
-                ...student,
-                ...form
-              }
-            : student
-        )
-      );
-
-      notify("Student updated", `${form.name} was updated successfully.`);
-    } else {
-      const student = {
-        id: `STU-${Date.now()}`,
-        ...form,
-        status: "Active",
-        attendance: 100,
-        average: 0
-      };
-
-      setStudents(current => [...current, student]);
-
-      notify("Student added", `${form.name} was added successfully.`);
-    }
-
-    setShowModal(false);
-  };
-
-  const removeStudent = student => {
-    setStudents(current =>
-      current.filter(item => item.id !== student.id)
-    );
-
-    notify("Student removed", `${student.name} was removed.`);
   };
 
   return (
-    <div className="system-page">
-      <div className="page-header">
-        <div>
-          <span className="eyebrow">Directory</span>
-          <h2>Students</h2>
-          <p>Manage student profiles and academic records.</p>
+    <div className="student-modal-backdrop">
+      <div className="add-student-modal">
+        <div className="modal-head">
+          <div>
+            <small>STUDENT MANAGEMENT</small>
+            <h2>Add student</h2>
+          </div>
+          <button onClick={onClose}>
+            <X size={18} />
+          </button>
         </div>
 
-        <button className="primary-button" onClick={openAdd}>
-          <Plus size={17} />
+        <div className="student-form-grid">
+          <label>
+            Student name
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. Muhammad Ali"
+            />
+          </label>
+
+          <label>
+            Class
+            <select
+              value={className}
+              onChange={(e) => setClassName(e.target.value)}
+            >
+              <option>9-A</option>
+              <option>9-B</option>
+              <option>9-C</option>
+              <option>10-A</option>
+              <option>10-B</option>
+            </select>
+          </label>
+        </div>
+
+        <div className="modal-foot">
+          <button onClick={onClose}>Cancel</button>
+          <button className="save-student" onClick={submit}>
+            <Plus size={16} />
+            Add student
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StudentsPage({ students, setStudents }) {
+  const [query, setQuery] = useState("");
+  const [modal, setModal] = useState(false);
+
+  const filtered = useMemo(
+    () =>
+      students.filter((student) =>
+        student.name.toLowerCase().includes(query.toLowerCase())
+      ),
+    [students, query]
+  );
+
+  const addStudent = (student) => {
+    setStudents((current) => [student, ...current]);
+    setModal(false);
+  };
+
+  return (
+    <div className="page-stack">
+      <div className="page-heading">
+        <div>
+          <div className="page-eyebrow">STUDENTS</div>
+          <h1>Student directory</h1>
+          <p>Manage every student from one connected academic record.</p>
+        </div>
+        <button className="primary-button" onClick={() => setModal(true)}>
+          <Plus size={16} />
           Add student
         </button>
       </div>
 
-      <div className="toolbar">
-        <div className="search-box">
-          <Search size={17} />
-          <input
-            value={query}
-            onChange={event => setQuery(event.target.value)}
-            placeholder="Search students..."
-          />
+      <div className="large-table-card">
+        <div className="marks-toolbar">
+          <div className="student-search">
+            <Search size={17} />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search students..."
+            />
+          </div>
+
+          <span>{filtered.length} students</span>
         </div>
 
-        <select
-          value={classFilter}
-          onChange={event => setClassFilter(event.target.value)}
-        >
-          {classes.map(item => (
-            <option key={item}>{item}</option>
+        <div className="data-table">
+          <div className="table-row table-header">
+            <span>Student</span>
+            <span>Class</span>
+            <span>Average</span>
+            <span>Attendance</span>
+            <span>Status</span>
+          </div>
+
+          {filtered.map((student) => (
+            <div className="table-row" key={student.id}>
+              <span className="table-student">
+                <i>{getInitials(student.name)}</i>
+                {student.name}
+              </span>
+              <span>{student.className}</span>
+              <strong className="score-cell">{student.avg || "—"}%</strong>
+              <span>{student.attendance || "—"}%</span>
+              <span className="status-pill">
+                {student.avg >= 90
+                  ? "Excellent"
+                  : student.avg >= 80
+                  ? "On track"
+                  : student.avg
+                  ? "Needs attention"
+                  : "New"}
+              </span>
+            </div>
           ))}
-        </select>
+
+          {!filtered.length && (
+            <div className="empty-state">
+              <Search size={22} />
+              <strong>No students found</strong>
+              <span>Try another search.</span>
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className="table-card">
-        <div className="table-header">
-          <span>Student</span>
-          <span>Roll number</span>
-          <span>Class</span>
-          <span>Attendance</span>
-          <span>Average</span>
-          <span />
-        </div>
-
-        {filtered.map(student => (
-          <div className="table-row" key={student.id}>
-            <div className="table-student">
-              <div className="table-avatar">
-                {student.name
-                  .split(" ")
-                  .map(part => part[0])
-                  .join("")
-                  .slice(0, 2)}
-              </div>
-
-              <div>
-                <strong>{student.name}</strong>
-                <span>{student.gender}</span>
-              </div>
-            </div>
-
-            <span>{student.roll}</span>
-            <span>{student.className}</span>
-
-            <span>
-              <b className={student.attendance < 75 ? "danger" : ""}>
-                {student.attendance}%
-              </b>
-            </span>
-
-            <span>
-              <b>{student.average}%</b>
-            </span>
-
-            <div className="row-actions">
-              <button onClick={() => openEdit(student)}>
-                <Edit3 size={15} />
-              </button>
-
-              <button onClick={() => removeStudent(student)}>
-                <Trash2 size={15} />
-              </button>
-            </div>
-          </div>
-        ))}
-
-        {!filtered.length && (
-          <div className="empty-state">
-            <Users size={26} />
-            <strong>No students found</strong>
-            <span>Try another search or add a new student.</span>
-          </div>
-        )}
-      </div>
-
-      {showModal && (
-        <div className="modal-backdrop" onMouseDown={() => setShowModal(false)}>
-          <div
-            className="modal"
-            onMouseDown={event => event.stopPropagation()}
-          >
-            <div className="modal-header">
-              <div>
-                <span className="eyebrow">
-                  {editing ? "Edit record" : "New record"}
-                </span>
-                <h3>{editing ? "Edit student" : "Add student"}</h3>
-              </div>
-
-              <button onClick={() => setShowModal(false)}>
-                <X size={18} />
-              </button>
-            </div>
-
-            <form onSubmit={saveStudent}>
-              <label>
-                Student name
-                <input
-                  value={form.name}
-                  onChange={event =>
-                    setForm({
-                      ...form,
-                      name: event.target.value
-                    })
-                  }
-                  placeholder="Enter student name"
-                />
-              </label>
-
-              <label>
-                Roll number
-                <input
-                  value={form.roll}
-                  onChange={event =>
-                    setForm({
-                      ...form,
-                      roll: event.target.value
-                    })
-                  }
-                  placeholder="Enter roll number"
-                />
-              </label>
-
-              <div className="form-grid">
-                <label>
-                  Class
-                  <select
-                    value={form.className}
-                    onChange={event =>
-                      setForm({
-                        ...form,
-                        className: event.target.value
-                      })
-                    }
-                  >
-                    {[
-                      "Class 9-A",
-                      "Class 9-B",
-                      "Class 9-C",
-                      "Class 10-A",
-                      "Class 10-B",
-                      "Class 10-C"
-                    ].map(item => (
-                      <option key={item}>{item}</option>
-                    ))}
-                  </select>
-                </label>
-
-                <label>
-                  Gender
-                  <select
-                    value={form.gender}
-                    onChange={event =>
-                      setForm({
-                        ...form,
-                        gender: event.target.value
-                      })
-                    }
-                  >
-                    <option>Male</option>
-                    <option>Female</option>
-                  </select>
-                </label>
-              </div>
-
-              <div className="modal-actions">
-                <button
-                  type="button"
-                  className="secondary-button"
-                  onClick={() => setShowModal(false)}
-                >
-                  Cancel
-                </button>
-
-                <button type="submit" className="primary-button">
-                  {editing ? "Save changes" : "Add student"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+      {modal && (
+        <StudentModal
+          onClose={() => setModal(false)}
+          onSave={addStudent}
+        />
       )}
     </div>
   );
 }
 
 function AcademicsPage() {
-  return (
-    <div className="system-page">
-      <div className="page-header">
-        <div>
-          <span className="eyebrow">Academic structure</span>
-          <h2>Academics</h2>
-          <p>Organize classes, subjects and academic planning.</p>
-        </div>
+  const subjects = [
+    ["Mathematics", 82, 72],
+    ["Physics", 88, 84],
+    ["English", 91, 89],
+    ["Computer Science", 94, 92],
+    ["Chemistry", 86, 80],
+    ["Urdu", 90, 88],
+  ];
 
-        <button className="primary-button">
-          <Plus size={17} />
-          Add class
+  return (
+    <div className="page-stack">
+      <div className="page-heading">
+        <div>
+          <div className="page-eyebrow">ACADEMICS</div>
+          <h1>Academic overview</h1>
+          <p>Understand how every subject is performing across your classes.</p>
+        </div>
+      </div>
+
+      <div className="academic-hero">
+        <div>
+          <small>TERM PERFORMANCE</small>
+          <h2>87.4%</h2>
+          <p>Overall academic average</p>
+        </div>
+        <div className="academic-progress">
+          <span style={{ width: "87.4%" }} />
+        </div>
+        <div className="academic-meta">
+          <span>Previous term <strong>84.2%</strong></span>
+          <span>Change <strong>+3.2%</strong></span>
+        </div>
+      </div>
+
+      <div className="subject-grid">
+        {subjects.map(([name, score, progress]) => (
+          <div className="subject-card" key={name}>
+            <div className="subject-icon">
+              <BookOpen size={17} />
+            </div>
+            <div className="subject-head">
+              <div>
+                <strong>{name}</strong>
+                <span>Current average</span>
+              </div>
+              <b>{score}%</b>
+            </div>
+            <div className="subject-bar">
+              <span style={{ width: `${progress}%` }} />
+            </div>
+            <div className="subject-foot">
+              <span>Class progress</span>
+              <strong>+{score > 88 ? "4.2" : "2.8"}%</strong>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ExamsPage() {
+  const exams = [
+    ["24", "September", "Mathematics", "09:00 AM", "Scheduled"],
+    ["27", "September", "Physics", "09:00 AM", "Scheduled"],
+    ["30", "September", "English", "10:00 AM", "Draft"],
+    ["03", "October", "Computer Science", "09:30 AM", "Scheduled"],
+  ];
+
+  return (
+    <div className="page-stack">
+      <div className="page-heading">
+        <div>
+          <div className="page-eyebrow">EXAMS</div>
+          <h1>Exam schedule</h1>
+          <p>Keep assessments organized across every class.</p>
+        </div>
+        <button className="outline-button">
+          <Plus size={16} />
+          New exam
         </button>
       </div>
 
-      <div className="academic-grid">
-        {[
-          {
-            title: "Classes",
-            count: "6",
-            icon: GraduationCap,
-            items: ["Class 9-A", "Class 9-B", "Class 9-C"]
-          },
-          {
-            title: "Subjects",
-            count: "8",
-            icon: BookOpen,
-            items: subjects.slice(0, 4)
-          },
-          {
-            title: "Academic year",
-            count: "2026",
-            icon: CalendarDays,
-            items: ["Term 1", "Term 2", "Term 3"]
-          }
-        ].map(item => {
-          const Icon = item.icon;
-
-          return (
-            <div className="academic-card" key={item.title}>
-              <div className="academic-card-top">
-                <div className="feature-icon">
-                  <Icon size={20} />
-                </div>
-
-                <span>{item.count}</span>
-              </div>
-
-              <h3>{item.title}</h3>
-
-              <div className="academic-items">
-                {item.items.map(value => (
-                  <div key={value}>
-                    <span>{value}</span>
-                    <ChevronRight size={14} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        })}
+      <div className="exam-overview">
+        <div>
+          <small>UPCOMING</small>
+          <strong>4</strong>
+          <span>Exams</span>
+        </div>
+        <div>
+          <small>THIS TERM</small>
+          <strong>18</strong>
+          <span>Assessments</span>
+        </div>
+        <div>
+          <small>COMPLETED</small>
+          <strong>12</strong>
+          <span>Assessments</span>
+        </div>
       </div>
 
-      <div className="dashboard-card curriculum-card">
-        <div className="dashboard-card-header">
+      <div className="timeline-card">
+        <div className="card-heading">
           <div>
-            <span>Curriculum</span>
-            <h3>Subjects overview</h3>
+            <small>EXAM TIMELINE</small>
+            <h2>Upcoming assessments</h2>
           </div>
         </div>
 
-        <div className="subject-grid">
-          {subjects.map((subject, index) => (
-            <div className="subject-item" key={subject}>
-              <div className="subject-number">
-                {String(index + 1).padStart(2, "0")}
+        <div className="exam-timeline">
+          {exams.map((exam) => (
+            <div className="exam-line" key={exam[2]}>
+              <div className="exam-date">
+                <strong>{exam[0]}</strong>
+                <span>{exam[1]}</span>
               </div>
-
-              <div>
-                <strong>{subject}</strong>
-                <span>Active subject</span>
+              <div className="exam-line-dot" />
+              <div className="exam-info">
+                <strong>{exam[2]}</strong>
+                <span>{exam[3]}</span>
               </div>
-
-              <CheckCircle2 size={17} />
+              <span className={exam[4] === "Draft" ? "draft" : "status-pill"}>
+                {exam[4]}
+              </span>
             </div>
           ))}
         </div>
@@ -1590,162 +1596,57 @@ function AcademicsPage() {
   );
 }
 
-function MarksPage({ notify }) {
-  return (
-    <div className="system-page">
-      <div className="page-header">
-        <div>
-          <span className="eyebrow">Academic records</span>
-          <h2>Marks</h2>
-          <p>Enter and manage student examination marks.</p>
-        </div>
+function MarksPage() {
+  const rows = [
+    ["Ahmed Raza", "9-A", 92, 88, 94],
+    ["Areeba Khan", "9-A", 94, 91, 89],
+    ["Hamza Ali", "9-B", 82, 84, 86],
+    ["Maham Noor", "9-B", 97, 95, 96],
+    ["Usman Tariq", "9-C", 78, 81, 79],
+  ];
 
-        <button
-          className="primary-button"
-          onClick={() =>
-            notify("Marks entry", "Marks entry workspace opened.")
-          }
-        >
-          <Plus size={17} />
+  return (
+    <div className="page-stack">
+      <div className="page-heading">
+        <div>
+          <div className="page-eyebrow">MARKS</div>
+          <h1>Marks management</h1>
+          <p>Enter, review and understand assessment results.</p>
+        </div>
+        <button className="primary-button">
+          <Plus size={16} />
           Enter marks
         </button>
       </div>
 
-      <div className="stats-grid">
-        <StatCard
-          label="Records entered"
-          value={842}
-          change="12%"
-          icon={PenLine}
-        />
-
-        <StatCard
-          label="Average score"
-          value={85}
-          suffix="%"
-          change="4.7%"
-          icon={BarChart3}
-        />
-
-        <StatCard
-          label="Passing rate"
-          value={93}
-          suffix="%"
-          change="2.8%"
-          icon={CheckCircle2}
-        />
-
-        <StatCard
-          label="Pending"
-          value={34}
-          change="8 fewer"
-          icon={Clock3}
-          positive={false}
-        />
-      </div>
-
-      <div className="dashboard-card">
-        <div className="dashboard-card-header">
+      <div className="marks-card">
+        <div className="table-summary-actions">
           <div>
-            <span>Latest records</span>
-            <h3>Recent mark entries</h3>
+            <small>MATHEMATICS · MID TERM</small>
+            <strong>Class 9</strong>
+          </div>
+          <span>5 students</span>
+        </div>
+
+        <div className="data-table marks-table">
+          <div className="table-row table-header">
+            <span>Student</span>
+            <span>Class</span>
+            <span>Quiz</span>
+            <span>Mid term</span>
+            <span>Final</span>
           </div>
 
-          <button>
-            Export
-            <ArrowUpRight size={14} />
-          </button>
-        </div>
-
-        <div className="marks-list">
-          {[
-            ["Mathematics", "Class 9-A", "88%", "Today"],
-            ["English", "Class 10-A", "91%", "Today"],
-            ["Physics", "Class 9-B", "82%", "Yesterday"],
-            ["Computer Science", "Class 10-A", "96%", "Yesterday"]
-          ].map(row => (
-            <div className="marks-row" key={`${row[0]}-${row[1]}`}>
-              <div className="marks-subject-icon">
-                <BookOpen size={17} />
-              </div>
-
-              <div>
-                <strong>{row[0]}</strong>
-                <span>{row[1]}</span>
-              </div>
-
-              <b>{row[2]}</b>
-              <span>{row[3]}</span>
-
-              <ChevronRight size={16} />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ResultsPage() {
-  return (
-    <div className="system-page">
-      <div className="page-header">
-        <div>
-          <span className="eyebrow">Outcome management</span>
-          <h2>Results</h2>
-          <p>Review examination outcomes and academic summaries.</p>
-        </div>
-
-        <button className="primary-button">
-          <FileText size={17} />
-          Generate result
-        </button>
-      </div>
-
-      <div className="result-summary-grid">
-        {[
-          ["Overall average", "84.6%", TrendingUp],
-          ["Pass rate", "93%", CheckCircle2],
-          ["Distinctions", "184", Award],
-          ["At risk", "27", Target]
-        ].map(([label, value, Icon]) => (
-          <div className="result-summary" key={label}>
-            <div className="feature-icon">
-              <Icon size={19} />
-            </div>
-
-            <span>{label}</span>
-            <strong>{value}</strong>
-          </div>
-        ))}
-      </div>
-
-      <div className="dashboard-card">
-        <div className="dashboard-card-header">
-          <div>
-            <span>Results</span>
-            <h3>Class performance</h3>
-          </div>
-        </div>
-
-        <div className="result-bars">
-          {[
-            ["Class 9-A", 88],
-            ["Class 9-B", 81],
-            ["Class 9-C", 84],
-            ["Class 10-A", 92],
-            ["Class 10-B", 79],
-            ["Class 10-C", 86]
-          ].map(([name, value]) => (
-            <div className="result-bar-row" key={name}>
-              <div>
-                <strong>{name}</strong>
-                <span>{value}%</span>
-              </div>
-
-              <div className="bar-track">
-                <i style={{ width: `${value}%` }} />
-              </div>
+          {rows.map((row) => (
+            <div className="table-row" key={row[0]}>
+              <span className="table-student">
+                <i>{getInitials(row[0])}</i>
+                {row[0]}
+              </span>
+              <span>{row[1]}</span>
+              <strong>{row[2]}%</strong>
+              <strong>{row[3]}%</strong>
+              <strong>{row[4]}%</strong>
             </div>
           ))}
         </div>
@@ -1755,424 +1656,259 @@ function ResultsPage() {
 }
 
 function AttendancePage() {
+  const classes = [
+    ["9-A", 96],
+    ["9-B", 93],
+    ["9-C", 91],
+    ["10-A", 95],
+    ["10-B", 97],
+  ];
+
   return (
-    <div className="system-page">
-      <div className="page-header">
+    <div className="page-stack">
+      <div className="page-heading">
         <div>
-          <span className="eyebrow">Daily records</span>
-          <h2>Attendance</h2>
-          <p>Track attendance and identify students who need attention.</p>
+          <div className="page-eyebrow">ATTENDANCE</div>
+          <h1>Attendance overview</h1>
+          <p>Track attendance patterns before they become problems.</p>
         </div>
-
-        <button className="primary-button">
-          <Plus size={17} />
-          Mark attendance
-        </button>
       </div>
 
-      <div className="stats-grid">
-        <StatCard
-          label="Present today"
-          value={1179}
-          change="3.2%"
-          icon={CheckCircle2}
-        />
-
-        <StatCard
-          label="Attendance rate"
-          value={92}
-          suffix="%"
-          change="2.1%"
-          icon={CalendarDays}
-        />
-
-        <StatCard
-          label="Absent"
-          value={72}
-          change="5 fewer"
-          icon={X}
-          positive={false}
-        />
-
-        <StatCard
-          label="Late"
-          value={33}
-          change="1.4%"
-          icon={Clock3}
-          positive={false}
-        />
-      </div>
-
-      <div className="dashboard-card">
-        <div className="dashboard-card-header">
+      <div className="attendance-overview">
+        <div className="attendance-ring" style={{ "--value": "94.8%" }}>
           <div>
-            <span>Today</span>
-            <h3>Attendance overview</h3>
+            <strong>94.8%</strong>
+            <span>Overall</span>
           </div>
-
-          <button>
-            18 Sep 2026
-            <ChevronDown size={14} />
-          </button>
         </div>
-
-        <div className="attendance-grid">
-          {[
-            ["Class 9-A", 96],
-            ["Class 9-B", 91],
-            ["Class 9-C", 89],
-            ["Class 10-A", 95],
-            ["Class 10-B", 87],
-            ["Class 10-C", 92]
-          ].map(([name, value]) => (
-            <div className="attendance-card" key={name}>
-              <div className="attendance-top">
-                <strong>{name}</strong>
-                <b>{value}%</b>
+        <div className="attendance-copy">
+          <small>THIS MONTH</small>
+          <h2>Attendance is trending positively.</h2>
+          <p>
+            Most classes remain above the school target. Three students are
+            currently below the attention threshold.
+          </p>
+          <div className="attendance-bars">
+            {classes.map(([name, value]) => (
+              <div key={name}>
+                <span>{name}</span>
+                <i>
+                  <b style={{ width: `${value}%` }} />
+                </i>
+                <strong>{value}%</strong>
               </div>
-
-              <div className="bar-track">
-                <i style={{ width: `${value}%` }} />
-              </div>
-
-              <span>
-                {value >= 90 ? "Healthy attendance" : "Needs attention"}
-              </span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-function PerformancePage({ students }) {
-  const sorted = [...students].sort(
-    (a, b) => Number(b.average) - Number(a.average)
-  );
+function PerformancePage() {
+  const subjects = [
+    ["Mathematics", 82, "+4.2%", "up"],
+    ["Physics", 88, "+2.8%", "up"],
+    ["English", 91, "+5.1%", "up"],
+    ["Computer Science", 94, "+7.2%", "up"],
+    ["Chemistry", 86, "-1.4%", "down"],
+  ];
 
   return (
-    <div className="system-page">
-      <div className="page-header">
+    <div className="page-stack">
+      <div className="page-heading">
         <div>
-          <span className="eyebrow">Insights</span>
-          <h2>Performance</h2>
-          <p>Understand academic trends across students and classes.</p>
+          <div className="page-eyebrow">PERFORMANCE</div>
+          <h1>Student performance</h1>
+          <p>Find trends across subjects, classes and assessments.</p>
         </div>
-
-        <button className="secondary-button">
-          <FileBarChart size={17} />
-          Generate report
-        </button>
       </div>
 
-      <div className="performance-overview">
-        <div className="performance-score-card">
-          <span>Overall performance</span>
-          <strong>84.6%</strong>
-          <div>
-            <TrendingUp size={15} />
-            Improving this term
-          </div>
+      <div className="performance-hero">
+        <div className="performance-score">
+          <span>87.4</span>
+          <small>Average score</small>
         </div>
-
-        <div className="performance-ring">
-          <div>
-            <strong>85</strong>
-            <span>Average</span>
-          </div>
-        </div>
-
-        <div className="performance-info">
-          <div>
-            <span>Strong performers</span>
-            <strong>
-              {students.filter(student => student.average >= 85).length}
-            </strong>
-          </div>
-
-          <div>
-            <span>Needs support</span>
-            <strong>
-              {students.filter(student => student.average < 75).length}
-            </strong>
+        <div className="performance-copy">
+          <small>ACADEMIC SIGNAL</small>
+          <h2>Overall performance is improving.</h2>
+          <p>
+            The strongest improvement is currently coming from Computer
+            Science and English.
+          </p>
+          <div className="performance-mini-chart">
+            <i style={{ height: "35%" }} />
+            <i style={{ height: "46%" }} />
+            <i style={{ height: "41%" }} />
+            <i style={{ height: "58%" }} />
+            <i style={{ height: "64%" }} />
+            <i style={{ height: "78%" }} />
+            <i style={{ height: "88%" }} />
           </div>
         </div>
       </div>
 
-      <div className="dashboard-card">
-        <div className="dashboard-card-header">
-          <div>
-            <span>Ranking</span>
-            <h3>Student performance</h3>
-          </div>
-        </div>
-
-        <div className="performance-list">
-          {sorted.map((student, index) => (
-            <div className="performance-row" key={student.id}>
-              <span className="performance-rank">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-
-              <div className="mini-avatar">
-                {student.name
-                  .split(" ")
-                  .map(part => part[0])
-                  .join("")
-                  .slice(0, 2)}
-              </div>
-
-              <div className="mini-student-copy">
-                <strong>{student.name}</strong>
-                <span>
-                  {student.className} · {student.attendance}% attendance
-                </span>
-              </div>
-
-              <div className="performance-progress">
-                <div className="bar-track">
-                  <i style={{ width: `${student.average}%` }} />
-                </div>
-              </div>
-
-              <strong>{student.average}%</strong>
+      <div className="performance-subjects">
+        {subjects.map(([name, score, change, direction], index) => (
+          <div className="performance-subject" key={name}>
+            <div className="subject-rank">0{index + 1}</div>
+            <div className="performance-subject-name">
+              <strong>{name}</strong>
+              <span>Class average</span>
             </div>
-          ))}
-        </div>
+            <strong className="performance-score-small">{score}%</strong>
+            <span className={`change ${direction}`}>{change}</span>
+            <div className="performance-progress">
+              <span style={{ width: `${score}%` }} />
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
-function AIPage({ students }) {
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState(
-    "Ask me something about your students, attendance, marks or academic performance."
-  );
-  const [history, setHistory] = useState([]);
+function AIPage() {
+  const [messages, setMessages] = useState([
+    {
+      role: "assistant",
+      text: "Hi Faizan. I can help you understand students, marks, attendance and academic performance. What would you like to know?",
+    },
+  ]);
+  const [input, setInput] = useState("");
 
-  const generateAnswer = prompt => {
-    const text = prompt.toLowerCase();
+  const send = () => {
+    if (!input.trim()) return;
 
-    let response =
-      "Based on the available SchoolMarks records, I can help you analyze this area further.";
+    const question = input.trim();
 
-    if (text.includes("support") || text.includes("risk")) {
-      const atRisk = students.filter(
-        student =>
-          Number(student.average) < 75 ||
-          Number(student.attendance) < 75
-      );
-
-      response =
-        atRisk.length > 0
-          ? `${atRisk.length} student${atRisk.length > 1 ? "s" : ""} may need additional support based on the current marks and attendance records.`
-          : "No students currently meet the selected support criteria.";
-    } else if (
-      text.includes("top") ||
-      text.includes("performing")
-    ) {
-      const top = [...students]
-        .sort((a, b) => Number(b.average) - Number(a.average))
-        .slice(0, 3);
-
-      response = `The current top performers are ${top
-        .map(student => `${student.name} (${student.average}%)`)
-        .join(", ")}.`;
-    } else if (text.includes("attendance")) {
-      const averageAttendance =
-        students.length > 0
-          ? Math.round(
-              students.reduce(
-                (sum, student) =>
-                  sum + Number(student.attendance || 0),
-                0
-              ) / students.length
-            )
-          : 0;
-
-      response = `The current average attendance across the available student records is ${averageAttendance}%.`;
-    } else if (text.includes("class")) {
-      const classMap = {};
-
-      students.forEach(student => {
-        if (!classMap[student.className]) {
-          classMap[student.className] = [];
-        }
-
-        classMap[student.className].push(Number(student.average || 0));
-      });
-
-      const classResults = Object.entries(classMap).map(
-        ([name, values]) => ({
-          name,
-          average: Math.round(
-            values.reduce((sum, value) => sum + value, 0) /
-              values.length
-          )
-        })
-      );
-
-      classResults.sort((a, b) => b.average - a.average);
-
-      response =
-        classResults.length > 0
-          ? `The current class averages are ${classResults
-              .map(item => `${item.name}: ${item.average}%`)
-              .join(", ")}.`
-          : "There is not enough class data available yet.";
-    } else if (text.includes("subject")) {
-      response =
-        "Subject-level analysis can be connected to the marks records so SchoolMarks can identify strengths, weaknesses and trends by subject.";
-    } else if (text.includes("improve")) {
-      response =
-        "SchoolMarks can compare historical marks and attendance records to identify students with the largest positive changes over time.";
-    } else {
-      response =
-        "I can analyze students, classes, attendance, marks, performance and academic trends. Try one of the suggested questions below.";
-    }
-
-    setAnswer(response);
-    setHistory(current => [
+    setMessages((current) => [
+      ...current,
+      { role: "user", text: question },
       {
-        question: prompt,
-        answer: response
+        role: "assistant",
+        text: `Based on the current SchoolMarks data, I would review ${question.toLowerCase()} across student performance, attendance and recent assessment trends. The current overall academic average is 87.4%.`,
       },
-      ...current
     ]);
-    setQuestion("");
+
+    setInput("");
   };
 
   return (
-    <div className="system-page ai-page">
-      <div className="page-header">
+    <div className="ai-page">
+      <div className="ai-workspace-head">
         <div>
-          <span className="eyebrow">Intelligence workspace</span>
-          <h2>SchoolMarks AI</h2>
-          <p>
-            Ask questions about your academic records and explore useful
-            insights.
-          </p>
+          <div className="page-eyebrow">SCHOOLMARKS INTELLIGENCE</div>
+          <h1>Ask your academic data.</h1>
+          <p>Natural-language questions for your academic workspace.</p>
         </div>
-
-        <div className="ai-ready-badge">
+        <div className="ai-workspace-status">
           <span />
-          AI ready
+          AI online
         </div>
       </div>
 
       <div className="ai-workspace">
-        <div className="ai-main-card">
-          <div className="ai-main-header">
-            <div className="ai-panel-title">
-              <div className="ai-icon large">
-                <Sparkles size={19} />
+        <div className="ai-chat">
+          <div className="chat-header">
+            <div className="chat-agent">
+              <div className="chat-agent-icon">
+                <BrainCircuit size={18} />
               </div>
-
               <div>
-                <strong>Academic assistant</strong>
-                <span>Powered by your SchoolMarks workspace</span>
+                <strong>SchoolMarks AI</strong>
+                <span>Academic intelligence</span>
               </div>
             </div>
 
-            <button
-              onClick={() =>
-                setAnswer(
-                  "Ask me something about your students, attendance, marks or academic performance."
-                )
-              }
-            >
-              <RefreshCw size={15} />
-              Reset
-            </button>
-          </div>
-
-          <div className="ai-conversation">
-            <div className="ai-message ai-message-assistant">
-              <div className="ai-avatar">
-                <Brain size={16} />
-              </div>
-
-              <div>
-                <span>SchoolMarks AI</span>
-                <p>{answer}</p>
-              </div>
+            <div className="chat-modes">
+              <button className="active">Ask</button>
+              <button>Analyze</button>
+              <button>Summarize</button>
             </div>
-
-            {history.slice(0, 3).map((item, index) => (
-              <React.Fragment key={`${item.question}-${index}`}>
-                <div className="ai-message ai-message-user">
-                  <div className="ai-user-avatar">SA</div>
-
-                  <div>
-                    <span>You</span>
-                    <p>{item.question}</p>
-                  </div>
-                </div>
-
-                <div className="ai-message ai-message-assistant">
-                  <div className="ai-avatar">
-                    <Brain size={16} />
-                  </div>
-
-                  <div>
-                    <span>SchoolMarks AI</span>
-                    <p>{item.answer}</p>
-                  </div>
-                </div>
-              </React.Fragment>
-            ))}
           </div>
 
-          <div className="ai-input-area">
-            <div className="ai-input">
-              <input
-                value={question}
-                onChange={event => setQuestion(event.target.value)}
-                onKeyDown={event => {
-                  if (event.key === "Enter" && question.trim()) {
-                    generateAnswer(question.trim());
-                  }
-                }}
-                placeholder="Ask SchoolMarks AI..."
-              />
-
-              <button
-                disabled={!question.trim()}
-                onClick={() => {
-                  if (question.trim()) {
-                    generateAnswer(question.trim());
-                  }
-                }}
+          <div className="chat-scroll">
+            {messages.map((message, index) => (
+              <div
+                className={`chat-message ${message.role}`}
+                key={`${message.role}-${index}`}
               >
-                <ArrowUpRight size={17} />
+                <div className="message-avatar">
+                  {message.role === "assistant" ? <Sparkles size={14} /> : "FK"}
+                </div>
+                <div className="message-bubble">{message.text}</div>
+              </div>
+            ))}
+
+            <div className="chat-message assistant">
+              <div className="message-avatar">
+                <Sparkles size={14} />
+              </div>
+              <div className="chat-answer-list">
+                <strong>Try asking</strong>
+                <button onClick={() => setInput("Which students need attention?")}>
+                  Which students need attention?
+                </button>
+                <button onClick={() => setInput("How is attendance this month?")}>
+                  How is attendance this month?
+                </button>
+                <button onClick={() => setInput("Which subject improved most?")}>
+                  Which subject improved most?
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="chat-composer">
+            <div className="composer-input">
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") send();
+                }}
+                placeholder="Ask about your students..."
+              />
+              <button onClick={send}>
+                <ArrowRight size={17} />
               </button>
             </div>
-
-            <span>
-              SchoolMarks AI provides insights from available academic
-              records.
-            </span>
           </div>
         </div>
 
-        <aside className="ai-sidebar-card">
-          <div>
-            <span className="eyebrow">Suggested questions</span>
-            <h3>Explore your data</h3>
+        <aside className="ai-tools">
+          <div className="ai-tools-head">
+            <div>
+              <small>TOOLS</small>
+              <strong>Academic signals</strong>
+            </div>
+            <Sparkles size={17} />
           </div>
 
-          <div className="ai-question-list">
-            {aiQuestions.map(item => (
-              <button
-                key={item}
-                onClick={() => generateAnswer(item)}
-              >
-                <span>{item}</span>
-                <ArrowRight size={14} />
-              </button>
+          <div className="tool-list">
+            {[
+              ["At-risk students", "18 students", Target],
+              ["Attendance signal", "94.8% average", Clock3],
+              ["Class performance", "87.4% average", TrendingUp],
+              ["Latest assessments", "126 entries", ClipboardCheck],
+            ].map(([title, value, Icon]) => (
+              <div className="tool-item" key={title}>
+                <div>
+                  <Icon size={16} />
+                </div>
+                <span>
+                  <strong>{title}</strong>
+                  <small>{value}</small>
+                </span>
+                <ChevronRight size={15} />
+              </div>
             ))}
+          </div>
+
+          <div className="live-signals">
+            <span />
+            Live academic data
           </div>
         </aside>
       </div>
@@ -2180,494 +1916,69 @@ function AIPage({ students }) {
   );
 }
 
-function ProfilePage({ profile, setProfile, notify }) {
-  const [form, setForm] = useState(profile);
+function AppLayout({ page, setPage, students, setStudents, onHome }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const save = event => {
-    event.preventDefault();
+  let content;
 
-    const next = {
-      ...form,
-      name: form.name.trim() || "School Admin"
-    };
-
-    setProfile(next);
-    localStorage.setItem("schoolmarks_profile", JSON.stringify(next));
-
-    notify("Profile saved", "Your profile has been updated.");
-  };
-
-  return (
-    <div className="system-page">
-      <div className="page-header">
-        <div>
-          <span className="eyebrow">Account</span>
-          <h2>Profile</h2>
-          <p>Manage the profile used across your SchoolMarks workspace.</p>
-        </div>
-      </div>
-
-      <div className="profile-layout">
-        <div className="profile-summary-card">
-          <div className="profile-large-avatar">
-            {form.name
-              ?.split(" ")
-              .map(part => part[0])
-              .join("")
-              .slice(0, 2)
-              .toUpperCase()}
-          </div>
-
-          <h3>{form.name || "School Admin"}</h3>
-          <span>{form.role}</span>
-
-          <div className="profile-divider" />
-
-          <div className="profile-summary-item">
-            <MailIcon />
-            <div>
-              <span>Email</span>
-              <strong>{form.email}</strong>
-            </div>
-          </div>
-
-          <div className="profile-summary-item">
-            <GraduationCap size={17} />
-            <div>
-              <span>Campus</span>
-              <strong>{form.campus}</strong>
-            </div>
-          </div>
-        </div>
-
-        <form className="profile-form-card" onSubmit={save}>
-          <div className="dashboard-card-header">
-            <div>
-              <span>Profile settings</span>
-              <h3>Personal information</h3>
-            </div>
-          </div>
-
-          <div className="form-grid">
-            <label>
-              Name
-              <input
-                value={form.name}
-                onChange={event =>
-                  setForm({
-                    ...form,
-                    name: event.target.value
-                  })
-                }
-              />
-            </label>
-
-            <label>
-              Role
-              <input
-                value={form.role}
-                onChange={event =>
-                  setForm({
-                    ...form,
-                    role: event.target.value
-                  })
-                }
-              />
-            </label>
-
-            <label>
-              Email
-              <input
-                type="email"
-                value={form.email}
-                onChange={event =>
-                  setForm({
-                    ...form,
-                    email: event.target.value
-                  })
-                }
-              />
-            </label>
-
-            <label>
-              Campus
-              <input
-                value={form.campus}
-                onChange={event =>
-                  setForm({
-                    ...form,
-                    campus: event.target.value
-                  })
-                }
-              />
-            </label>
-
-            <label>
-              Interface
-              <select
-                value={form.interface}
-                onChange={event =>
-                  setForm({
-                    ...form,
-                    interface: event.target.value
-                  })
-                }
-              >
-                <option>English</option>
-                <option>Urdu</option>
-              </select>
-            </label>
-          </div>
-
-          <div className="modal-actions">
-            <button className="primary-button" type="submit">
-              <Check size={17} />
-              Save profile
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-function MailIcon() {
-  return <MessageSquare size={17} />;
-}
-
-function SettingsPage({ notify }) {
-  const [notifications, setNotifications] = useState(true);
-  const [compact, setCompact] = useState(false);
-
-  return (
-    <div className="system-page">
-      <div className="page-header">
-        <div>
-          <span className="eyebrow">Workspace preferences</span>
-          <h2>Settings</h2>
-          <p>Configure how SchoolMarks works for your school.</p>
-        </div>
-      </div>
-
-      <div className="settings-grid">
-        <div className="settings-card">
-          <div className="settings-icon">
-            <Bell size={18} />
-          </div>
-
-          <div>
-            <strong>Notifications</strong>
-            <span>Receive important academic updates.</span>
-          </div>
-
-          <button
-            className={`toggle ${notifications ? "active" : ""}`}
-            onClick={() => setNotifications(!notifications)}
-          >
-            <i />
-          </button>
-        </div>
-
-        <div className="settings-card">
-          <div className="settings-icon">
-            <LayoutDashboard size={18} />
-          </div>
-
-          <div>
-            <strong>Compact dashboard</strong>
-            <span>Use a denser workspace layout.</span>
-          </div>
-
-          <button
-            className={`toggle ${compact ? "active" : ""}`}
-            onClick={() => setCompact(!compact)}
-          >
-            <i />
-          </button>
-        </div>
-
-        <div className="settings-card">
-          <div className="settings-icon">
-            <ShieldCheck size={18} />
-          </div>
-
-          <div>
-            <strong>Local data protection</strong>
-            <span>Your current demo records are stored locally.</span>
-          </div>
-
-          <CheckCircle2 size={18} />
-        </div>
-      </div>
-
-      <div className="dashboard-card settings-info">
-        <div className="settings-info-icon">
-          <Database size={20} />
-        </div>
-
-        <div>
-          <span>Storage</span>
-          <h3>SchoolMarks local workspace</h3>
-          <p>
-            Student and academic records can persist locally between
-            sessions using the SchoolMarks storage layer.
-          </p>
-        </div>
-
-        <button
-          className="secondary-button"
-          onClick={() =>
-            notify("Storage", "Local SchoolMarks storage is active.")
-          }
-        >
-          Check storage
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function HistoryIcon() {
-  return (
-    <div className="history-icon">
-      <Clock3 size={19} />
-    </div>
-  );
-}
-
-function AppLayout({
-  page,
-  setPage,
-  profile,
-  children
-}) {
-  const [collapsed, setCollapsed] = useState(false);
+  switch (page) {
+    case "students":
+      content = <StudentsPage students={students} setStudents={setStudents} />;
+      break;
+    case "academics":
+      content = <AcademicsPage />;
+      break;
+    case "exams":
+      content = <ExamsPage />;
+      break;
+    case "marks":
+      content = <MarksPage />;
+      break;
+    case "attendance":
+      content = <AttendancePage />;
+      break;
+    case "performance":
+      content = <PerformancePage />;
+      break;
+    case "ai":
+      content = <AIPage />;
+      break;
+    default:
+      content = <DashboardPage students={students} />;
+  }
 
   return (
     <div className="app-shell">
       <Sidebar
         page={page}
         setPage={setPage}
-        collapsed={collapsed}
-        setCollapsed={setCollapsed}
+        open={sidebarOpen}
+        setOpen={setSidebarOpen}
       />
 
-      <div className={`app-main ${collapsed ? "sidebar-collapsed" : ""}`}>
-        <Topbar
-          profile={profile}
-          page={page}
-          setPage={setPage}
-        />
-
-        <div className="app-content">{children}</div>
-      </div>
+      <main className="app-main">
+        <Topbar setOpen={setSidebarOpen} onHome={onHome} />
+        <div className="app-content">{content}</div>
+      </main>
     </div>
   );
 }
 
 export default function App() {
   const [page, setPage] = useState("home");
-  const [students, setStudents] = useState(seedStudents);
-  const [toast, setToast] = useState(null);
+  const [students, setStudents] = useState(studentsSeed);
 
-  const [profile, setProfile] = useState(() => {
-    try {
-      const saved = localStorage.getItem("schoolmarks_profile");
-
-      if (saved) {
-        return JSON.parse(saved);
-      }
-    } catch {}
-
-    return {
-      name: "School Admin",
-      role: "Administrator",
-      email: "admin@schoolmarks.local",
-      campus: "Main Campus",
-      interface: "English"
-    };
-  });
-
-  useEffect(() => {
-    const storedStudents = localStorage.getItem("schoolmarks_students");
-
-    if (storedStudents) {
-      try {
-        const parsed = JSON.parse(storedStudents);
-
-        if (Array.isArray(parsed) && parsed.length) {
-          setStudents(parsed);
-        }
-      } catch {}
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem(
-      "schoolmarks_students",
-      JSON.stringify(students)
-    );
-  }, [students]);
-
-  const notify = (title, message) => {
-    setToast({
-      title,
-      message
-    });
-
-    window.clearTimeout(window.__schoolmarksToast);
-
-    window.__schoolmarksToast = window.setTimeout(() => {
-      setToast(null);
-    }, 3500);
-  };
-
-  const goTo = nextPage => {
-    setPage(nextPage);
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  };
-
-  let content = null;
-
-  switch (page) {
-    case "home":
-      content = <HomePage navigate={goTo} />;
-      break;
-
-    case "dashboard":
-      content = (
-        <DashboardPage
-          navigate={goTo}
-          students={students}
-        />
-      );
-      break;
-
-    case "students":
-      content = (
-        <StudentsPage
-          students={students}
-          setStudents={setStudents}
-          notify={notify}
-        />
-      );
-      break;
-
-    case "academics":
-      content = <AcademicsPage />;
-      break;
-
-    case "exams":
-      content = <Exams />;
-      break;
-
-    case "marks":
-      content = <MarksPage notify={notify} />;
-      break;
-
-    case "results":
-      content = <ResultsPage />;
-      break;
-
-    case "attendance":
-      content = <AttendancePage />;
-      break;
-
-    case "performance":
-      content = <PerformancePage students={students} />;
-      break;
-
-    case "ai":
-      content = <AIPage students={students} />;
-      break;
-
-    case "profile":
-      content = (
-        <ProfilePage
-          profile={profile}
-          setProfile={setProfile}
-          notify={notify}
-        />
-      );
-      break;
-
-    case "settings":
-      content = <SettingsPage notify={notify} />;
-      break;
-
-    default:
-      content = <HomePage navigate={goTo} />;
+  if (page === "home") {
+    return <HomePage onOpenApp={() => setPage("dashboard")} />;
   }
 
-  const isSystemPage = page !== "home";
-
   return (
-    <>
-      {isSystemPage ? (
-        <AppLayout
-          page={page}
-          setPage={goTo}
-          profile={profile}
-        >
-          {content}
-        </AppLayout>
-      ) : (
-        <div className="public-shell">
-          <header className="public-header">
-            <button
-              className="public-brand"
-              onClick={() => goTo("home")}
-            >
-              <Logo />
-
-              <div>
-                <strong>SchoolMarks</strong>
-                <span>Academic OS</span>
-              </div>
-            </button>
-
-            <nav className="public-nav">
-              <button onClick={() => goTo("home")}>Home</button>
-              <button onClick={() => goTo("dashboard")}>
-                Dashboard
-              </button>
-              <button onClick={() => goTo("ai")}>AI workspace</button>
-            </nav>
-
-            <div className="public-actions">
-              <button
-                className="secondary-button"
-                onClick={() => goTo("profile")}
-              >
-                <User size={16} />
-                Profile
-              </button>
-
-              <button
-                className="primary-button"
-                onClick={() => goTo("dashboard")}
-              >
-                Open dashboard
-                <ArrowRight size={16} />
-              </button>
-            </div>
-
-            <button className="mobile-menu-button">
-              <Menu size={19} />
-            </button>
-          </header>
-
-          {content}
-        </div>
-      )}
-
-      <Toast
-        toast={toast}
-        close={() => setToast(null)}
-      />
-    </>
+    <AppLayout
+      page={page}
+      setPage={setPage}
+      students={students}
+      setStudents={setStudents}
+      onHome={() => setPage("home")}
+    />
   );
 }
