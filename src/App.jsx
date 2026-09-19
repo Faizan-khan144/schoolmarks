@@ -504,10 +504,13 @@ function HomePage({ onOpenApp }) {
       </nav>
 
       <main>
-        <section className="hero">
-          <div className="hero-grid" />
-          <div className="hero-orb orb-one" />
-          <div className="hero-orb orb-two" />
+      <section className="hero">
+        <div className="hero-bg" />
+        <div className="hero-grid-pattern" />
+        <div className="hero-orb orb-one" />
+        <div className="hero-orb orb-two" />
+
+        <div className="hero-inner">
 
           <div className="hero-copy">
             <Reveal>
@@ -562,9 +565,10 @@ function HomePage({ onOpenApp }) {
             </Reveal>
           </div>
 
-          <Reveal delay={120} className="hero-product">
-            <ProductDashboard />
-          </Reveal>
+            <Reveal delay={120} className="hero-product">
+              <ProductDashboard />
+            </Reveal>
+          </div>
 
           <div className="hero-bottom-stats">
             <div>
